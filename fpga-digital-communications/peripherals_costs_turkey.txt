@@ -1,0 +1,61 @@
+Peripherals And Turkey Cost Notes: fpga-digital-communications Digital Communication
+===============================================================
+
+Price note:
+
+Checked on 2026-06-16. Recheck before buying.
+
+Core peripherals:
+
+```text
+1. MCP3208 ADC DIP-16
+   Use: ADC input for later wired analog loopback.
+   Observed price: 269.61 TL
+   Source: Direnc.net
+   URL: https://www.direnc.net/analogtan-digitale-donusturucu-entegreler
+
+2. Jumper cable set
+   Use: FPGA to ADC/DAC/test wiring.
+   Observed price examples:
+     40-pin M-M jumper: 55.80 TL
+     40-pin F-M jumper: 52.98 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/kablo-donusturucu
+
+3. Logic level converter 3.3V-5V
+   Use: only if a module uses 5V logic.
+   Observed price: 19.16 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/voltaj-regulator-karti
+
+4. 433MHz antenna or SMA antenna
+   Use: optional RF extension, not OFDM MVP.
+   Observed price examples:
+     433MHz 5dBi SMA antenna: 66.66 TL
+     433MHz magnetic SMA antenna: 99.71 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/anten-ve-konektor
+
+5. PT2262 RF transmitter module
+   Use: optional simple RF extension, not full OFDM.
+   Observed price: 249.70 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/rf-1
+```
+
+Still to check before final hardware:
+
+```text
+1. DAC module or fast external DAC.
+2. Optional SDR board if RF OFDM is added.
+3. Oscilloscope or logic analyzer.
+4. SMA cables and adapters if RF extension is used.
+```
+
+Budget direction:
+
+```text
+Base digital-loopback MVP: low cost, mostly FPGA + Orin.
+Analog loopback MVP: add ADC/DAC and wiring.
+RF extension: defer until the digital baseband chain works.
+```

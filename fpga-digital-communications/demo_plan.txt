@@ -1,0 +1,29 @@
+Demo Plan: fpga-digital-communications Digital Communication
+=======================================
+
+Demo title:
+
+Adaptive FPGA OFDM Link Monitor
+
+Demo flow:
+
+```text
+1. Start link with QPSK.
+2. Show clean constellation and low BER.
+3. Increase noise/channel impairment.
+4. Show BER rising.
+5. Switch modulation or coding setting.
+6. Show Orin dashboard logging the change.
+```
+
+Minimum demo if hardware is limited:
+
+```text
+FPGA internal loopback + Orin dashboard + BER plot.
+```
+
+Best demo:
+
+```text
+ADC/DAC or SDR loopback + live constellation + adaptive modulation.
+```

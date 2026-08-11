@@ -1,0 +1,81 @@
+Nexys Video Selected: Next Steps
+================================
+
+Immediate goal:
+
+Use the Nexys Video first without Orin Nano. The laptop/PC is the temporary software side.
+
+First week target:
+
+```text
+1. Install/confirm Vivado environment.
+2. Download Digilent Nexys Video board files and reference manual.
+3. Create a simple LED/switch project.
+4. Create a UART hello-world telemetry project.
+5. Create one shared PC-side Python serial logger.
+6. Create basic constraints/pin-map folders for each project.
+```
+
+Created in this workspace:
+
+```text
+LED/switch HDL:
+  system-integration/bringup/hdl/led_switch_top.v
+  system-integration/bringup/constraints/nexys_video_led_switch.xdc
+
+UART hello HDL:
+  system-integration/bringup/hdl/uart_tx.v
+  system-integration/bringup/hdl/uart_hello_top.v
+  system-integration/bringup/constraints/nexys_video_uart_hello.xdc
+
+Shared PC logger:
+  system-integration/tools/serial_logger.py
+  system-integration/tools/requirements.txt
+```
+
+Next board action:
+
+```text
+1. Fix Hardware Manager connection: DONE
+2. Open target -> Auto Connect: DONE
+3. Confirm Vivado sees xc7a200t_0: DONE
+4. Program LED/switch bitstream: DONE
+5. Confirm SW0-SW7 drive LD0-LD7 after programming: PASS
+6. Build UART hello-world design: DONE
+7. Confirm PuTTY receives hello telemetry on J13 / COM6: PASS
+8. Start first project-specific board test: solar-tracker-bess PWM output / fake solar telemetry.
+```
+
+Second week target:
+
+```text
+fpga-digital-communications:
+  QPSK mapper/demapper simulation.
+
+network-telemetry-dashboard:
+  Ethernet/IP header parser simulation using stored frame examples.
+
+solar-tracker-bess:
+  PWM generator simulation and simple duty-cycle test.
+```
+
+Do before Orin arrives:
+
+```text
+1. FPGA HDL simulations.
+2. UART telemetry protocol.
+3. PC-side logging and plotting.
+4. Basic dashboard mockup.
+5. Sensor/ADC research.
+6. Ethernet parser simulation.
+```
+
+Do after Orin arrives:
+
+```text
+1. Move Python telemetry scripts to Orin.
+2. Add Orin dashboard.
+3. Add AI/fault/anomaly models.
+4. Connect Orin to FPGA through UART/SPI/Ethernet.
+5. Record final demos.
+```

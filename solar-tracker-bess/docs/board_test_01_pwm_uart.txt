@@ -1,0 +1,152 @@
+Solar Tracker and BESS Board Test 01: PWM Output + Fake Solar UART Telemetry
+============================================================
+
+Goal
+----
+
+Prove the first renewable-energy project behavior on the Nexys Video without external sensors,
+solar panels, batteries, or power electronics.
+
+What this test does
+-------------------
+
+```text
+SW0-SW7:
+  8-bit duty command.
+
+LD0:
+  PWM output.
+  Low duty should look dimmer.
+  High duty should look brighter.
+
+LD1:
+  Heartbeat.
+  Toggles whenever a telemetry line is scheduled.
+
+LD2:
+  UART busy indicator.
+  Flickers during telemetry transmission.
+
+LD3-LD7:
+  Mirrors SW3-SW7 for quick visual confirmation.
+
+J13 / COM6:
+  UART telemetry at 115200 baud.
+```
+
+Vivado build
+------------
+
+```text
+FPGA part:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_pwm_uart_top
+
+HDL sources:
+  solar-tracker-bess/code/hdl/pwm_generator.v
+  solar-tracker-bess/code/hdl/uart_tx.v
+  solar-tracker-bess/code/hdl/solar_pwm_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_pwm_uart.xdc
+```
+
+PuTTY settings
+--------------
+
+```text
+Serial line:
+  COM6
+
+Speed:
+  115200
+
+Data bits:
+  8
+
+Stop bits:
+  1
+
+Parity:
+  None
+
+Flow control:
+  None
+```
+
+Expected telemetry
+------------------
+
+Example line:
+
+```text
+p3,duty=0x80,v=0xA0,i=0x20,p=0x40,ok
+```
+
+Field meaning:
+
+```text
+p3:
+  solar-tracker-bess
+
+duty:
+  raw 8-bit PWM duty value from switches
+
+v:
+  fake voltage value
+
+i:
+  fake current value
+
+p:
+  fake power value
+
+ok:
+  no fault in this first safe test
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. LD0 brightness changes when SW0-SW7 change.
+3. LD1 toggles.
+4. PuTTY receives repeated p3 telemetry lines on COM6.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed telemetry:
+
+```text
+p3,duty=0x00,v=0x80,i=0x10,p=0x00,ok
+p3,duty=0x0F,v=0x83,i=0x11,p=0x07,ok
+p3,duty=0x3F,v=0x8F,i=0x17,p=0x1F,ok
+p3,duty=0x7F,v=0x9F,i=0x1F,p=0x3F,ok
+p3,duty=0xFF,v=0xBF,i=0x2F,p=0x7F,ok
+```
+
+Meaning:
+
+```text
+SW0-SW7 are correctly changing the duty field.
+Fake voltage/current/power fields respond to the duty command.
+UART path from FPGA AA19 through J13 / COM6 is working.
+This is the first successful solar-tracker-bess board-level renewable-energy telemetry demo.
+```
+
+Safety
+------
+
+```text
+Do not connect a solar panel, buck converter, battery, current sensor, voltage sensor,
+or any external power stage for this test.
+```

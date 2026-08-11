@@ -11,12 +11,12 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 
 COMMANDS = [
-    [sys.executable, "-m", "unittest", "discover", "-s", "proje1/code/tests", "-p", "test_*.py", "-v"],
-    [sys.executable, "-m", "unittest", "discover", "-s", "proje2/code/tests", "-p", "test_*.py", "-v"],
-    [sys.executable, "-m", "unittest", "discover", "-s", "proje3/code/tests", "-p", "test_*.py", "-v"],
-    [sys.executable, "proje3/code/orin_app/test_ldr_servo_tracker.py"],
-    [sys.executable, "proje3/code/pc_app/test_ldr_uart_monitor.py"],
-    [sys.executable, "proje1/code/pc_app/tracker_udp_comm_bridge.py", "--self-test"],
+    [sys.executable, "-m", "unittest", "discover", "-s", "fpga-digital-communications/code/tests", "-p", "test_*.py", "-v"],
+    [sys.executable, "-m", "unittest", "discover", "-s", "network-telemetry-dashboard/code/tests", "-p", "test_*.py", "-v"],
+    [sys.executable, "-m", "unittest", "discover", "-s", "solar-tracker-bess/code/tests", "-p", "test_*.py", "-v"],
+    [sys.executable, "solar-tracker-bess/code/orin_app/test_ldr_servo_tracker.py"],
+    [sys.executable, "solar-tracker-bess/code/pc_app/test_ldr_uart_monitor.py"],
+    [sys.executable, "fpga-digital-communications/code/pc_app/tracker_udp_comm_bridge.py", "--self-test"],
 ]
 
 

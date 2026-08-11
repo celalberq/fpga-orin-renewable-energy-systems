@@ -1,0 +1,99 @@
+Solar Tracker and BESS Board Test 12: Real Servo Tracker UDP Loop
+=================================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Live result:
+
+```text
+2026-08-06: Orin tracker loop drove the real pan/tilt servos through PCA9685.
+The user confirmed that the fast visible tracker run worked.
+2026-08-06: Solar panel was mounted on a cardboard adapter/base and stabilized
+with 4-5 elastic bands. The physical panel mount is usable for prototype demos.
+```
+
+Goal
+----
+
+Prove that the renewable-energy tracker is no longer software-only:
+
+```text
+Orin tracker loop
+  -> PCA9685 I2C servo driver
+  -> pan/tilt servos
+  -> UDP tracker telemetry
+```
+
+Current Channel Map
+-------------------
+
+```text
+PCA9685 address: 0x40
+PCA9685 bus: 7
+
+Pan servo:
+  channel 15
+  left/right rotation
+  safe range 70-110 deg
+
+Tilt servo:
+  channel 12
+  up/down rotation
+  safe range 80-100 deg
+```
+
+Working Command
+---------------
+
+Use this for a visible real-servo tracker run:
+
+```bash
+cd /home/msi
+python3 solar-tracker-bess/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5013 --max-packets 60 --interval 0.25 --control-gain 35 --lock-error-deg 10 --ina-enable --ina-bus 7 --ina-addr 0x44 --shunt-ohms 0.1 --drive-servos --pca-bus 7 --pca-addr 0x40 --pan-channel 15 --tilt-channel 12 --pan-min 70 --pan-max 110 --tilt-min 80 --tilt-max 100
+```
+
+Expected Terminal Output
+------------------------
+
+```text
+INA226 addr=0x44 bus=7
+PCA9685 addr=0x40 bus=7
+Sending UDP to 192.168.1.219:5013
+Servo output is ON
+seq=00000 pan=... tilt=... err=... state=...
+```
+
+What This Proves
+----------------
+
+```text
+solar-tracker-bess now has a real actuator path:
+  Orin computes tracker movement.
+  PCA9685 receives I2C commands.
+  Physical pan/tilt servos move.
+  A real solar panel is mounted on the moving structure.
+  Tracker state is still sent over UDP for network-telemetry-dashboard/fpga-digital-communications integration.
+```
+
+Remaining Mechanical Polish
+---------------------------
+
+```text
+The prototype cardboard/elastic-band panel mount works.
+For a cleaner final demo, fix the base to a heavier board so it cannot slide.
+Keep the panel mount light and balanced so the tilt servo is not overloaded.
+Leave wire slack near the tilt hinge so panel wires do not fight the servo.
+Use a stronger lamp or sunlight for more visible INA226 power changes.
+```
+
+Nexys Video Vivado part
+-----------------------
+
+```text
+xc7a200tsbg484-1
+```

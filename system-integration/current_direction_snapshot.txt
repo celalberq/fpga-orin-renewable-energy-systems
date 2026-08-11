@@ -1,0 +1,118 @@
+Current Direction Snapshot
+==========================
+
+Last synced:
+
+```text
+2026-07-13
+```
+
+Hardware baseline:
+
+```text
+Selected FPGA:
+  Digilent Nexys Video 410-316
+
+Current software side:
+  Laptop/PC
+
+Future software side:
+  Jetson Orin Nano Super
+```
+
+Portfolio/application direction:
+
+```text
+Main strength stack:
+  Computer engineering + renewable energy systems:
+    - FPGA/embedded systems
+    - software/data/dashboarding
+    - edge AI and hardware/software integration
+    - solar
+    - BESS
+    - grid integration
+    - SCADA, commissioning, monitoring, and asset performance
+
+Strong supporting knowledge:
+  Digital communication:
+    - modulation
+    - signal processing
+    - telemetry links
+    - reliable data movement between FPGA, PC, and Orin
+
+Basic supporting knowledge:
+  Networking:
+    - Ethernet basics
+    - packet metadata
+    - monitoring concepts
+    - infrastructure awareness
+```
+
+Project priority:
+
+```text
+1. solar-tracker-bess Renewable Energy Solar
+   Main Australia-facing portfolio project and shared telemetry data source.
+   Extend toward solar+BESS monitoring, MPPT simulation, and SCADA-style telemetry.
+
+2. fpga-digital-communications Digital Communication
+   Strong technical support project for reliable communication of the same renewable telemetry.
+
+3. network-telemetry-dashboard Network
+   Basic supporting project showing Ethernet/packet metadata awareness for the same renewable telemetry.
+```
+
+Career/application logic:
+
+```text
+Lead with computer/embedded + renewable energy systems.
+Use Nexys Video FPGA work to stand out from generic renewable applicants.
+Use digital communication to show stronger signal-processing and telemetry understanding.
+Keep networking basic and practical, not a main identity.
+Avoid making analog/RF/electromagnetics-heavy roles the main bet right now.
+```
+
+Near-term work:
+
+```text
+1. Nexys Video bring-up LED/switch and UART telemetry: DONE.
+2. Start solar-tracker-bess as the primary project with PWM output and fake solar telemetry: DONE.
+3. Define shared telemetry packet v1 with sequence counter, MPPT state, fault, and checksum: DONE.
+4. Add PC parser/logger for shared packet v1: UART parsing/logging PASS.
+5. Add raw=XX to shared packet so PC checksum validation is complete for all switch states: PASS.
+6. Use that shared packet as the base for fpga-digital-communications digital communication and network-telemetry-dashboard network parsing: STARTED.
+7. FPGA Digital Communications shared packet framing/CRC simulation: DONE.
+8. FPGA Digital Communications Nexys Video communication frame/CRC loopback: BOARD PASS.
+9. FPGA Digital Communications QPSK packet-link simulation with the same p3 frame: DONE.
+10. FPGA Digital Communications Nexys Video QPSK mapper/demapper loopback: BOARD PASS.
+11. FPGA Digital Communications configurable channel/noise model for BER-style tests: BOARD PASS.
+12. FPGA Digital Communications OFDM framing plan and first simulation: DONE.
+13. FPGA Digital Communications first FPGA OFDM resource-grid counter: BOARD PASS.
+14. FPGA Digital Communications OFDM cyclic-prefix/resource-grid sequencer: READY FOR BOARD.
+15. Network Telemetry Dashboard solar telemetry UDP gateway and receiver: LIVE PASS.
+16. Network Telemetry Dashboard live solar dashboard: LIVE PASS.
+17. Solar Tracker and BESS auto MPPT UART/dashboard build: LIVE PASS.
+18. Network Telemetry Dashboard BESS SoC dashboard simulation: SMOKE PASS / READY FOR LIVE TEST on http://127.0.0.1:8083.
+19. Network Telemetry Dashboard telemetry link-health dashboard: SMOKE PASS / READY FOR LIVE TEST on http://127.0.0.1:8084.
+20. Solar Tracker and BESS real voltage/current sensing stage 01: HDL ADDED / PARTS NEEDED / BOARD TEST PENDING.
+21. FPGA Digital Communications digital communication strengthening plan: READY AFTER REAL SENSING STAGE 01.
+22. Buy-ready peripherals and Orin plan: CREATED.
+23. New fast-track rule: prioritize integrated system demos over tiny isolated board tests.
+24. Prepare a 1-page CV and 1-page project portfolio before contacting EMMS/Samil Demir.
+25. Keep Monash, University of Melbourne, RMIT, Swinburne, and UNSW choices tied to accreditation,
+   renewables/BESS subjects, computer/embedded fit, digital communication support, and industry links.
+```
+
+Source files:
+
+```text
+post_graduation_australia_application_direction.txt
+target_schools_and_programs.txt
+integrated_three_project_architecture.txt
+cv_demo_strategy.txt
+development_roadmap.txt
+three_project_basic_build_plan.txt
+hardware_purchase_plan_no_orin.txt
+buy_ready_peripherals_and_orin_plan.txt
+fast_track_execution_plan.txt
+```

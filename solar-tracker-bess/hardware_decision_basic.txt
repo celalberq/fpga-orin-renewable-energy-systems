@@ -1,0 +1,128 @@
+Hardware Decision: solar-tracker-bess Solar
+===============================
+
+Current decision:
+
+Buy the low-voltage sensing/protection parts first. Do not buy solar panel, battery, or full buck converter hardware yet.
+
+Needed now:
+
+```text
+1. Nexys Video
+2. Laptop/PC
+3. USB programming cable, included with Nexys Video kit
+4. Nexys Video 12V supply, included with kit
+5. Breadboard
+6. Jumper wires
+7. Multimeter
+```
+
+Buy for the first real sensing stage:
+
+```text
+1. MCP3208 DIP-16 ADC
+   Use: SPI ADC for voltage/current sensing.
+   Decision: buy now.
+   First use:
+     CH0 = voltage divider
+     CH1 = analog current-sensor signal after calibration
+
+2. INA226 IIC current/power monitor module
+   Use: voltage/current/power telemetry and calibration.
+   Decision: buy now.
+   First use:
+     calibration/reference path
+   Later use:
+     FPGA or Orin I2C current/power sensing
+
+3. Logic level converter 3.3V-5V
+   Use: only for modules that are not 3.3V compatible.
+   Decision: buy because it is cheap and useful.
+
+4. Resistor set
+   Use: voltage divider and test loads.
+   Decision: buy.
+
+5. Fuses
+   Use: input protection before any power experiments.
+   Decision: buy 1A, 2A, 5A.
+```
+
+Buy after simulation and PWM logic are ready:
+
+```text
+1. Low-voltage DC supply or small 12V source with current limit.
+2. Proper MOSFET gate driver.
+3. MOSFET.
+4. Inductor, diode, capacitors, and shunt resistor for buck converter.
+5. Power resistor load.
+6. Small solar panel or PV emulator.
+```
+
+Do not buy yet:
+
+```text
+1. Battery pack
+2. High-power solar panel
+3. Grid inverter
+4. Large electronic load
+5. High-voltage components
+```
+
+Battery decision update:
+
+```text
+Battery is allowed later only as a measured storage element, not as a supply for
+Nexys Video or Orin.
+
+Safe later buy:
+  protected 1S LiPo/Li-ion battery
+  proper 1S charger/protection module
+  small safe load
+
+First battery use:
+  measure voltage/current/state
+  report SoC and charge/discharge state
+  keep Nexys Video and Orin on their official adapters
+```
+
+Why this is enough:
+
+```text
+The first solar version should prove MPPT logic, PWM timing, sensor reading, and telemetry before real power conversion.
+This lowers risk and keeps the Nexys Video safe.
+```
+
+Next Vivado build:
+
+```text
+Top module:
+  solar_real_sense_uart_top
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+HDL:
+  solar-tracker-bess/code/hdl/mcp3208_reader.v
+  solar-tracker-bess/code/hdl/solar_real_sense_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_real_sense_uart.xdc
+
+Detailed plan:
+  solar-tracker-bess/docs/real_sensing_stage_01_plan.txt
+```
+
+Source notes:
+
+```text
+MCP3208 and INA226:
+https://www.direnc.net/analogtan-digitale-donusturucu-entegreler
+https://www.direnc.net/akim-sensorleri
+
+Breadboard, jumper wires, logic level converter, fuses:
+https://www.robotistan.com/breadboard
+https://www.robotistan.com/kablo-donusturucu
+https://www.robotistan.com/voltaj-regulator-karti
+https://www.robotistan.com/sigorta
+```

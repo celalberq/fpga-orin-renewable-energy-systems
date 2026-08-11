@@ -1,0 +1,105 @@
+One Page Project Report Draft - 2026-08-05
+==========================================
+
+Title
+-----
+
+FPGA and Jetson Orin Based Solar Tracker Telemetry Platform with CRC/QPSK/OFDM
+Communication Profiling and UDP Monitoring
+
+Abstract
+--------
+
+This project demonstrates an integrated renewable-energy telemetry prototype
+that combines four KY-018 light sensors, MCP3208 conversion through a Nexys
+Video FPGA, a Jetson Orin Nano edge controller, a real two-axis solar tracker,
+panel-power measurement, and a live UDP dashboard. The Orin produces real LDR
+tracker and sensor telemetry, the
+fpga-digital-communications bridge converts each packet into a compact CRC-protected communication
+frame and QPSK/OFDM metadata, and the network-telemetry-dashboard dashboard monitors live values,
+packet validity, sequence gaps, and reliability state.
+
+System Architecture
+-------------------
+
+```text
+Four LDRs / MCP3208 / Nexys UART / Orin tracker / mounted panel
+  -> UDP tracker packet
+  -> fpga-digital-communications CRC/QPSK/OFDM bridge
+  -> network-telemetry-dashboard dashboard and reliability monitor
+```
+
+The Orin acts as the Linux edge controller and network gateway. The Nexys Video
+acts as the deterministic FPGA proof platform for packet framing and digital
+communication accounting. The PC runs the bridge, dashboard, loggers, and
+evidence-generation tools.
+
+Implementation
+--------------
+
+The renewable-energy layer sends voltage, estimated load power, tracker state,
+panel angles, LDR-derived light target, tracking error, fault state, and BESS
+model values. The Orin commands PCA9685 pan/tilt servos to move the mounted
+panel, and detects sustained panel shading while the LDRs remain exposed. The
+digital-communication layer packs the tracker telemetry into a
+129-byte payload, adds a CRC-protected 133-byte frame, maps it to 532 QPSK
+symbols, and accounts for a 12-symbol OFDM resource layout. The network layer
+transports the data over UDP, detects invalid packets and sequence gaps, and
+shows live warning/recovery state on the dashboard.
+
+Evidence
+--------
+
+```text
+Real LDR servo/dashboard packets: 60 valid, 0 bad, 0 gaps
+Communication bridge frames: 60/60 valid, 0 gaps
+Best observed tracking error: 0.027 deg
+Final tracking error: 0.391 deg
+Tracking mean-power gain over fixed panel: 24.141%
+Tracking energy gain over fixed panel: 24.229%
+Shading/recovery test: 120 valid packets, 0 gaps
+Shading warning: seq 61; automatic recovery: seq 78
+Nexys Video tracker CRC/QPSK/OFDM batch: PASS
+```
+
+Digital communication profile:
+
+```text
+Payload bytes: 129
+Frame bytes: 133
+Frame bits: 1064
+QPSK symbols: 532
+OFDM symbols: 12
+QPSK padding symbols: 44
+OFDM transmitted samples: 960
+Cyclic-prefix samples: 192
+Pilot bins: 48
+```
+
+Reliability evidence:
+
+```text
+Injected packet drops: 4
+Injected packet corruptions: 3
+Dashboard invalid packets: 3
+Dashboard sequence gaps: 4
+Recent recovery window: 10 clean packets, 0 invalid, 0 gaps
+```
+
+Limitations And Next Work
+-------------------------
+
+The tracker and shading behavior are proven using real stationary LDR sensors
+and a prototype-mounted physical panel. Indoor lighting remains below useful
+INA226 current resolution, so the A/B result uses measured panel voltage across
+a known 1k-ohm load. The next step is final demo video and report polish; future
+outdoor testing can add higher-power INA226 evidence.
+
+Conclusion
+----------
+
+The project is strongest when presented as one system rather than three separate
+labs: renewable sensing and control from solar-tracker-bess, digital communication depth
+from fpga-digital-communications, and network observability from network-telemetry-dashboard. It shows a computer
+engineering direction with renewable-energy relevance, FPGA validation, edge
+Linux telemetry, and dashboard-based system evidence.

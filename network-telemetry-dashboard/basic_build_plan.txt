@@ -1,0 +1,112 @@
+Basic Build Plan: network-telemetry-dashboard Network
+================================
+
+Project:
+
+FPGA-Accelerated Network Telemetry and AI Anomaly Detection Appliance
+
+Goal of this basic build:
+
+Define the network metadata pipeline before coding the parser or using live Ethernet.
+
+We do this:
+
+```text
+1. Build a metadata-based network monitor architecture.
+2. Start with packet/header parsing, not inline firewall mode.
+3. Define what fields the FPGA extracts from packets.
+4. Define what the PC/Orin dashboard will display.
+5. Define the anomaly/fault logic at a simple level first.
+```
+
+Add these:
+
+```text
+Design blocks:
+  - Ethernet frame input placeholder
+  - Ethernet header parser
+  - IPv4 parser
+  - TCP/UDP parser
+  - protocol counter
+  - flow key extractor
+  - rule flag generator
+  - metadata output
+
+Metadata fields:
+  - project name
+  - packet length
+  - Ethernet type
+  - IP protocol
+  - source IP
+  - destination IP
+  - source port
+  - destination port
+  - packet counter
+  - byte counter
+  - alert flag
+
+Folders already prepared:
+  - code/hdl
+  - code/sim
+  - code/pc_app
+  - code/tests
+  - hardware/constraints
+  - hardware/pin_maps
+```
+
+This will achieve:
+
+```text
+1. A clean network project that uses the Nexys Video Ethernet strength.
+2. A first version that works from stored/sample frames before live Ethernet.
+3. A strong base for monitor-mode traffic analysis.
+4. A clear data path from FPGA metadata to PC first, then Orin later.
+5. A portfolio story showing FPGA packet processing and network security.
+```
+
+Then code part:
+
+```text
+First HDL files:
+  - eth_header_parser.v
+  - ipv4_parser.v
+  - tcp_udp_parser.v
+  - protocol_counter.v
+  - metadata_formatter.v
+  - top_network_basic.v
+
+First simulation files:
+  - frame_samples.hex
+  - test_eth_header_parser.sv
+  - test_ipv4_parser.sv
+  - expected_metadata.csv
+
+First PC app files:
+  - network_metadata_reader.py
+  - network_dashboard_basic.py
+  - anomaly_rule_viewer.py
+  - solar_telemetry_udp_gateway.py: CREATED
+  - solar_telemetry_udp_receiver.py: CREATED
+  - solar_live_dashboard.py: READY FOR LIVE TEST
+```
+
+Not included in first version:
+
+```text
+1. Inline firewall/bridge mode
+2. Full packet payload inspection
+3. Deep packet inspection
+4. High-rate flow table in DDR
+5. AI model training
+```
+
+Upgrade path:
+
+```text
+Version 1: parse stored/sample frames: DONE
+Version 2: stream live solar telemetry as UDP JSON: CREATED
+Version 3: local live dashboard for solar UDP telemetry: READY FOR LIVE TEST
+Version 4: use live Ethernet receive
+Version 5: add anomaly rules
+Version 6: move dashboard and AI to Orin
+```

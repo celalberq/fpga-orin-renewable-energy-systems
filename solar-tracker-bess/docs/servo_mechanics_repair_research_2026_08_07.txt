@@ -1,0 +1,240 @@
+Solar Tracker and BESS Servo Mechanics Repair Research - 2026-08-07
+===================================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Assembly update
+---------------
+
+```text
+2026-08-08: The replacement servo hardware and 3D-printed pan/tilt mechanism
+were received and assembled. The panel remains mechanically separate for the
+first sensor and narrow-range servo checks.
+
+2026-08-08: Pan channel 15 and tilt channel 12 both passed the 90-degree center
+test through the PCA9685. The user confirmed that the mechanism moves very well,
+the motors are aligned, and there are no sudden movements or binding.
+```
+
+Context
+-------
+
+The earlier pan/tilt path passed live:
+
+```text
+PCA9685 bus: 7
+PCA9685 address: 0x40
+Pan servo channel: 15
+Tilt servo channel: 12
+Known safe limits with the prototype: pan 70-110 deg, tilt 80-100 deg
+Servo family used in the small plastic mechanism: MG90S / SG90-size micro servo
+```
+
+On 2026-08-07 the tilt part was reported broken. Treat the old live pass as
+valid evidence, but treat the physical tilt axis as temporarily unsafe for new
+servo-driven demo runs.
+
+Immediate Safe Demo Path
+------------------------
+
+Until the tilt repair is finished:
+
+```text
+1. Do not run two-axis servo mode with the broken tilt mechanism attached.
+2. For camera tests, use --disable-tilt and --disable-tilt-servo, then keep
+   tilt mechanically fixed near center.
+3. Pan-only CV tracking can still support a useful demo if the pan axis is
+   healthy.
+4. Keep software-only tracker / dashboard / fpga-digital-communications bridge / network-telemetry-dashboard dashboard
+   demos running because they do not depend on the broken tilt axis.
+```
+
+Example camera command while tilt is broken:
+
+```bash
+python3 solar-tracker-bess/code/orin_app/camera_light_tracker_udp_gateway.py --camera csi --camera-id 0 --width 640 --height 480 --udp-host 192.168.1.219 --udp-port 5013 --max-packets 120 --interval 0.25 --threshold-min 80 --threshold-percentile 98.0 --min-area-px 3 --preview --drive-servos --disable-tilt --disable-tilt-servo --pca-bus 7 --pca-addr 0x40 --pan-channel 15 --tilt-channel 12 --pan-min 70 --pan-max 110 --tilt-min 89 --tilt-max 91 --tilt-start 90
+```
+
+Replacement Options
+-------------------
+
+Option A: fast repair, same micro-servo ecosystem
+
+```text
+Buy:
+  - 1x MG90S 180-degree micro servo, or
+  - 1x SG90/MG90S pan-tilt bracket if the bracket/horn broke
+
+Why:
+  Cheapest and fastest repair.
+  Fits the current small pan-tilt geometry.
+  Existing PCA9685 wiring and 5V 2A servo adapter can likely remain.
+
+Risk:
+  MG90S is still only about 2 kg-cm class.
+  The same tilt overload can happen again if the panel is off-balance, wires
+  pull on the hinge, or the bracket hits a stop.
+```
+
+Option B: recommended final-demo repair, standard-size metal mechanism
+
+```text
+Buy:
+  - 2x MG996R 180-degree standard servos, not 360-degree continuous servos.
+  - 1x metal 2-DOF pan/tilt bracket for standard 40 x 20 x 36 mm servos.
+  - 5V-6V external servo supply rated about 5A or better.
+
+Why:
+  MG996R gives roughly five times the torque of MG90S.
+  A standard-size aluminum/bearing bracket is mechanically more credible for a
+  visible mounted-panel demo.
+  It turns the current prototype-grade mount into a more serious final-video
+  actuator.
+
+Risk:
+  The old SG90/MG90S plastic bracket does not fit standard MG996R servos.
+  Current 5V 2A adapter is undersized for two high-torque servos under load.
+  The heavier servo assembly needs a stiffer base.
+```
+
+Option C: overkill / only if MG996R still struggles
+
+```text
+Buy:
+  - DS3218 / 20 kg-cm class 270-degree digital servo(s)
+  - compatible standard servo brackets and metal horns
+  - stronger 6V supply/BEC
+
+Why:
+  Very high torque and usually stronger gears/bearings.
+
+Risk:
+  More current, more weight, more tuning work, possible import delay, and no
+  clear need for this small solar-panel prototype unless MG996R fails.
+```
+
+Current Recommendation
+----------------------
+
+```text
+Updated middle-ground decision after price and compatibility review:
+  1. Keep the existing 5V 2A external servo supply and PCA9685 wiring.
+  2. Use 2x MG90S 180-degree position servos, not continuous-rotation models.
+  3. Buy an assembled 3D-printed pan/tilt mechanism only if the seller prints
+     it around the actual MG90S bodies and the horns supplied with them.
+  4. Require centering at 90 degrees plus a no-binding movement test/video.
+  5. Keep the panel light, balanced, and mechanically fixed independently of
+     the servo horn.
+
+Why this replaced the MG996R recommendation:
+  MG996R is stronger but requires a larger bracket, stiffer base, and roughly
+  a 5A supply. That cost and weight are excessive for the current small panel.
+  MG90S is the best practical torque/size/power middle ground, while correct
+  mechanical fit addresses the actual failure mode.
+
+While waiting for the replacement:
+  Continue with PCA9685 channel 15 pan-only camera tracking. Channel 12 must be
+  disconnected or explicitly released and the physical tilt angle fixed.
+```
+
+Power and Wiring Notes
+----------------------
+
+Keep the existing logic wiring:
+
+```text
+Orin 3.3V -> PCA9685 VCC
+Orin GND  -> PCA9685 GND
+Orin SDA  -> PCA9685 SDA
+Orin SCL  -> PCA9685 SCL
+```
+
+For high-torque servos:
+
+```text
+External 5V-6V supply + -> servo V+ rail or direct servo red wires
+External 5V-6V supply - -> servo GND / PCA9685 GND / Orin GND common
+Do not power high-torque servos from Orin pins.
+Do not connect servo V+ to PCA9685 VCC.
+```
+
+Retest Plan After New Parts Arrive
+----------------------------------
+
+```text
+1. Unmounted center test:
+   pan_tilt_servo_test.py --mode center
+
+2. Axis-only checks:
+   pan_tilt_servo_test.py --mode pan with narrow range
+   pan_tilt_servo_test.py --mode tilt with very narrow range
+
+3. Increase range only after checking physical clearance by hand.
+
+4. Re-run camera tracker with:
+   --disable-tilt and --disable-tilt-servo first
+   then pan+tilt only after the tilt axis is balanced and quiet.
+
+5. Update board_test_15 or a new repair note with the final live result.
+```
+
+Research Snapshot
+-----------------
+
+Useful facts checked online on 2026-08-07:
+
+```text
+MG90S:
+  Typical micro-servo class, 4.8V-6V, about 1.8-2.2 kg-cm torque, about
+  650-800 mA stall current.
+
+MG996R:
+  Standard-size servo, about 40.7 x 19.7 x 42.9 mm, about 55 g, about
+  9.4 kgf-cm at 4.8V and 11 kgf-cm at 6V, about 2.5A stall current.
+
+PCA9685:
+  VCC is logic supply and should match the Orin logic side.
+  V+ is separate servo power and should normally be 5V-6V for servos.
+
+Local/nearby buying notes:
+  Robotistan lists MG996R 180-degree around 209-223 TL depending on listing.
+  Robotistan lists MG90S 180-degree around 115 TL.
+  Robotistan/Motorobit list SG90/MG90S pan-tilt brackets around 48-58 TL.
+  Motorobit lists a metal MG996R two-axis kit, but it appeared as notify/out of
+  stock during this check.
+```
+
+Sources
+-------
+
+```text
+MG90S specification reference:
+https://shillehtek.com/blogs/shillehtek-product-manuals/mg90s-metal-gear-micro-servo-motor-180-degree-9g-for-rc-plane-manual
+
+MG996R datasheet reference:
+https://www.digikey.com/en/htmldatasheets/production/5014637/0/0/1/mg996r
+
+Robotistan MG996R 180-degree listing:
+https://www.robotistan.com/tower-pro-mg996r-high-torque-servo-motor-13kg-180-degree
+https://www.robotistan.com/mg996-13-kg-servo-motor
+
+Robotistan MG90S listing:
+https://www.robotistan.com/mg90s-servo-motor-en
+
+Robotistan SG90/MG90S pan-tilt bracket:
+https://www.robotistan.com/pan-tilt-bracket-for-servo-sg90s-mg90s-normal-quality
+
+Motorobit SG90/MG90S pan-tilt bracket:
+https://www.motorobit.com/2-eksenli-pan-tilt-servosuz
+
+Motorobit MG996R metal pan-tilt kit:
+https://www.motorobit.com/metal-pan-tilt-2-axis-included-2-x-mg996r
+
+Adafruit PCA9685 pinout and servo power notes:
+https://learn.adafruit.com/16-channel-pwm-servo-driver/pinouts
+```

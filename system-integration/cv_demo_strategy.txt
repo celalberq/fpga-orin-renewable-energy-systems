@@ -1,0 +1,133 @@
+CV And Demo Strategy
+====================
+
+Goal:
+
+Turn the three projects into strong application material for Australia higher education, especially with a GPA around 2.8-2.84 and a prior ADAS prototype.
+
+Related direction file:
+
+```text
+post_graduation_australia_application_direction.txt
+```
+
+Current application/career priority:
+
+```text
+Main identity:
+  Computer engineering + renewable energy systems.
+  This means FPGA/embedded systems, software/data/dashboarding, edge AI, solar, BESS, grid integration, SCADA, monitoring, and asset performance.
+
+Strong support:
+  Digital communication and signal processing.
+  This supports telemetry, reliable data links, modulation, and FPGA DSP credibility.
+
+Basic support:
+  Networking.
+  This should show Ethernet/packet/monitoring literacy, not become the main career direction.
+```
+
+Portfolio narrative:
+
+```text
+Previous project:
+  ADAS prototype using stereo cameras, lane detection, collision avoidance, sign/object detection, and distance calculation.
+
+Summer project direction:
+  Move from perception-only embedded AI into computer + renewable systems:
+    - FPGA/embedded renewable monitoring
+    - solar/BESS telemetry and SCADA-style dashboards
+    - digital communication for reliable telemetry
+    - basic networking for infrastructure awareness
+```
+
+Best project story:
+
+```text
+solar-tracker-bess solar:
+  strongest Australia relevance
+  connects renewable energy, BESS, grid integration, embedded control, FPGA, SCADA-style monitoring, and AI/data monitoring
+
+fpga-digital-communications digital communication:
+  strong supporting technical project
+  shows DSP, modulation, telemetry, and real-time HDL implementation
+
+network-telemetry-dashboard network:
+  basic supporting infrastructure project
+  shows Ethernet metadata, monitoring, and packet-level literacy
+```
+
+Required demo material for each project:
+
+```text
+1. 30-90 second demo video
+2. One architecture diagram
+3. One performance graph
+4. GitHub README
+5. Short technical report
+6. CV bullet
+```
+
+Example CV bullets:
+
+```text
+Solar:
+Designed an FPGA-based low-voltage solar/BESS monitoring prototype with MPPT simulation, real-time voltage/current sensing, PWM generation, protection logic, and Jetson Orin Nano dashboarding for SCADA-style fault and shading analysis.
+
+Digital communication:
+Implemented an FPGA digital communication prototype with QPSK/16-QAM mapping, OFDM framing, BER measurement, and PC/Orin-based link monitoring for telemetry and adaptive communication experiments.
+
+Network:
+Developed a basic FPGA-assisted network telemetry prototype that parses Ethernet/IP/TCP/UDP metadata and demonstrates infrastructure monitoring fundamentals.
+```
+
+Application positioning:
+
+```text
+Use solar/BESS project first when applying to:
+  renewable energy
+  solar and BESS
+  grid integration
+  power systems
+  smart grid
+  EPC/project engineering
+  SCADA/commissioning
+  embedded systems
+  sustainable engineering
+
+Use digital communication project first when applying to:
+  telecommunications
+  signal processing
+  electrical/electronics engineering
+  embedded/FPGA systems
+
+Use network project only as supporting evidence for:
+  basic networking
+  infrastructure monitoring
+  Ethernet literacy
+  computer engineering breadth
+```
+
+EMMS / renewable networking angle:
+
+```text
+Before contacting EMMS or another renewable energy company, prepare:
+  - 1-page CV
+  - 1-page project portfolio summary
+  - short explanation of why solar+BESS/grid integration fits your path
+  - 3-5 questions about junior renewable engineering skills in Australia
+
+Do not ask for a job first.
+Ask for advice about which skills, tools, and project proof matter most.
+```
+
+Quality bar:
+
+```text
+A small project with clean demo, metrics, and report is stronger than a large unfinished system.
+Each project should show:
+  - design discipline
+  - measurable result
+  - hardware/software boundary
+  - readable documentation
+```

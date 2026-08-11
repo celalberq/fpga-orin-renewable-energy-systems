@@ -1,0 +1,104 @@
+L1 Design: Network Project
+==========================
+
+Document status
+---------------
+
+```text
+ORIGINAL DESIGN TARGET / PLANNING BASELINE
+
+This file preserves the initial project ambition. It is not an as-built
+specification and must not be read as a claim that every item below was
+implemented. Current delivered scope is documented in `network-telemetry-dashboard/README.md` and
+`system-integration/current_system_status_2026_08_11.txt`.
+```
+
+Delivered baseline - 2026-08-11
+-------------------------------
+
+```text
+Implemented:
+  Live UDP renewable telemetry transport and forwarding.
+  Packet validity, sequence-gap, stale-link, warning, and recovery states.
+  Controlled drop/corruption/duplicate reliability proxy.
+  Browser dashboard with tracker, panel, BESS, protection, and link metrics.
+  CSV evidence logging and final 368/368 zero-gap dashboard run.
+
+Not implemented:
+  Live Nexys Ethernet ingress, FPGA Ethernet/IP/TCP/UDP parser, mirrored-switch
+  monitor appliance, inline packet forwarding, flow-table acceleration,
+  production security controls, or AI anomaly classification.
+```
+
+Project title:
+
+FPGA-Accelerated Network Telemetry and AI Anomaly Detection Appliance
+
+Original main goal:
+
+Create an edge network device where the FPGA extracts packet and flow metadata in real time while the Orin Nano Super performs anomaly detection, visualization, and logging.
+
+Original target architecture:
+
+Monitor mode MVP:
+
+```text
+Client/server traffic
+  -> managed switch mirror port
+  -> FPGA Ethernet input
+  -> packet parser and counters
+  -> metadata stream
+  -> Orin Nano dashboard and anomaly detector
+```
+
+Inline mode extension:
+
+```text
+Ethernet in
+  -> FPGA parser and rule engine
+  -> Ethernet out
+  -> Orin Nano control plane and AI analytics
+```
+
+Original planned FPGA role:
+
+```text
+1. Receive Ethernet frames.
+2. Parse Ethernet, IPv4, TCP, UDP, and ICMP headers.
+3. Count packets, bytes, protocol types, and flows.
+4. Extract source/destination IPs and ports.
+5. Apply simple rule flags.
+6. Stream compact metadata to Orin.
+```
+
+Original planned Orin Nano role:
+
+```text
+1. Dashboard for packet rates, top flows, and alerts.
+2. Anomaly detection from FPGA metadata.
+3. Dataset logging for normal and abnormal traffic.
+4. Experiment automation with iperf3, ping, and scripted traffic.
+```
+
+Original MVP scope:
+
+```text
+1. Monitor mode with one Ethernet input.
+2. No packet forwarding at first.
+3. Parse metadata and display it live.
+4. Detect traffic bursts, scans, and unusual protocol patterns.
+```
+
+Original success metrics:
+
+```text
+1. FPGA receives traffic from a mirror port.
+2. FPGA extracts header metadata.
+3. Orin dashboard shows live packet and flow statistics.
+4. At least three traffic patterns are tested: normal, scan, flood/burst.
+5. AI or rule-based anomaly alert is generated.
+```
+
+CV value:
+
+This project demonstrates FPGA packet processing, networking, cybersecurity, edge AI, embedded Linux, and measurable real-time system design.

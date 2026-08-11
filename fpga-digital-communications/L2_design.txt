@@ -1,0 +1,105 @@
+L2 Design: Digital Communication Project
+========================================
+
+Detailed system blocks:
+
+```text
+Shared solar-tracker-bess telemetry packet
+  -> frame builder
+  -> CRC-8 / later stronger CRC
+  -> scrambler
+  -> QPSK / 16-QAM mapper
+  -> pilot insertion
+  -> OFDM IFFT
+  -> cyclic prefix
+  -> DAC path or internal channel
+
+RX path
+  -> ADC path or internal channel
+  -> synchronization
+  -> cyclic prefix removal
+  -> FFT
+  -> channel estimate
+  -> equalizer
+  -> demapper
+  -> BER and packet metric unit
+
+Control path
+  -> FPGA telemetry FIFO
+  -> UART/SPI/Ethernet to Orin
+  -> Python dashboard and logger
+```
+
+Implementation levels:
+
+```text
+Level A: shared packet framing + CRC simulation
+Level B: FPGA frame builder/checker digital loopback
+Level C: QPSK loopback with shared packet payload
+Level D: FPGA loopback with configurable noise/channel model
+Level E: ADC/DAC wired loopback
+Level F: optional RF experiment
+```
+
+FPGA modules to create later:
+
+```text
+frame_builder.v
+crc8.v
+error_injector.v
+frame_checker.v
+tx_bit_source.v
+qam_mapper.v
+ofdm_framer.v
+fft_ifft_wrapper.v
+cyclic_prefix.v
+channel_model.v
+sync_detector.v
+qam_demapper.v
+ber_counter.v
+telemetry_uart_or_spi.v
+top_digital_comm.v
+```
+
+Orin software modules to create later:
+
+```text
+telemetry_reader.py
+dashboard_app.py
+experiment_runner.py
+plot_constellation.py
+adaptive_modulation_model.py
+```
+
+Initial interface recommendation:
+
+```text
+FPGA to Orin:
+  UART first for metrics and debug.
+  SPI second for higher telemetry rate.
+  Ethernet later if the final FPGA board has stable Ethernet examples.
+
+FPGA to analog front-end:
+  Start with internal loopback.
+  Then add SPI ADC or simple DAC/PWM-DAC path.
+```
+
+Risk control:
+
+```text
+1. Do not start with RF hardware.
+2. Do not depend on expensive SDR at the beginning.
+3. Make the baseband chain demonstrable even with digital loopback.
+4. Keep RF as a portfolio extension, not the MVP blocker.
+```
+
+Deliverables:
+
+```text
+1. L1 and L2 design docs.
+2. HDL simulation plots.
+3. FPGA digital-loopback demo.
+4. Orin dashboard screenshot.
+5. BER/SNR/channel experiment report.
+6. Final short demo video.
+```

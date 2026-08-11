@@ -1,0 +1,90 @@
+FPGA Digital Communications Digital Communication Strengthening Plan
+===============================================
+
+Status
+------
+
+```text
+TRACKER PAYLOAD SIMULATION PASS
+```
+
+Purpose
+-------
+
+Make the digital communication project support the main solar/BESS project,
+instead of becoming a separate isolated modulation demo.
+
+Current proof
+-------------
+
+```text
+1. p3 packet checksum and sequence validation: working.
+2. FPGA comm frame/CRC loopback: board pass.
+3. QPSK packet-link simulation: done.
+4. QPSK mapper/demapper loopback: board pass.
+5. QPSK channel/noise model: board pass.
+6. OFDM packet-link simulation: done.
+7. OFDM resource-grid counter: board pass.
+8. OFDM CP/grid sequencer: ready for board.
+9. Dashboard link health: working at UDP/dashboard layer.
+10. Tracker/INA226 packet CRC framing: simulation pass.
+11. Tracker/INA226 QPSK packet link: simulation pass.
+12. Tracker/INA226 OFDM packet link: simulation pass.
+```
+
+Next stronger version
+---------------------
+
+```text
+1. Keep p3 real-sensor telemetry as the small FPGA-board payload.
+2. Use tracker/INA226 telemetry as the stronger system-level payload.
+3. Add a link profile field on the PC/Orin side:
+     crc_only
+     qpsk_model
+     ofdm_model
+4. Add packet reliability metrics:
+     valid packets
+     invalid packets
+     sequence gaps
+     CRC fail count
+     estimated BER
+     frame error rate
+5. Show those metrics on the dashboard as the digital communication layer.
+6. Update the next FPGA OFDM counter for the 133-byte tracker frame.
+```
+
+Why this is stronger
+--------------------
+
+```text
+The communication project will prove that renewable telemetry can be protected,
+framed, checked, and monitored through a noisy/packetized link.
+This is better for the CV than a modulation block with no application payload.
+```
+
+Buy decision
+------------
+
+```text
+Do not buy SDR/RF hardware yet.
+Do not buy FMC ADC/DAC yet.
+
+Use:
+  simulations
+  FPGA loopback
+  QPSK/OFDM channel models
+  dashboard reliability metrics
+
+Buy RF hardware only after the solar sensing and Orin pipeline are stable.
+```
+
+Board note
+----------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+```

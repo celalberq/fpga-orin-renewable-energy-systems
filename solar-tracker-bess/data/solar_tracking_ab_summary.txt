@@ -1,0 +1,23 @@
+Solar Tracking A/B Evidence Summary
+====================================
+
+Fixed log: solar-tracker-bess\data\solar_fixed_ldr_ina226.csv
+Tracking log: solar-tracker-bess\data\solar_tracking_ldr_ina226.csv
+Power source: MCP3208 panel voltage with 1000-ohm resistive-load estimate
+
+Result
+------
+
+Fixed mean power: 0.009 mW
+Tracking mean power: 0.011 mW
+Tracking mean-power gain: 24.141%
+Fixed integrated energy: 0.000144 mWh
+Tracking integrated energy: 0.000179 mWh
+Tracking energy gain: 24.229%
+
+Quality
+-------
+
+Fixed samples/duration: 113 / 56.5 s
+Tracking samples/duration: 113 / 56.5 s
+Tracking detection/locked: 100.0% / 82.3%

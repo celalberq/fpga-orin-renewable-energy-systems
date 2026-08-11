@@ -12,10 +12,14 @@ Thumbs.db
 *.inspect.ndjson
 
 # Temporary document/presentation render products.
-main_layout/demo_evidence/final_report/_build/
-main_layout/demo_evidence/final_report/_qa_tmp/
-main_layout/demo_evidence/final_presentation/_build/
-main_layout/demo_evidence/final_presentation/_qa_tmp/
+system-integration/demo_evidence/final_report/_build/
+system-integration/demo_evidence/final_report/_qa_tmp/
+system-integration/demo_evidence/final_report/lo-profile-renamed/
+system-integration/demo_evidence/final_report/qa-renamed/
+system-integration/demo_evidence/final_report/qa-temp/
+system-integration/demo_evidence/final_presentation/_build/
+system-integration/demo_evidence/final_presentation/_qa_tmp/
+system-integration/demo_evidence/final_presentation/qa-renamed/
 
 .Xil/
 *.jou

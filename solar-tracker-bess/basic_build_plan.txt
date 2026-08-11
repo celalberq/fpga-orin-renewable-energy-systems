@@ -1,0 +1,121 @@
+Basic Build Plan: solar-tracker-bess Solar Renewable Energy
+===============================================
+
+Project:
+
+FPGA-Based Solar MPPT Controller with PC/Orin Monitoring
+
+Goal of this basic build:
+
+Define the safe low-voltage solar control system before coding HDL or connecting power electronics.
+
+We do this:
+
+```text
+1. Build a low-voltage solar MPPT architecture.
+2. Start with simulation and PWM/control design.
+3. Define voltage/current sensing path.
+4. Define MPPT state machine.
+5. Define protection logic and telemetry fields.
+```
+
+Add these:
+
+```text
+Design blocks:
+  - voltage input measurement
+  - current input measurement
+  - sample filter
+  - power calculator
+  - MPPT controller
+  - PWM generator
+  - fault/protection logic
+  - telemetry output
+
+Telemetry fields:
+  - project name
+  - voltage
+  - current
+  - power
+  - duty cycle
+  - MPPT direction
+  - fault flag
+  - operating state
+
+Folders already prepared:
+  - code/hdl
+  - code/sim
+  - code/pc_app
+  - code/tests
+  - hardware/constraints
+  - hardware/pin_maps
+```
+
+This will achieve:
+
+```text
+1. A safe first solar project that does not start with high-risk power hardware.
+2. A clear MPPT controller design before connecting a converter.
+3. A measurable renewable-energy demo path.
+4. A strong Australia-facing CV project.
+5. A clean transition from PC dashboard to Orin dashboard later.
+```
+
+Then code part:
+
+```text
+First HDL files:
+  - pwm_generator.v: DONE
+  - uart_tx.v: DONE
+  - solar_pwm_uart_top.v: DONE
+  - solar_scaled_uart_top.v: DONE
+  - solar_packet_v1_uart_top.v: DONE
+  - solar_mppt_auto_uart_top.v: LIVE PASS
+  - sample_filter.v: later
+  - power_calculator.v: later
+  - mppt_perturb_observe.v: later
+  - fault_protection.v: later
+  - telemetry_formatter.v: partly covered by solar_pwm_uart_top.v
+
+First simulation files:
+  - pv_curve_model.py
+  - mppt_reference_model.py
+  - test_pwm_generator.sv
+  - test_mppt_controller.sv
+  - expected_mppt_steps.csv
+
+First PC app files:
+  - solar_log_reader.py
+  - mppt_plotter.py
+  - solar_dashboard_basic.py
+```
+
+Not included in first version:
+
+```text
+1. Grid connection
+2. Battery charging
+3. High-voltage solar panel
+4. Real buck converter control
+5. Camera-based panel soiling detection
+```
+
+Upgrade path:
+
+```text
+Version 1: MPPT and PWM simulation
+Version 2: FPGA PWM output and fake sensor telemetry: DONE
+Version 3: auto MPPT control loop with dashboard: LIVE PASS
+Version 4: real voltage/current sensor input
+Version 5: low-voltage buck converter
+Version 6: Orin dashboard and fault/shading intelligence
+```
+
+Current board test:
+
+```text
+solar-tracker-bess/docs/board_test_01_pwm_uart.txt
+solar-tracker-bess/docs/board_test_02_scaled_telemetry.txt
+solar-tracker-bess/docs/board_test_03_shared_packet_v1.txt
+solar-tracker-bess/docs/board_test_04_auto_mppt_uart_dashboard.txt
+```

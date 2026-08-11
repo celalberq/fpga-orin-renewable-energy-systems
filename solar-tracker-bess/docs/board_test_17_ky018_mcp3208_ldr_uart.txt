@@ -1,0 +1,222 @@
+Solar Tracker and BESS Board Test 17: Four KY-018 Sensors and Panel Voltage
+===========================================================
+
+Status
+------
+
+```text
+PASS
+```
+
+Date
+----
+
+```text
+2026-08-08
+```
+
+Goal
+----
+
+Read the solar-panel divider and four KY-018 light sensors through one MCP3208.
+This is a sensor bring-up test; the panel may remain physically separate from
+the pan-tilt mechanism.
+
+Verified electrical checks
+--------------------------
+
+```text
+MCP3208 VDD pin 16: 3.3V
+MCP3208 VREF pin 15: 3.3V
+Panel divider midpoint: 0.3V during the check
+All four KY-018 signals: about 0.9V ambient, up to 3.3V with flashlight
+```
+
+ADC channel map
+---------------
+
+```text
+CH0 / pin 1: panel 100k/22k divider midpoint
+CH1 / pin 2: GND
+CH2 / pin 3: top-left KY-018 signal
+CH3 / pin 4: top-right KY-018 signal
+CH4 / pin 5: bottom-left KY-018 signal
+CH5 / pin 6: bottom-right KY-018 signal
+```
+
+Vivado build
+------------
+
+```text
+Part: xc7a200tsbg484-1
+Top: solar_ldr_uart_top
+
+Sources:
+  solar-tracker-bess/code/hdl/uart_tx.v
+  solar-tracker-bess/code/hdl/mcp3208_reader.v
+  solar-tracker-bess/code/hdl/solar_ldr_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_ldr_uart.xdc
+```
+
+Run the monitor
+---------------
+
+```text
+cd "<repository-root>"
+python solar-tracker-bess/code/pc_app/ldr_uart_monitor.py --port COM6 --baud 115200
+```
+
+Expected line
+-------------
+
+```text
+ldr,seq=00001,pv=01665,tl=1117,tr=1200,bl=1300,br=1400
+```
+
+Pass conditions
+---------------
+
+```text
+1. A valid line arrives every 0.5 seconds.
+2. Panel voltage follows the CH0 divider measurement.
+3. Flashing or covering one KY-018 changes only its matching labeled count.
+4. Every LDR count remains between 0 and 4095.
+5. LED7 warns that at least one LDR is close to ADC full scale.
+```
+
+Observed live result
+--------------------
+
+```text
+Packet sequence: 00058 through 00112, no gaps
+Reported panel voltage: 1617mV through 3901mV
+Top-left LDR: 1591 through 3705 counts
+Top-right LDR: 415 through 3660 counts
+Bottom-left LDR: 775 through 3799 counts
+Bottom-right LDR: 717 through 3846 counts
+
+UART packet format: PASS
+MCP3208 CH0 panel sensing: PASS
+MCP3208 CH2-CH5 LDR sensing: PASS
+Four independent LDR responses: PASS
+ADC range protection, all readings within 0-4095: PASS
+```
+
+Representative packets
+----------------------
+
+```text
+ldr,seq=00058,pv=01850,tl=1982,tr=1389,bl=2268,br=2015
+ldr,seq=00086,pv=03901,tl=3606,tr=3644,bl=3779,br=3846
+ldr,seq=00112,pv=01827,tl=1707,tr=1444,bl=1889,br=2104
+```
+
+Centered calibration run
+------------------------
+
+```text
+Date: 2026-08-08
+Packets: 01280 through 01303, 24 consecutive samples
+Raw data: solar-tracker-bess/data/ldr_center_calibration_2026_08_08.csv
+
+Mean TL: 2892.54 counts
+Mean TR: 2835.63 counts
+Mean BL: 3121.79 counts
+Mean BR: 3257.29 counts
+
+Mean normalized horizontal error, (right-left)/total: +0.00636
+Mean normalized vertical error, (bottom-top)/total: +0.05414
+Mean right/left ratio: 1.01283
+Mean bottom/top ratio: 1.11471
+```
+
+The closed-loop controller should subtract the normalized center errors before
+applying its deadband. This prevents sensor gain and mounting offsets from
+causing motion when the lamp is centered.
+
+Sensor-left calibration run
+---------------------------
+
+```text
+Date: 2026-08-08
+Packets: 01603 through 01622, 20 consecutive samples
+Raw data: solar-tracker-bess/data/ldr_left_calibration_2026_08_08.csv
+
+Mean left sum: 6613.90 counts
+Mean right sum: 6365.60 counts
+Mean raw normalized horizontal error: -0.01922
+Mean center-corrected horizontal error: -0.02558
+Center-corrected horizontal range: about -0.0292 through -0.0146
+```
+
+The sensor-left sign is therefore negative when horizontal error is defined as
+`(right-left)/total`. The left run remains outside a 0.01 normalized deadband,
+while the centered run remains inside it.
+
+Sensor-right attempt 1
+----------------------
+
+```text
+Date: 2026-08-08
+Packets: 01788 through 01803, 16 consecutive samples
+Raw data: solar-tracker-bess/data/ldr_right_attempt_1_2026_08_08.csv
+
+Mean left sum: 6221.13 counts
+Mean right sum: 6200.75 counts
+Mean raw normalized horizontal error: -0.00163
+Mean center-corrected horizontal error: -0.00799
+Center-corrected range: about -0.0157 through -0.0003
+Result: INCONCLUSIVE; position is mostly inside the proposed 0.01 deadband
+```
+
+Repeat the sensor-right test at a larger angle toward the physical TR/BR side.
+Do not infer the right-motion sign from this attempt.
+
+Continuous four-direction sweep
+-------------------------------
+
+```text
+Date: 2026-08-08
+Summary: solar-tracker-bess/data/ldr_directional_sweep_summary_2026_08_08.csv
+
+Left,  packets 02226-02236: corrected horizontal error -1.624%
+Right, packets 02243-02253: corrected horizontal error +1.504%
+Up,    packets 02261-02271: corrected vertical error   -0.975%
+Down,  packets 02278-02286: corrected vertical error   +1.619%
+
+Horizontal sign: PASS
+Vertical sign: PASS
+Four-direction separation: PASS
+Recommended initial normalized deadband: 0.007 (0.7%)
+Recommended calibration: calculate center offsets at controller startup
+```
+
+The local center means drifted between holds, but noise inside each stable hold
+was small. Startup center calibration is therefore preferable to permanently
+hard-coding one earlier center offset.
+
+LED map
+-------
+
+```text
+LED0 ADC transaction activity
+LED1 half-second heartbeat
+LED2 UART activity
+LED3 right sum greater than left sum
+LED4 left sum greater than right sum
+LED5 bottom sum greater than top sum
+LED6 top sum greater than bottom sum
+LED7 at least one LDR count above 4000
+```
+
+Notes
+-----
+
+```text
+Live data confirmed that KY-018 counts increase with stronger light. The four
+modules still need a uniform-light calibration before raw left/right differences
+drive a servo. A detached panel can verify voltage sensing, but it cannot
+demonstrate that pan motion improves panel power.
+```

@@ -1,0 +1,196 @@
+FPGA Digital Communications Board Test 07: Tracker OFDM Payload Placer
+=================================================
+
+Goal
+----
+
+Prove that the Nexys Video can walk the tracker OFDM transmit structure, not only
+print the final packet constants.
+
+The FPGA sequencer walks:
+
+```text
+12 OFDM symbols
+64 FFT bins per symbol
+16 cyclic-prefix samples per symbol
+80 transmitted samples per symbol
+```
+
+It classifies each transmitted position as cyclic prefix, FFT null/guard/DC bin,
+pilot bin, real tracker QPSK payload, or QPSK padding.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  tracker_ofdm_payload_placer_top
+
+HDL sources:
+  fpga-digital-communications/code/hdl/uart_tx.v
+  fpga-digital-communications/code/hdl/tracker_ofdm_payload_placer_top.v
+
+Constraints:
+  fpga-digital-communications/hardware/constraints/nexys_video_tracker_ofdm_payload_placer.xdc
+```
+
+Expected placement counts
+-------------------------
+
+```text
+OFDM symbols:
+  12
+
+Transmitted samples:
+  960
+
+FFT-region samples:
+  768
+
+Cyclic-prefix samples:
+  192
+
+Pilot bins:
+  48
+
+Null/guard/DC bins:
+  144
+
+Payload QPSK symbols:
+  532
+
+Padding QPSK symbols:
+  44
+```
+
+Why these numbers are correct
+-----------------------------
+
+```text
+tx_s:
+  12 * (64 + 16) = 960
+
+fft_s:
+  12 * 64 = 768
+
+cp_s:
+  12 * 16 = 192
+
+pilot:
+  12 * 4 = 48
+
+null:
+  12 * 12 = 144
+
+data slots:
+  12 * 48 = 576
+
+payload:
+  133 bytes * 8 bits / 2 bits per QPSK symbol = 532
+
+pad_q:
+  576 - 532 = 44
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  Constant OK.
+
+LD1:
+  Heartbeat toggles once per report.
+
+LD2:
+  UART busy.
+
+LD3:
+  Sequencer running.
+
+LD4-LD7:
+  Fixed 0111 marker for tracker OFDM payload placer.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  Usually COM6, but confirm in Windows Device Manager.
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected output
+---------------
+
+```text
+p1op,seq=00001,ofdm=012,tx_s=00960,fft_s=00768,cp_s=00192,pilot=00048,null=00144,payload=00532,pad_q=00044,ok=1
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY/TeraTerm receives p1op lines on the J13 UART COM port.
+3. seq increments once per report.
+4. tx_s=00960, fft_s=00768, cp_s=00192.
+5. pilot=00048, null=00144.
+6. payload=00532, pad_q=00044.
+7. ok=1.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed output:
+
+```text
+p1op,seq=00011,ofdm=012,tx_s=00960,fft_s=00768,cp_s=00192,pilot=00048,null=00144,payload=00532,pad_q=00044,ok=1
+p1op,seq=00016,ofdm=012,tx_s=00960,fft_s=00768,cp_s=00192,pilot=00048,null=00144,payload=00532,pad_q=00044,ok=1
+p1op,seq=00019,ofdm=012,tx_s=00960,fft_s=00768,cp_s=00192,pilot=00048,null=00144,payload=00532,pad_q=00044,ok=1
+```
+
+Confirmed:
+
+```text
+seq increments once per report.
+tx_s=00960, fft_s=00768, cp_s=00192.
+pilot=00048, null=00144.
+payload=00532, pad_q=00044.
+ok=1.
+```
+
+Note:
+
+```text
+Some terminal copies may show long spaces inside the line when the 113-character
+UART packet wraps on screen. The observed values are correct.
+```
+
+Next step after pass
+--------------------
+
+```text
+Add a board-level frame encoder that accepts tracker telemetry fields, builds the
+133-byte frame shape, and feeds the OFDM placer counters.
+```

@@ -1,0 +1,129 @@
+FPGA Digital Communications Board Test 05: OFDM CP/Grid Sequencer
+============================================
+
+Goal
+----
+
+Add a real FPGA sequencer for the OFDM timing skeleton before implementing full FFT/IFFT.
+
+The FPGA steps through:
+
+```text
+8 OFDM symbols
+16 cyclic-prefix samples per symbol
+64 FFT/body samples per symbol
+48 data resource slots per symbol
+4 pilot resource slots per symbol
+```
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  ofdm_cp_grid_sequencer_top
+
+HDL sources:
+  fpga-digital-communications/code/hdl/uart_tx.v
+  fpga-digital-communications/code/hdl/ofdm_cp_grid_sequencer_top.v
+
+Constraints:
+  fpga-digital-communications/hardware/constraints/nexys_video_ofdm_cp_grid_sequencer.xdc
+```
+
+Expected counts
+---------------
+
+```text
+OFDM symbols:
+  8
+
+CP samples:
+  8 * 16 = 128
+
+FFT/body samples:
+  8 * 64 = 512
+
+Total samples:
+  8 * (16 + 64) = 640
+
+Data resource slots:
+  8 * 48 = 384
+
+Pilot resource slots:
+  8 * 4 = 32
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  Last sequencer check OK.
+
+LD1:
+  Sequencer running.
+
+LD2:
+  UART busy.
+
+LD3:
+  Heartbeat toggles once per report.
+
+LD4-LD7:
+  Fixed 0110 marker for OFDM CP/grid sequencer.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected output
+---------------
+
+```text
+p1c,seq=00001,ofdm=008,cp_s=00128,fft_s=00512,tot_s=00640,data_s=00384,pil_s=00032,ok=1
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY/TeraTerm receives p1c lines on COM6.
+3. seq increments once per report.
+4. cp_s=00128, fft_s=00512, tot_s=00640.
+5. data_s=00384, pil_s=00032.
+6. ok=1.
+```
+
+Why this matters
+----------------
+
+```text
+This proves the OFDM scheduling skeleton:
+  cyclic-prefix phase
+  FFT/body phase
+  resource-grid data/pilot slot accounting
+
+Next staged step can add actual sample buffers or a vendor FFT/IFFT IP path.
+```

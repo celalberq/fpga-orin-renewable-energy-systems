@@ -1,0 +1,191 @@
+Solar Tracker and BESS Board Test 16: Fixed vs LDR-Tracking Solar Power
+=======================================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Date
+----
+
+```text
+2026-08-08
+```
+
+Goal
+----
+
+Compare solar load power and integrated energy with the panel held at 90/90
+against the same panel using the stationary four-LDR absolute tracker.
+
+Required Physical State
+-----------------------
+
+```text
+Solar panel -> INA226 VIN+/VIN- path -> stable load
+Panel negative / load negative -> INA226 GND common reference
+INA226 VBUS sense pin -> INA226 VIN- / load-side node
+INA226: bus 7, address 0x44, R100 / 0.1-ohm shunt
+PCA9685: bus 7, address 0x40
+Pan servo: channel 15
+Tilt servo: channel 12
+Stationary four-LDR cross -> MCP3208 -> Nexys UART -> Orin /dev/ttyUSB0
+```
+
+Keep the same panel, load, lamp position, distance, and duration in both runs.
+Warm the lamp and load first. Use a strong lamp or sunlight; weak room lighting
+previously produced near-zero solar power.
+
+Live Result
+-----------
+
+The available indoor hand LED was mounted in one fixed off-axis position. Run
+A held the panel at 90/90. Run B started at 90/90, converged to approximately
+57/124, and remained locked for 82.3% of the analyzed window.
+
+```text
+Analysis method: MCP3208 panel voltage with known 1k-ohm resistive load
+Startup discarded: 3 seconds per run
+Usable samples: 113 fixed / 113 tracking
+Active duration: 56.543 s fixed / 56.542 s tracking
+
+Fixed mean voltage: 95.655 mV
+Tracking mean voltage: 106.593 mV
+Fixed mean estimated load power: 0.009 mW
+Tracking mean estimated load power: 0.011 mW
+Mean-power gain: 24.141%
+
+Fixed integrated energy: 0.000144 mWh
+Tracking integrated energy: 0.000179 mWh
+Integrated-energy gain: 24.229%
+
+Tracking detection: 100.0%
+Tracking locked: 82.3%
+Tracking mean target error: 3.574 degrees
+```
+
+This result demonstrates repeatable improvement under the available weak-light
+setup. It does not replace a future outdoor or high-illumination INA226 test.
+
+Transfer Updated Tracker
+------------------------
+
+From Windows PowerShell:
+
+```powershell
+scp "solar-tracker-bess\code\orin_app\ldr_servo_tracker.py" msi@192.168.1.30:/home/msi/solar-tracker-bess/code/orin_app/
+```
+
+Stage 1: One Center Calibration
+-------------------------------
+
+Center the lamp over the stationary LDR cross and keep it still:
+
+```bash
+cd /home/msi
+python3 solar-tracker-bess/code/orin_app/ldr_servo_tracker.py \
+  --port /dev/ttyUSB0 \
+  --sensor-mount fixed \
+  --calibrate-only \
+  --calibration-out solar-tracker-bess/data/ldr_ab_calibration.json
+```
+
+After calibration, move the lamp to one clearly off-center position and mark
+that position. Do not move the lamp, LDR cross, panel base, load, or wiring
+between Run A and Run B.
+
+Run A: Fixed 90/90 Panel
+------------------------
+
+```bash
+cd /home/msi
+python3 solar-tracker-bess/code/orin_app/ldr_servo_tracker.py \
+  --port /dev/ttyUSB0 \
+  --calibration-in solar-tracker-bess/data/ldr_ab_calibration.json \
+  --sensor-mount fixed --control-mode sequential \
+  --max-packets 120 \
+  --drive-servos --disable-tracking \
+  --bus 7 --addr 0x40 --ina-enable --ina-addr 0x44 --shunt-ohms 0.1 \
+  --pan-channel 15 --tilt-channel 12 \
+  --pan-start 90 --tilt-start 90 \
+  --pan-min 10 --pan-max 170 --tilt-min 10 --tilt-max 170 \
+  --fixed-tilt-gain 120 --fixed-center-deadband 0.015 \
+  --fixed-hemisphere-deadband 0.05 --target-deadband-deg 1.0 \
+  --min-step 0.5 --max-step 3.0 --stable-samples 2 --invert-tilt \
+  --log solar-tracker-bess/data/solar_fixed_ldr_ina226.csv --overwrite-log
+```
+
+Run B: Active LDR Tracking
+--------------------------
+
+Run immediately after Run A without moving the light or hardware:
+
+```bash
+cd /home/msi
+python3 solar-tracker-bess/code/orin_app/ldr_servo_tracker.py \
+  --port /dev/ttyUSB0 \
+  --calibration-in solar-tracker-bess/data/ldr_ab_calibration.json \
+  --sensor-mount fixed --control-mode sequential \
+  --max-packets 120 \
+  --drive-servos \
+  --bus 7 --addr 0x40 --ina-enable --ina-addr 0x44 --shunt-ohms 0.1 \
+  --pan-channel 15 --tilt-channel 12 \
+  --pan-start 90 --tilt-start 90 \
+  --pan-min 10 --pan-max 170 --tilt-min 10 --tilt-max 170 \
+  --fixed-tilt-gain 120 --fixed-center-deadband 0.015 \
+  --fixed-hemisphere-deadband 0.05 --target-deadband-deg 1.0 \
+  --min-step 0.5 --max-step 3.0 --stable-samples 2 --invert-tilt \
+  --log solar-tracker-bess/data/solar_tracking_ldr_ina226.csv --overwrite-log
+```
+
+Analysis
+--------
+
+Transfer both CSV files to the Windows workspace, then run:
+
+```powershell
+python solar-tracker-bess/code/pc_app/solar_tracking_ab_analyzer.py `
+  --fixed-log solar-tracker-bess/data/solar_fixed_ldr_ina226.csv `
+  --tracking-log solar-tracker-bess/data/solar_tracking_ldr_ina226.csv `
+  --panel-load-ohms 1000
+```
+
+The indoor hand LED produces current below the useful INA226 measurement floor.
+With the fixed 1k-ohm load still connected, this option calculates load current
+and power from the calibrated MCP3208 panel-voltage field using P = V^2/R. The
+report explicitly labels this as a resistive-load estimate. Omit
+`--panel-load-ohms` when analyzing direct INA226 power under stronger light.
+
+Outputs:
+
+```text
+solar-tracker-bess/data/solar_tracking_ab_summary.txt
+solar-tracker-bess/data/solar_tracking_ab_metrics.csv
+```
+
+Evidence Quality
+----------------
+
+```text
+Both logs should have at least 20 usable samples after startup removal.
+Run durations should be within 20% of each other.
+Mean power should be positive and stable.
+The `--panel-load-ohms 1000` analysis is valid only while the same measured
+1k-ohm resistor remains connected across the panel output in both runs.
+Do not move the lamp between runs.
+Repeat in reverse order later to expose lamp warm-up or time bias.
+The analyzer reports measured gain or loss; do not assume a positive result.
+```
+
+Evidence Files
+--------------
+
+```text
+solar-tracker-bess/data/solar_fixed_ldr_ina226.csv
+solar-tracker-bess/data/solar_tracking_ldr_ina226.csv
+solar-tracker-bess/data/solar_tracking_ab_summary.txt
+solar-tracker-bess/data/solar_tracking_ab_metrics.csv
+```

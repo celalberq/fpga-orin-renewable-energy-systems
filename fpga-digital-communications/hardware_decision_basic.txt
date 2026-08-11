@@ -1,0 +1,49 @@
+Hardware Decision: fpga-digital-communications Digital Communication
+===============================================
+
+Current decision:
+
+Do not buy extra digital communication hardware yet.
+
+Reason:
+
+```text
+The first useful version can be built with:
+  - Python reference model
+  - HDL QPSK mapper/demapper
+  - FPGA internal loopback
+  - BER/error counters
+  - PC-side logs
+```
+
+Needed now:
+
+```text
+1. Nexys Video
+2. Laptop/PC
+3. USB programming cable, included with Nexys Video kit
+4. Nexys Video 12V supply, included with kit
+```
+
+Optional now:
+
+```text
+1. Ethernet cable
+2. Jumper wires
+```
+
+Buy later only after first code works:
+
+```text
+1. External ADC module
+2. External DAC module
+3. Pmod analog module
+4. SDR/RF hardware
+```
+
+Why this is enough:
+
+```text
+QPSK, BER, packet counters, and OFDM framing can be developed first without any RF hardware.
+The project becomes measurable before extra cost is added.
+```

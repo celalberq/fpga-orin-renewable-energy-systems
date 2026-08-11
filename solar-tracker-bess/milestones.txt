@@ -1,0 +1,63 @@
+Milestones: solar-tracker-bess Solar
+========================
+
+Milestone 1: MPPT simulation
+
+```text
+Output:
+  - PV curve model
+  - fixed duty comparison
+  - Perturb and Observe MPPT plot
+```
+
+Milestone 2: Sensor reading
+
+```text
+Output:
+  - ADC or INA226 reading
+  - voltage/current calibration table
+```
+
+Milestone 3: PWM generation
+
+```text
+Output:
+  - stable PWM waveform
+  - duty-cycle command interface
+
+Current status:
+  - PASS.
+  - PWM duty is controlled by SW0-SW7.
+  - LD0 shows PWM output.
+  - J13 / COM6 reports fake solar telemetry.
+  - Telemetry changes correctly when switches change.
+  - Shared packet v1 with seq, mppt, fault, and checksum is passing on hardware.
+  - Auto MPPT UART/dashboard build passed live on Nexys Video.
+```
+
+Milestone 4: Low-power control loop
+
+```text
+Output:
+  - safe low-voltage switching
+  - current limit test
+  - fault flag test
+```
+
+Milestone 5: MPPT demo
+
+```text
+Output:
+  - solar/DC input
+  - load
+  - Orin dashboard
+  - shading/input-change response plot
+
+Current status:
+  - solar_mppt_auto_uart_top.v created
+  - simulated PV curve uses SW0-SW2 as maximum-power-point selector
+  - SW3-SW5 adjust simulated irradiance/current
+  - SW7 injects demo fault/protection
+  - same UDP dashboard path is reused
+  - live dashboard pass shows automatic duty movement, MPPT state changes, and protection status
+```

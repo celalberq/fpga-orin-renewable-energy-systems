@@ -1,0 +1,135 @@
+Network Telemetry Dashboard Network Test 08: Tracker Bridge Status on Dashboard
+==========================================================
+
+Status
+------
+
+```text
+PASS
+```
+
+Goal
+----
+
+Show the fpga-digital-communications digital-communication bridge status directly inside the network-telemetry-dashboard
+dashboard while the live solar-tracker-bess tracker telemetry is flowing.
+
+This makes the dashboard prove two layers at the same time:
+
+```text
+1. Network layer:
+   UDP tracker packets arrive with sequence-gap tracking.
+
+2. Digital communication layer:
+   The same tracker packet is converted into a compact CRC/QPSK/OFDM frame
+   profile by fpga-digital-communications.
+```
+
+Data path
+---------
+
+```text
+Orin tracker + optional INA226
+  -> UDP JSON to PC port 5013
+  -> fpga-digital-communications tracker_udp_comm_bridge.py
+  -> enrich JSON with digital_comm metadata
+  -> UDP to dashboard on PC port 5011
+  -> network-telemetry-dashboard solar_live_dashboard.py
+```
+
+Run dashboard on PC
+-------------------
+
+Use a clean log name for this test:
+
+```text
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_live_dashboard.py --udp-host 0.0.0.0 --udp-port 5011 --http-host 127.0.0.1 --http-port 8085 --bess-load-w 0.1 --log network-telemetry-dashboard/data/solar_live_dashboard_bridge_status_log.csv
+```
+
+Open:
+
+```text
+http://127.0.0.1:8085
+```
+
+Run fpga-digital-communications bridge on PC
+-----------------------
+
+```text
+cd "<repository-root>"
+python fpga-digital-communications/code/pc_app/tracker_udp_comm_bridge.py --bind-host 0.0.0.0 --bind-port 5013 --forward-host 127.0.0.1 --forward-port 5011 --log fpga-digital-communications/data/tracker_udp_comm_bridge_status_log.csv
+```
+
+Run Orin tracker into the bridge
+--------------------------------
+
+Use the PC IPv4 address. Last working PC address was:
+
+```text
+192.168.1.219
+```
+
+Software tracker:
+
+```text
+cd /home/msi
+python3 solar-tracker-bess/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5013 --lock-error-deg 10
+```
+
+Software tracker plus INA226:
+
+```text
+python3 solar-tracker-bess/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5013 --lock-error-deg 10 --ina-enable --ina-bus 7 --ina-addr 0x44 --shunt-ohms 0.1
+```
+
+Expected dashboard result
+-------------------------
+
+```text
+Source:
+  Orin software solar tracker or Orin INA226 real solar sensor.
+
+Link State:
+  healthy
+
+Digital Comm Layer:
+  CRC/QPSK/OFDM
+
+Digital Comm detail:
+  frame 133B, 532 QPSK, 12 OFDM, gap 0
+
+Sequence gaps:
+  0
+```
+
+Observed result
+---------------
+
+```text
+Dashboard:
+  Link State = healthy
+  Digital Comm Layer = CRC/QPSK/OFDM
+  Detail = frame 133B, 532 QPSK, 12 OFDM, gap 0
+  Sequence gaps = 0
+  Invalid packets = 0
+
+Bridge terminal:
+  p1br,seq=00102,frame_b=00133,bits=01064,qpsk=00532,ofdm=012,pad_q=00044,gap=0,ok=1
+```
+
+Why this matters
+----------------
+
+```text
+solar-tracker-bess creates the renewable tracker data.
+fpga-digital-communications frames and profiles that data as a communication payload.
+network-telemetry-dashboard transports, logs, and visualizes both the network and digital-comm state.
+```
+
+Nexys Video Vivado part
+-----------------------
+
+```text
+xc7a200tsbg484-1
+```

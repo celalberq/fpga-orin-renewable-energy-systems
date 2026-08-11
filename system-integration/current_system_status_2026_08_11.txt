@@ -1,0 +1,85 @@
+Current System Status - 2026-08-11
+==================================
+
+High-Level Result
+-----------------
+
+The three project layers now operate as one live renewable-energy tracker and
+storage telemetry prototype.
+
+```text
+solar-tracker-bess renewable layer:
+  Four KY-018 sensors -> MCP3208 -> Nexys Video UART -> Jetson Orin tracker
+  PCA9685 drives real pan and tilt servos carrying the prototype solar panel
+  MCP3208 CH0 measures panel voltage across a known 1k-ohm load
+  INA226 measures protected 1S battery voltage and signed charge/discharge current
+
+fpga-digital-communications communication layer:
+  Mixed tracker/panel/BESS payload -> CRC frame -> QPSK/OFDM profile
+  Live unified frame: 157-byte payload, 161-byte frame, 644 QPSK symbols,
+  14 OFDM symbols, 28 padding symbols
+
+network-telemetry-dashboard network layer:
+  UDP forwarding -> packet/gap validation -> live dashboard -> CSV evidence
+```
+
+Validated Results
+-----------------
+
+```text
+Real two-axis LDR tracking: PASS
+Fixed-vs-tracking mean-power gain: +24.141%
+Panel shading warning and automatic recovery: PASS
+Real BESS fan-load discharge: approximately -0.683 W
+Real BESS supervised charging: +0.895 to +0.908 W
+Unified tracker+BESS baseline: 60/60 valid frames, 0 sequence gaps
+Unified baseline battery discharge: -0.636 to -0.638 W
+Edited unified evidence video: PASS
+Continuous idle/charge/idle/discharge/idle demo: 368/368 valid, 0 gaps
+Continuous demo tracker: 213 locked samples, 0.012-degree best error
+Continuous demo BESS: approximately +0.83 W charge / -0.64 W discharge
+```
+
+Primary Evidence
+----------------
+
+```text
+system-integration/demo_evidence/video/unified_tracker_bess_bidirectional_final_demo_2026-08-11.mp4
+fpga-digital-communications/data/unified_tracker_bess_bidirectional_demo_bridge.csv
+network-telemetry-dashboard/data/unified_tracker_bess_bidirectional_demo_dashboard.csv
+fpga-digital-communications/data/unified_tracker_bess_final_demo_bridge.csv
+network-telemetry-dashboard/data/unified_tracker_bess_final_demo_dashboard.csv
+solar-tracker-bess/docs/board_test_22_real_bess_ina226_discharge.txt
+solar-tracker-bess/docs/board_test_23_real_bess_charge_udp_dashboard.txt
+solar-tracker-bess/docs/board_test_24_unified_tracker_bess_discharge.txt
+solar-tracker-bess/docs/board_test_25_unified_tracker_bess_bidirectional_demo.txt
+```
+
+Safety And Honest Limitations
+-----------------------------
+
+```text
+The Orin and Nexys remain on their normal external supplies.
+The battery does not power the Orin or Nexys.
+The TP4056 USB input is disconnected while the fan load is connected.
+Temporary battery connections are for supervised bench testing only.
+The panel-power values are low indoor measurements from a handheld LED.
+The tracker mechanics and sensor cross are functional prototype construction.
+The communication layer is CRC/QPSK/OFDM profiling and FPGA pipeline proof,
+not a complete over-the-air RF modem.
+```
+
+Remaining Work
+--------------
+
+```text
+Required:
+  None for the validated portfolio baseline. The final report, architecture,
+  evidence plots, READMEs, presentation, and demo package are complete.
+
+Optional:
+  Outdoor sunlight measurements.
+  Mechanically secure battery terminals and enclosure.
+  Full FPGA IFFT/FFT modem or real RF/SDR extension.
+  Remote database/cloud deployment.
+```

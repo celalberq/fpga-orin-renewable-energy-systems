@@ -1,0 +1,79 @@
+Milestones: fpga-digital-communications Digital Communication
+========================================
+
+Milestone 1: Python simulation
+
+```text
+Output:
+  - shared telemetry packet framing
+  - CRC-8 error detection simulation
+  - QPSK mapper/demapper
+  - noise model
+  - BER plot
+
+Current status:
+  - shared_packet_comm_sim.py created and run
+  - shared_packet_comm_sim.csv generated
+  - board_test_01_comm_frame_loopback passed on Nexys Video
+  - qpsk_packet_link_sim.py created and run
+  - qpsk_packet_link_sim.csv generated
+  - qpsk_packet_link_constellation.csv generated
+```
+
+Milestone 2: HDL baseband blocks
+
+```text
+Output:
+  - frame/CRC loopback top
+  - mapper
+  - demapper
+  - BER counter
+  - testbench
+
+Current status:
+  - comm_frame_loopback_top.v created
+  - crc8_byte.v created
+  - UART telemetry output created
+  - frame/CRC loopback board test passed
+  - qpsk_mapper.v created
+  - qpsk_demapper.v created
+  - qpsk_loopback_top.v created
+  - QPSK loopback board test passed
+  - qpsk_channel_model_top.v created
+  - QPSK channel/noise model board test passed
+```
+
+Milestone 3: OFDM framing
+
+```text
+Output:
+  - pilot insertion
+  - cyclic prefix
+  - FFT/IFFT plan
+
+Current status:
+  - ofdm_packet_link_sim.py created and run
+  - ofdm_packet_link_sim.csv generated
+  - ofdm_resource_grid_example.csv generated
+  - ofdm_resource_grid_counter_top.v created
+  - first FPGA OFDM resource-grid counter passed on Nexys Video
+  - ofdm_cp_grid_sequencer_top.v created
+  - OFDM cyclic-prefix/resource-grid sequencer ready for Nexys Video board test
+```
+
+Milestone 4: FPGA loopback
+
+```text
+Output:
+  - internal link test
+  - telemetry stream
+  - Orin dashboard
+```
+
+Milestone 5: Optional analog/RF extension
+
+```text
+Output:
+  - ADC/DAC loopback or SDR experiment
+  - final plots and demo
+```

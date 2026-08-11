@@ -1,0 +1,137 @@
+Solar Tracker and BESS Board Test 25: Unified Tracker and Bidirectional BESS Demo
+=================================================================
+
+Date
+----
+
+2026-08-11
+
+Purpose
+-------
+
+Validate one uninterrupted run in which the real tracker, signed BESS
+telemetry, communication bridge, network dashboard, and CSV logging remain
+active while the battery path transitions through idle, charging, idle,
+discharging, and final idle states.
+
+Safety conditions
+-----------------
+
+```text
+TP4056 USB-C and the fan load were never connected simultaneously.
+The fan was disconnected before USB-C charging.
+USB-C was disconnected before the fan discharge path was connected.
+MT3608 remained disconnected.
+Orin and Nexys used their normal external supplies.
+The run remained supervised throughout.
+```
+
+Continuous state sequence
+-------------------------
+
+```text
+seq 000-156: idle
+seq 157-198: charging
+seq 199:     idle transition
+seq 200-201: charging contact transition
+seq 202:     idle transition
+seq 203-335: discharging
+seq 336-367: final idle
+```
+
+BESS result
+-----------
+
+```text
+Idle rows: 191
+Charging rows: 44
+Discharging rows: 133
+
+Charging current: +38.0 to +238.6 mA, approximately +230 mA when settled
+Charging power: +0.148 to +0.858 W, approximately +0.83 W average
+Charging voltage: 3.595 to 3.906 V
+
+Discharging current: -78.0 to -215.5 mA
+Discharging power: -0.257 to -0.638 W
+Loaded discharge voltage: 2.955 to 3.302 V
+
+Final idle voltage: 3.499 to 3.502 V
+Final idle current: approximately -0.1 mA
+```
+
+When both USB-C and the fan path were initially open, the INA226 bus-voltage
+register observed the open monitored path rather than a valid cell terminal
+voltage. Idle classification remained valid because signed current was near
+zero. The final idle phase restored a valid approximately 3.50 V cell reading.
+
+Tracker result
+--------------
+
+```text
+Pan range: 59.072 to 119.562 degrees
+Tilt range: 41.201 to 90.000 degrees
+Best tracking error: 0.012 degrees
+Locked samples: 213
+Observed states: track-pan, track-tilt, locked
+Physical servo output: enabled
+```
+
+Communication and dashboard result
+----------------------------------
+
+```text
+Dashboard packets: 368/368 valid
+Dashboard invalid packets: 0
+Dashboard sequence gaps: 0
+Bridge frames: 368/368 CRC valid
+Bridge sequence gaps: 0
+
+Payload: 157 bytes
+CRC frame: 161 bytes / 1288 bits
+QPSK symbols: 644
+OFDM symbols: 14
+QPSK padding: 28 symbols
+```
+
+Video evidence
+--------------
+
+```text
+system-integration/demo_evidence/video/
+  unified_tracker_bess_bidirectional_final_demo_2026-08-11.mp4
+
+Duration: 3 minutes 16.53 seconds
+Resolution: 2560x1440
+Frame rate: 30 fps
+Video: H.264
+Audio: none
+SHA-256: CA3890AF8DC1A0DA271EB855CCBC08B3D733BB98884584540634CD89113A4DE7
+```
+
+Matching CSV evidence
+---------------------
+
+```text
+fpga-digital-communications/data/unified_tracker_bess_bidirectional_demo_bridge.csv
+network-telemetry-dashboard/data/unified_tracker_bess_bidirectional_demo_dashboard.csv
+solar-tracker-bess/data/unified_tracker_bess_bidirectional_demo.csv (on Orin)
+```
+
+Result
+------
+
+LIVE PASS for one continuous small-scale BESS supervisory demonstration with
+real idle, positive charging, negative discharging, final idle recovery,
+two-axis physical tracking, deterministic CRC/QPSK/OFDM profiling, zero-gap UDP
+transport, dashboard visualization, and CSV evidence.
+
+Accurate portfolio claim
+------------------------
+
+```text
+Demonstrated a small-scale bidirectional BESS telemetry prototype integrated
+with an FPGA/Jetson two-axis solar tracker, continuously classifying real
+battery idle, charge, and discharge states while preserving signed power data
+through CRC/QPSK/OFDM profiling, UDP transport, dashboard visualization, and
+CSV evidence.
+```

@@ -1,0 +1,252 @@
+Shared Tracker Packet Contract
+==============================
+
+Purpose
+-------
+
+Keep the three project parts connected around one renewable-energy tracker data
+stream.
+
+The live Orin tracker path uses rich JSON for the dashboard. The digital
+communication path uses a compact fixed-size ASCII payload wrapped in the shared
+CRC frame.
+
+Project responsibilities
+------------------------
+
+```text
+solar-tracker-bess:
+  Creates the real/virtual solar tracker state.
+  Reads INA226 voltage/current/power when connected.
+  Sends rich JSON over UDP.
+
+network-telemetry-dashboard:
+  Receives JSON over UDP.
+  Tracks sequence gaps, invalid packets, packet rate, link health.
+  Shows the live dashboard.
+
+fpga-digital-communications:
+  Converts the tracker state into a compact framed payload.
+  Measures CRC/QPSK/OFDM reliability.
+  Proves packet sizing and OFDM placement on Nexys Video.
+```
+
+Rich JSON path
+--------------
+
+```text
+Orin tracker gateway
+  -> UDP JSON
+  -> dashboard / network tools
+```
+
+Example fields:
+
+```text
+seq
+v_mv
+i_ma
+p_mw
+tracker.pan_deg
+tracker.tilt_deg
+tracker.sun_pan_deg
+tracker.sun_tilt_deg
+tracker.track_error_deg
+tracker.state
+tracker.servo_enabled
+tracker.pan_servo_enabled
+tracker.tilt_servo_enabled
+tracker.servo_mode
+vision.mode
+vision.camera_mount
+vision.detected
+vision.confidence
+vision.target_x_px
+vision.target_y_px
+vision.x_error
+vision.y_error
+vision.frame_w
+vision.frame_h
+vision.area_px
+light_sensor.mode
+light_sensor.mount
+light_sensor.panel_mv
+light_sensor.h_error
+light_sensor.v_error
+light_sensor.tl / tr / bl / br
+power_source
+```
+
+Actuator mode extension:
+
+```text
+tracker.servo_enabled is true when at least one PCA9685 servo output is active.
+tracker.pan_servo_enabled and tracker.tilt_servo_enabled report each axis.
+tracker.servo_mode is software, pan-only, tilt-only, or pan+tilt.
+```
+
+Vision extension
+----------------
+
+Camera tracker packets may include an optional `vision` object:
+
+```text
+vision.mode:
+  csi, usb, or synthetic
+
+vision.detected:
+  true when a bright target was found
+
+vision.confidence:
+  0.0-1.0 confidence score from brightness and target area
+
+vision.target_x_px / vision.target_y_px:
+  target centroid in camera pixel coordinates
+
+vision.x_error / vision.y_error:
+  normalized camera offset from image center, -1.0 to +1.0
+```
+
+The dashboard displays these fields directly. The current compact
+CRC/QPSK/OFDM frame still uses the tracker angle/error/power fields, so camera
+telemetry does not break the existing Nexys Video frame profile.
+
+Four-LDR extension
+------------------
+
+The real stationary-sensor tracker uses `schema_variant=orin.ldr_tracker.v1`
+and includes a `light_sensor` object with MCP3208 panel voltage, four raw KY-018
+channels, calibrated horizontal/vertical errors, and sensor-mount mode. The
+standard tracker target fields carry the absolute LDR-derived light direction.
+
+Weak indoor tests may report
+`power_source=mcp3208-1000-ohm-load-estimate`; direct INA226 tests report
+`power_source=ina226`. The compact frame keeps its fixed three-character source
+field (`mcp` or `ina`), so its 129-byte payload and OFDM profile do not change.
+
+Unified tracker and real-BESS extension
+---------------------------------------
+
+The combined live mode uses `schema_variant=orin.ldr_tracker.bess.v1` and keeps
+the two electrical measurements separate:
+
+```text
+Top-level v_mv / i_ma / p_mw:
+  MCP3208 panel voltage and the known 1 kOhm panel-load estimate.
+
+battery.voltage_v / current_a / power_w:
+  Real INA226 battery measurement.
+
+bess_measurement_mode:
+  real
+
+bess_state:
+  charging / discharging / idle from signed battery current.
+
+bess_power_w:
+  Signed real battery power. Positive is charging and negative is discharging.
+```
+
+This lets tracker shading logic and the dashboard's top power trend remain
+panel-side while the BESS cards and energy integration use the real battery.
+
+The mixed compact payload carries both domains:
+
+```text
+mix,seq=00009,pan=090.0,tilt=095.0,sun_pan=100.0,sun_tilt=110.0,err=017.5,st=seek,pv_mv=02500,pp_mw=00006,bv_mv=02973,bi_ma=-00223,bp_mw=-00663,bs=dis,act=hw
+```
+
+Mixed frame profile:
+
+```text
+payload bytes: 157
+frame bytes: 161
+frame bits: 1288
+QPSK symbols: 644
+OFDM symbols: 14
+QPSK padding symbols: 28
+```
+
+The existing 129-byte tracker-only and 63-byte BESS-only payloads remain
+unchanged.
+
+Compact digital-comm frame
+--------------------------
+
+Payload:
+
+```text
+trk,seq=00023,pan=124.9,tilt=102.6,sun_pan=127.0,sun_tilt=102.8,err=002.1,st=lock,v_mv=05506,i_ma=00421,p_mw=02318,src=ina,act=sw
+```
+
+Frame wrapper:
+
+```text
+preamble:
+  A5 5A
+
+length:
+  1 byte
+
+payload:
+  ASCII tracker payload
+
+crc:
+  CRC-8 over length + payload
+```
+
+Current tracker frame profile
+-----------------------------
+
+```text
+payload bytes:
+  129
+
+frame bytes:
+  133
+
+frame bits:
+  1064
+
+QPSK symbols:
+  532
+
+OFDM:
+  FFT size 64
+  cyclic prefix 16
+  data subcarriers 48
+  pilot subcarriers 4
+  12 OFDM symbols
+  44 QPSK padding symbols
+```
+
+Current bridge tool
+-------------------
+
+```text
+fpga-digital-communications/code/pc_app/tracker_udp_comm_bridge.py
+```
+
+This receives Orin JSON, creates the compact frame profile, logs it, and forwards
+the original JSON to the network-telemetry-dashboard dashboard.
+
+Current Nexys proofs
+--------------------
+
+```text
+fpga-digital-communications/docs/board_test_06_tracker_ofdm_resource_grid_counter.txt
+  PASS: hard packet profile constants match tracker simulation.
+
+fpga-digital-communications/docs/board_test_07_tracker_ofdm_payload_placer.txt
+  PASS: FPGA walks OFDM symbols, CP samples, pilots, nulls, payload, and padding.
+
+fpga-digital-communications/docs/board_test_08_tracker_frame_encoder.txt
+  PASS: FPGA builds the compact tracker frame and validates CRC-8.
+
+fpga-digital-communications/docs/board_test_09_tracker_frame_ofdm_pipeline.txt
+  PASS: FPGA combines tracker frame CRC and OFDM packet counters.
+
+fpga-digital-communications/docs/board_test_10_tracker_frame_qpsk_ofdm_batch.txt
+  PASS: FPGA maps the tracker frame into 532 QPSK symbols and places them into
+  the 12-symbol OFDM data/pilot/null/CP stream.
+```

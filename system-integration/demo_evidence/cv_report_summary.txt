@@ -1,0 +1,160 @@
+CV And Report Summary
+=====================
+
+Integrated Portfolio Title
+--------------------------
+
+```text
+Three-Project FPGA and Jetson Orin Renewable-Energy Platform with
+CRC/QPSK/OFDM Communication Profiling and UDP Dashboard Monitoring
+```
+
+Short Abstract
+--------------
+
+```text
+This portfolio integrates three independently scoped renewable-energy,
+communication, and networking projects using
+a Jetson Orin Nano, Digilent Nexys Video FPGA, four KY-018 light sensors through
+an MCP3208 ADC, PCA9685 pan/tilt servo control for a prototype-mounted solar
+panel, UDP network transport, and a live monitoring dashboard.
+Real tracker, panel-power, and signed battery telemetry is processed on the
+Orin, converted into a compact CRC-protected frame by the digital communication
+layer, profiled as QPSK/OFDM traffic, and displayed on a network dashboard with
+packet validation, gap detection, tracking state, and measured BESS status. The
+Nexys Video validates the key digital-communication frame, QPSK symbol counts,
+OFDM symbols, pilots, padding, and cyclic-prefix accounting on real FPGA
+hardware.
+```
+
+Best CV Bullet
+--------------
+
+```text
+Built an FPGA and Jetson Orin based renewable-energy telemetry prototype that
+combines four-LDR light sensing, panel-power estimation, real Li-ion battery
+charge/discharge measurement, PCA9685 pan/tilt control, shading detection,
+CRC-protected packetization, QPSK/OFDM communication profiling, UDP bridge
+monitoring, and a live dashboard with
+sequence-gap and packet-validity checks.
+```
+
+Stronger Technical CV Bullet
+----------------------------
+
+```text
+Validated real four-LDR solar tracking across an Orin-to-PC UDP pipeline and a
+Nexys Video FPGA communication proof, achieving 368/368 valid dashboard packets
+and CRC-valid bridge frames with zero gaps, 213 locked tracker samples,
+0.012-degree best observed error, 24.141% mean-power gain over the fixed panel,
+and continuous idle/charge/idle/discharge/idle BESS telemetry in one run.
+```
+
+Three Projects
+--------------
+
+```text
+Solar Tracker and BESS (`solar-tracker-bess/`):
+  Orin tracker loop, MCP3208 panel sensing, INA226 real BESS sensing, PCA9685
+  pan/tilt actuation, prototype mounted-panel tracker, TP4056 charge path.
+
+FPGA Digital Communications (`fpga-digital-communications/`):
+  CRC framing, QPSK mapping, OFDM packet sizing, pilot/null/CP accounting,
+  Nexys Video board validation.
+
+Network Telemetry Dashboard (`network-telemetry-dashboard/`):
+  UDP receiver, bridge forwarding, dashboard, link health, sequence gaps,
+  invalid packet counter, live evidence logging.
+```
+
+Skills Demonstrated
+-------------------
+
+```text
+FPGA/HDL:
+  Verilog, Vivado, Nexys Video, UART telemetry, CRC, packet sizing,
+  QPSK symbol accounting, OFDM resource accounting.
+
+Embedded Linux:
+  Jetson Orin Nano, I2C, INA226, PCA9685, servo control, Python gateway services.
+
+Networking:
+  UDP telemetry, local gateway bridge, packet validation, sequence-gap
+  detection, live dashboard updates, reliability warning/recovery testing.
+
+Renewable Energy:
+  Solar power sensing, tracker state, MPPT-style status, measured 1S BESS
+  charge/discharge telemetry, low-voltage safe prototyping.
+
+Data/Reporting:
+  CSV logs, generated metrics, SVG plots, repeatable demo checklist.
+```
+
+Current Evidence Metrics
+------------------------
+
+```text
+Continuous dashboard packets: 368 valid, 0 bad, 0 gaps
+Continuous bridge frames: 368/368 CRC-valid, 0 gaps
+Continuous BESS states: idle 191, charging 44, discharging 133
+Continuous tracker locked samples: 213
+Best observed tracking error: 0.012 deg
+Mean-power gain over fixed panel: 24.141%
+Energy gain over fixed panel: 24.229%
+Shading test packets: 120 valid, 0 gaps
+Shading warning/recovery: seq 61 / seq 78
+
+Reliability warning/recovery:
+  proxy dropped packets: 4
+  proxy corrupted packets: 3
+  dashboard invalid packets: 3
+  dashboard sequence gaps: 4
+  recent recovery window: 10 clean packets, 0 invalid, 0 gaps
+
+Payload bytes: 129
+Frame bytes: 133
+Frame bits: 1064
+QPSK symbols: 532
+OFDM symbols: 12
+QPSK padding symbols: 44
+OFDM TX samples: 960
+OFDM CP samples: 192
+OFDM pilot bins: 48
+
+Standalone real BESS discharge: approximately -0.683 W
+Standalone real BESS charging: +0.895 to +0.908 W
+Continuous demo charging: +38.0 to +238.6 mA, average about +0.83 W settled
+Continuous demo discharge: -78.0 to -215.5 mA, -0.257 to -0.638 W
+Final valid idle cell voltage: 3.499-3.502 V
+Unified payload/frame: 157/161 bytes
+Unified communication profile: 644 QPSK symbols, 14 OFDM symbols
+```
+
+Honest Limitation Statement
+---------------------------
+
+```text
+The tracker uses real stationary LDR sensing and a working prototype pan/tilt
+panel mount. Indoor light is below useful INA226 current resolution, so the
+reported A/B gain is a load-power estimate derived from panel voltage across a
+known 1k-ohm resistor, not a claim of high solar production. Real battery
+charge/discharge power is measured separately by the INA226. Temporary battery
+connections are used only for supervised bench tests. The initial approximately
+0.63 V INA226 bus value in the continuous demo came from an open monitored path
+and is excluded from battery-voltage claims.
+```
+
+Application Positioning
+-----------------------
+
+```text
+Use this project first for:
+  renewable energy, smart grid, BESS, embedded systems, FPGA, edge monitoring,
+  SCADA-style dashboards, and computer engineering applications.
+
+Use the digital-communication part as technical depth:
+  QPSK, OFDM, CRC, FPGA verification, reliability metrics.
+
+Use the network part as infrastructure support:
+  UDP telemetry, dashboard, link health, packet validation.
+```

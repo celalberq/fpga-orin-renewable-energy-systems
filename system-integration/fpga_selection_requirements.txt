@@ -1,0 +1,96 @@
+FPGA Selection Result And Requirements
+======================================
+
+Final board:
+
+```text
+Digilent Nexys Video 410-316
+FPGA: Xilinx/AMD Artix-7 XC7A200T-1SBG484C
+Status: bought
+```
+
+This file now records why the Nexys Video satisfies the original selection checklist.
+
+Hard requirements:
+
+```text
+1. Works with a normal student workflow and has good documentation.
+2. Supports HDL development, simulation, synthesis, and programming without unusual vendor barriers.
+3. Has enough GPIO or expansion connectors for sensors, ADC/DAC, PWM, and debug.
+4. Has a stable JTAG/programming path.
+5. Can communicate with Jetson Orin Nano Super through at least UART and SPI.
+```
+
+Strongly preferred:
+
+```text
+1. 1x Gigabit Ethernet PHY minimum.
+2. 2x Ethernet or SFP preferred for the network project.
+3. Enough DSP slices for FFT, filtering, modulation, and control.
+4. Enough block RAM for packet buffers and signal buffers.
+5. External DDR or SRAM preferred.
+6. PMOD, Arduino header, FMC, or similar expansion connector.
+7. Vendor or open-source examples for Ethernet, SPI, UART, PWM, and ADC/DAC.
+```
+
+Project-driven requirements:
+
+```text
+fpga-digital-communications digital communication:
+  - DSP blocks for FFT/IFFT, FIR filters, modulation, and demodulation
+  - stable clocks and PLL/MMCM support
+  - ADC/DAC expansion path
+  - enough memory for symbol buffers
+
+network-telemetry-dashboard network:
+  - Ethernet PHY/MAC support is the main board selector
+  - 1 GbE preferred
+  - 2 ports or SFP preferred for inline mode
+  - packet buffer memory
+  - timing support for packet counters and timestamps
+
+solar-tracker-bess solar:
+  - GPIO for PWM and protection signals
+  - SPI/I2C for ADC/current sensors
+  - simple deterministic control loop
+  - isolation-friendly expansion
+```
+
+Minimum practical target:
+
+```text
+Logic capacity: 50k+ logic cells preferred
+DSP: enough for small FFT/filter/control experiments
+Memory: useful block RAM plus external memory if possible
+I/O: 3.3V-compatible expansion pins
+Networking: at least 1 Ethernet port, 2 preferred
+Tooling: examples and board files available
+```
+
+Original final-selection checklist:
+
+```text
+1. L2 design for all three projects is frozen.
+2. Interface counts are listed.
+3. Required Ethernet mode is selected.
+4. Digital communication front-end is selected.
+5. Solar power stage voltage/current range is selected.
+```
+
+Selection result:
+
+```text
+Nexys Video satisfies the main shared requirements:
+  - Gigabit Ethernet for network-telemetry-dashboard network work
+  - large Artix-7 fabric for fpga-digital-communications digital communication work
+  - strong DSP capacity for FFT/filter/modulation experiments
+  - Pmod/FMC expansion for solar-tracker-bess solar sensors and external interfaces
+  - USB-JTAG and USB-UART bring-up path
+```
+
+Current limitation:
+
+```text
+Orin Nano Super is not available yet.
+Laptop/PC will temporarily replace Orin for telemetry, logging, and dashboards.
+```

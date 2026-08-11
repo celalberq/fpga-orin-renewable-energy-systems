@@ -1,0 +1,138 @@
+Network Telemetry Dashboard Network Test 02: Live Solar Dashboard
+============================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Goal
+----
+
+Turn the UDP terminal demo into a visible PC/Orin-style monitoring dashboard.
+
+Data path
+---------
+
+```text
+Nexys Video solar-tracker-bess solar packet
+  -> COM6 UART
+  -> network-telemetry-dashboard UDP gateway
+  -> network-telemetry-dashboard live dashboard
+  -> browser view + CSV log
+```
+
+Vivado board code
+-----------------
+
+Use the existing solar-tracker-bess solar packet board build.
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_packet_v1_uart_top
+
+HDL sources:
+  solar-tracker-bess/code/hdl/uart_tx.v
+  solar-tracker-bess/code/hdl/pwm_generator.v
+  solar-tracker-bess/code/hdl/solar_packet_v1_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_packet_v1_uart.xdc
+```
+
+Run dashboard
+-------------
+
+Terminal 1:
+
+```text
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_live_dashboard.py --udp-host 127.0.0.1 --udp-port 5007 --http-host 127.0.0.1 --http-port 8081
+```
+
+With BESS simulation:
+
+```text
+python network-telemetry-dashboard/code/pc_app/solar_live_dashboard.py --udp-host 127.0.0.1 --udp-port 5007 --http-host 127.0.0.1 --http-port 8081 --bess-capacity-wh 50 --bess-initial-soc 55 --bess-load-w 10
+```
+
+Open in browser:
+
+```text
+http://127.0.0.1:8081
+```
+
+Run gateway into dashboard
+--------------------------
+
+Terminal 2:
+
+```text
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_telemetry_udp_gateway.py --port COM6 --baud 115200 --udp-host 127.0.0.1 --udp-port 5007
+```
+
+Expected dashboard behavior
+---------------------------
+
+```text
+1. Connection changes from waiting to live.
+2. Power, duty, voltage, current, MPPT status, and protection status update once per packet.
+3. Power and duty trend lines move when switches change.
+4. Latest raw p3 packet is visible.
+5. Dashboard log is written to network-telemetry-dashboard/data/solar_live_dashboard_log.csv.
+6. MPPT code is expanded into Hold, Power increased, or Power decreased.
+7. Fault flag is expanded into a readable protection reason.
+8. BESS SoC, battery power, load, and charge/discharge state update from the live solar power stream.
+```
+
+Observed live result
+--------------------
+
+```text
+Date:
+  2026-07-12
+
+Board:
+  Nexys Video running solar-tracker-bess solar_packet_v1_uart_top
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Dashboard:
+  http://127.0.0.1:8081
+
+Observed values:
+  seq=75
+  gaps=0
+  bad=0
+  power=34.71 W
+  duty=100%
+  voltage=17.10 V
+  current=2.03 A
+  mppt=Hold
+  fault=FAULT
+  fault_reason=High duty demo protection active: raw duty is at or above 0xF0.
+
+Observed raw packet:
+  p3,seq=00075,d_pct=00100,v_mv=17100,i_ma=02030,p_mw=34713,mppt=hd,f=1,chk=A8,raw=FF
+```
+
+Why this matters
+----------------
+
+```text
+This is the first SCADA/Orin-style view of the integrated system:
+  renewable telemetry source
+  communication validation
+  network transport
+  monitoring dashboard
+```

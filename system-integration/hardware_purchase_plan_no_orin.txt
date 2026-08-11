@@ -1,0 +1,180 @@
+Hardware Purchase Plan Without Orin
+===================================
+
+Purpose:
+
+Decide what hardware is needed while continuing the basic project builds without the Jetson Orin Nano Super.
+
+Current baseline:
+
+```text
+Already bought:
+  Digilent Nexys Video 410-316
+
+Temporary software side:
+  Laptop/desktop PC
+
+Not bought yet:
+  Jetson Orin Nano Super
+```
+
+Nexys Video included items to confirm when the box arrives:
+
+```text
+1. Nexys Video board
+2. USB A to micro-B programming cable
+3. 12V, 3A wall power supply with US/EU adapters
+```
+
+Source note:
+
+Digilent lists the Nexys Video kit contents as the board, custom packing, USB A to micro-B programming cable, and 12V 3A wall supply. The board is powered from a 12V source and includes 10/100/1000 Ethernet, USB-UART, Pmod ports, and FMC expansion.
+
+Source:
+
+```text
+https://digilent.com/shop/nexys-video-amd-artix-7-fpga-trainer-board-for-multimedia-applications/
+```
+
+Buy now: shared basic kit
+
+```text
+1. Breadboard
+   Use: sensor/interface prototyping.
+   Example source: Robotistan breadboard page.
+   Observed price: 55.75 TL KDV included, but page showed out of stock during check.
+   Source: https://www.robotistan.com/breadboard
+
+2. Jumper wire sets
+   Use: general prototyping.
+   Buy:
+     - M-M jumper set
+     - M-F jumper set
+     - F-F jumper set
+   Observed prices:
+     - M-F 20 cm: 53.43 TL
+     - M-M 20 cm: 56.28 TL
+     - F-F 20 cm: 46.04 TL
+   Source: https://www.robotistan.com/kablo-donusturucu
+
+3. Logic level converter 3.3V-5V
+   Use: only if a module is not 3.3V compatible.
+   Observed price: 19.33 TL
+   Source: https://www.robotistan.com/voltaj-regulator-karti
+
+4. CAT5E/CAT6 Ethernet cables
+   Use: Nexys Video, PC, router/switch, network project.
+   Buy: at least 3 cables.
+   Source example: https://www.robotistan.com/ethernet-kablosu-cat-5e-2-metre
+
+5. Basic resistor set
+   Use: voltage dividers, pull-ups, LED/current limits, simple loads.
+   Minimum values:
+     - 330R
+     - 1k
+     - 4.7k
+     - 10k
+     - 100k
+
+6. Multimeter
+   Use: mandatory for solar/power work.
+   Buy only if you do not already have one.
+```
+
+Buy soon for solar-tracker-bess solar:
+
+```text
+1. MCP3208 DIP-16 ADC
+   Use: SPI ADC for voltage/current sensing.
+   Decision: buy now.
+   Observed price: 284.13 TL
+   Source: https://www.direnc.net/analogtan-digitale-donusturucu-entegreler
+
+2. INA226 IIC current/power monitor module
+   Use: current, voltage, power measurement and calibration.
+   Decision: buy now.
+   Observed price: 79.56 TL
+   Source: https://www.direnc.net/akim-sensorleri
+
+3. Glass fuses
+   Use: low-voltage input protection.
+   Decision: buy 1A, 2A, 5A values.
+   Observed price example: 5x20 mm fuses around 1.36 TL each.
+   Source: https://www.robotistan.com/sigorta
+
+4. LM2596 or small step-down module
+   Use: auxiliary supply experiments only.
+   Decision: optional, not for main FPGA-controlled MPPT converter.
+   Observed LM2596-ADJ prices: around 181 TL to 183 TL.
+   Source: https://www.robotistan.com/voltaj-regulator-karti
+```
+
+Buy soon for network-telemetry-dashboard network:
+
+```text
+1. Managed gigabit switch with port mirroring
+   Recommended model type: TP-Link TL-SG105E or TL-SG108E.
+   Use: mirror network traffic to the Nexys Video for monitor-mode experiments.
+   Decision: buy when network project starts.
+   Feature source: TP-Link lists 5 gigabit ports and port mirroring for TL-SG105E.
+   Source: https://www.tp-link.com/us/business-networking/easy-smart-switch/tl-sg105e/
+
+2. Extra Ethernet cables
+   Use: PC, switch, Nexys Video, router/server connection.
+   Decision: buy with the switch.
+```
+
+Buy later for fpga-digital-communications digital communication:
+
+```text
+1. External ADC/DAC or Pmod analog module
+   Decision: do not buy yet.
+   Reason: first versions are simulation and internal loopback.
+
+2. SDR/RF hardware
+   Decision: do not buy yet.
+   Reason: too much cost and complexity before QPSK/OFDM base works.
+```
+
+Do not buy yet:
+
+```text
+1. Jetson Orin Nano Super
+2. SDR
+3. High-voltage solar panel
+4. Battery pack
+5. Grid inverter
+6. Large electronic load
+7. Oscilloscope, unless budget allows or you cannot borrow one
+8. FMC ADC/DAC board
+```
+
+Minimum useful hardware stack for the next stage:
+
+```text
+Nexys Video
+Laptop/PC
+Nexys power supply and USB cable
+Jumper wires
+Breadboard
+Logic level converter
+MCP3208
+INA226
+Fuses
+Ethernet cables
+Managed switch later for network project
+Multimeter
+```
+
+Current real-sensing implementation target:
+
+```text
+Top module:
+  solar_real_sense_uart_top
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Detailed plan:
+  solar-tracker-bess/docs/real_sensing_stage_01_plan.txt
+```

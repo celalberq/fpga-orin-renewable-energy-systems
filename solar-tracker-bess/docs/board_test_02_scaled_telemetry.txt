@@ -1,0 +1,103 @@
+Solar Tracker and BESS Board Test 02: Scaled Solar Telemetry
+============================================
+
+Goal
+----
+
+Keep the safe board-only PWM demo, but send telemetry in engineering-style decimal fields.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_scaled_uart_top
+
+HDL sources:
+  solar-tracker-bess/code/hdl/pwm_generator.v
+  solar-tracker-bess/code/hdl/uart_tx.v
+  solar-tracker-bess/code/hdl/solar_scaled_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_scaled_uart.xdc
+```
+
+Board behavior
+--------------
+
+```text
+SW0-SW7:
+  8-bit duty command.
+
+LD0:
+  PWM output.
+
+LD1:
+  Heartbeat.
+
+LD2:
+  UART busy indicator.
+
+LD3:
+  Fault flag.
+
+LD4-LD7:
+  Upper duty bits.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected telemetry
+------------------
+
+```text
+p3,d_pct=00000,v_mv=12000,i_ma=00500,p_mw=06000,f=0
+p3,d_pct=00049,v_mv=14540,i_ma=01262,p_mw=18348,f=0
+p3,d_pct=00100,v_mv=17100,i_ma=02030,p_mw=34713,f=1
+```
+
+Debug note:
+
+```text
+If v_mv, i_ma, and p_mw change but d_pct stays 00000, rebuild with the latest
+solar_scaled_uart_top.v. The fixed version widens duty_raw before multiplying by 100.
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. LD0 PWM brightness changes with switches.
+3. PuTTY receives p3 telemetry lines on COM6.
+4. d_pct, v_mv, i_ma, and p_mw change when switches change.
+5. f becomes 1 near the highest duty commands.
+```
+
+Safety
+------
+
+```text
+No external power electronics, solar panel, battery, buck converter, or sensors are connected.
+```

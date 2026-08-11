@@ -1,0 +1,27 @@
+FPGA Requirements: solar-tracker-bess Solar
+===============================
+
+Required:
+
+```text
+1. GPIO for PWM output and fault/protection signals.
+2. SPI support for MCP3208 or similar ADC.
+3. I2C support if INA226/INA219 is used directly from FPGA.
+4. UART/SPI telemetry link to Orin.
+5. Timers/counters for stable PWM frequency.
+6. Enough logic for MPPT, filtering, and protection state machines.
+```
+
+Preferred:
+
+```text
+1. 3.3V I/O with clear electrical limits.
+2. PMOD or header expansion for sensor modules.
+3. External clock or PLL for precise PWM timing.
+4. Hardware multipliers/DSP for power calculation, though not strictly required.
+5. Easy pin constraint flow.
+```
+
+Nexys Video fit:
+
+This project does not require the full size of the Nexys Video, but the board is more than enough for reliable PWM, sensor interfaces, telemetry, and protection logic. Solar sensors and PWM outputs should use Pmod/FMC/header expansion with careful electrical protection.

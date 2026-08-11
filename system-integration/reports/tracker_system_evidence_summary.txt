@@ -1,0 +1,66 @@
+Tracker System Evidence Summary
+===============================
+
+Purpose
+-------
+
+Summarize the current integrated renewable-energy tracker evidence across solar-tracker-bess, network-telemetry-dashboard, and fpga-digital-communications.
+
+Integrated Path
+---------------
+
+Nexys/MCP3208 LDR sensing -> Orin tracker/PCA9685 actuation -> fpga-digital-communications compact CRC frame/QPSK/OFDM profile -> network-telemetry-dashboard UDP dashboard.
+
+Key Results
+-----------
+
+Tracker valid dashboard rows: 60
+Tracker sequence gaps: 0
+Tracker locked rows: 14 (23.3%)
+Tracking error best/avg/max deg: 0.027 / 15.859 / 56.539
+Best tracking sequence: 36
+Bridge frame OK rows: 60
+Bridge sequence gaps: 0
+Board Test 10 tracker QPSK/OFDM batch: PASS
+
+Renewable Tracking Evidence
+---------------------------
+
+Fixed mean load power: 0.009 mW
+Tracking mean load power: 0.011 mW
+Tracking mean-power gain: 24.141%
+Tracking energy gain: 24.229%
+Tracking locked samples: 82.301%
+
+Shading Detection Evidence
+--------------------------
+
+Fault-test valid dashboard rows: 120
+Fault-test sequence gaps: 0
+Learning started at sequence: 30
+Baseline ready at sequence: 40
+Shading detected at sequence: 61
+Dashboard shading samples: 15
+Recovered to OK at sequence: 78
+
+Digital Communication Profile
+-----------------------------
+
+Payload bytes: 129
+Frame bytes: 133
+Frame bits: 1064
+QPSK symbols: 532
+OFDM symbols: 12
+QPSK padding symbols: 44
+OFDM TX samples: 960
+OFDM CP samples: 192
+OFDM pilot bins: 48
+
+Artifacts
+---------
+
+tracker_system_evidence_metrics.csv
+tracker_error_deg.svg
+tracker_power_mw.svg
+tracker_angles_deg.svg
+comm_profile_bar.svg

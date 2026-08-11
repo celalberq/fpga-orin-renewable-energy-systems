@@ -1,0 +1,92 @@
+FPGA Digital Communications Communication Test 06: Tracker OFDM Packet Link
+======================================================
+
+Status
+------
+
+```text
+PASS
+```
+
+Goal
+----
+
+Run the current tracker/INA226 telemetry packet through the OFDM packet-link
+model.
+
+OFDM parameters
+---------------
+
+```text
+frame_bytes:
+  133
+
+frame_bits:
+  1064
+
+FFT size:
+  64
+
+Cyclic prefix:
+  16 samples
+
+Data subcarriers:
+  48
+
+Pilot subcarriers:
+  4
+
+OFDM symbols per packet:
+  12
+
+Padding:
+  88 bits
+```
+
+Observed simulation
+-------------------
+
+```text
+ebn0_db frames ber        fer        frame_errors crc_detected undetected
+0.0     80     0.12233318 1.00000000 80           80           0
+2.0     80     0.07247415 1.00000000 80           80           0
+4.0     80     0.03375235 1.00000000 80           80           0
+6.0     80     0.01069079 1.00000000 80           80           0
+8.0     80     0.00166823 0.81250000 65           65           0
+10.0    80     0.00012923 0.13750000 11           11           0
+12.0    80     0.00001175 0.01250000 1            1            0
+14.0    80     0.00000000 0.00000000 0            0            0
+```
+
+Interpretation
+--------------
+
+```text
+The tracker frame needs 12 OFDM symbols instead of the old 8-symbol p3 packet.
+That affects future FPGA resource-grid counters and packet scheduling.
+The BER/FER curve still behaves correctly and reaches zero errors at high Eb/N0.
+```
+
+Files
+-----
+
+```text
+fpga-digital-communications/code/sim/tracker_ofdm_packet_link_sim.py
+fpga-digital-communications/data/tracker_ofdm_packet_link_sim.csv
+fpga-digital-communications/data/tracker_ofdm_resource_grid_example.csv
+```
+
+Run
+---
+
+```text
+cd "<repository-root>"
+python fpga-digital-communications/code/sim/tracker_ofdm_packet_link_sim.py
+```
+
+Nexys Video Vivado part
+-----------------------
+
+```text
+xc7a200tsbg484-1
+```

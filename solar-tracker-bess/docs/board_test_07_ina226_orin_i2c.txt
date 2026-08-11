@@ -1,0 +1,185 @@
+Solar Tracker and BESS Board Test 07: INA226 on Orin I2C
+========================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Goal
+----
+
+Add real current/power sensing without disturbing the working MCP3208 solar
+voltage breadboard.
+
+The INA226 is first tested from the Orin Nano Super over I2C. After this works,
+its values can be merged into the dashboard and later into the FPGA packet.
+
+Why Orin first
+--------------
+
+```text
+The MCP3208 + Nexys wiring is already working and should be preserved.
+INA226 is I2C, so the Orin can bring it up quickly.
+FPGA I2C can be added later after the measurement path is proven.
+```
+
+Orin 40-pin header wiring
+-------------------------
+
+Use the Orin 40-pin header I2C pins:
+
+```text
+Orin pin 1  3.3V -> INA226 VCC
+Orin pin 6  GND  -> INA226 GND
+Orin pin 3  SDA  -> INA226 SDA
+Orin pin 5  SCL  -> INA226 SCL
+```
+
+Important:
+
+```text
+Use 3.3V logic/power for the INA226 module.
+Do not connect INA226 VCC to 5V for this Orin test.
+Do not connect the solar current path until I2C detection works.
+```
+
+I2C software check
+------------------
+
+Run on Orin:
+
+```text
+sudo apt install -y i2c-tools python3-smbus
+i2cdetect -y 7
+```
+
+Expected:
+
+```text
+INA226 usually appears at address 0x40.
+The current module appeared at address 0x44 after direct jumper/soldered-header wiring.
+```
+
+If nothing appears:
+
+```text
+ls /dev/i2c-*
+i2cdetect -y 1
+i2cdetect -y 7
+```
+
+Run the project reader:
+
+```text
+cd "path/to/yaz proje"
+python3 solar-tracker-bess/code/orin_app/ina226_reader.py --bus 7 --addr 0x44 --id-only
+python3 solar-tracker-bess/code/orin_app/ina226_reader.py --bus 7 --addr 0x44 --shunt-ohms 0.1
+```
+
+Observed ID result
+------------------
+
+```text
+INA226 addr=0x44 bus=7
+config=0x4127 manufacturer_id=0x5449 die_id=0x2260
+```
+
+Observed baseline result
+------------------------
+
+With no current path connected:
+
+```text
+bus approximately 0 mV
+current approximately -0.05 mA to -0.10 mA
+power approximately 0 mW
+```
+
+This is expected sensor offset/noise.
+
+Solar current path, after I2C detection
+---------------------------------------
+
+Use the INA226 in series with a small load:
+
+```text
+solar panel + -> INA226 VIN+ / IN+
+INA226 VIN- / IN- -> load +
+load - -> solar panel -
+solar panel - / load - node -> INA226 GND common reference
+INA226 VBUS sense pin -> INA226 VIN- / load-side node
+```
+
+The common-reference connection is required for the isolated panel circuit.
+The INA226 IC has a separate VBUS input, so a breakout that does not tie VBUS
+to IN- internally also needs the explicit VBUS-to-VIN- sense jumper shown above.
+Never connect panel positive to an Orin power pin; only the low-voltage panel
+negative/reference joins INA226 GND.
+
+Start with a safe simple load:
+
+```text
+1k resistor indoors, then 330R resistor in stronger light
+or LED + 330R resistor
+```
+
+Do not start with battery/fan load.
+
+Expected first readings
+-----------------------
+
+No load:
+
+```text
+bus voltage can show panel voltage.
+current should be near zero.
+power should be near zero.
+```
+
+With resistor/LED load:
+
+```text
+bus voltage depends on light and load.
+current becomes nonzero.
+power becomes nonzero.
+covering the panel should reduce current and power.
+```
+
+Observed indoor/phone-flash result
+----------------------------------
+
+Room light:
+
+```text
+bus approximately 10 mV
+current approximately zero/noise
+```
+
+Phone flash:
+
+```text
+bus approximately 370 mV
+current approximately 0.25 mA
+power approximately 0.09 mW
+```
+
+Conclusion:
+
+```text
+INA226 real solar voltage/current/power sensing works.
+Useful power readings require stronger light, preferably daylight.
+```
+
+Sources
+-------
+
+```text
+NVIDIA Jetson Linux Developer Guide, expansion headers:
+https://docs.nvidia.com/jetson/archives/r36.4/DeveloperGuide/HR/ConfiguringTheJetsonExpansionHeaders.html
+
+TI INA226 product page:
+https://www.ti.com/product/INA226
+```

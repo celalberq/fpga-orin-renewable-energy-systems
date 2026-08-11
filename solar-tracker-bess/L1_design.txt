@@ -1,0 +1,100 @@
+L1 Design: Renewable Energy Solar Project
+=========================================
+
+Document status
+---------------
+
+```text
+ORIGINAL DESIGN TARGET / PLANNING BASELINE
+
+This file preserves the initial project ambition. It is not an as-built
+specification and must not be read as a claim that every item below was
+implemented. Current delivered scope is documented in `solar-tracker-bess/README.md`,
+`system-integration/current_system_status_2026_08_11.txt`, and
+`system-integration/final_hardware_wiring_2026_08_11.md`.
+```
+
+Delivered baseline - 2026-08-11
+-------------------------------
+
+```text
+Implemented:
+  Four KY-018 sensors sampled by MCP3208 and Nexys Video.
+  Calibrated Jetson Orin two-axis control through PCA9685 and two servos.
+  Panel-voltage sensing and indoor 1k-ohm load-power estimation.
+  Shading warning/recovery and sensor-fault handling.
+  INA226 signed 1S battery charging/discharging telemetry.
+  Continuous tracker+BESS UDP/dashboard demonstration with 368/368 valid
+  packets and zero sequence gaps.
+
+Not implemented:
+  A real FPGA-controlled buck converter, closed-loop hardware MPPT power stage,
+  solar charging of the battery, simultaneous charge/load power sharing,
+  outdoor energy-yield validation, or AI fault classification.
+```
+
+Project title:
+
+FPGA-Based Solar MPPT Controller with Jetson Orin Nano AI Monitoring
+
+Original main goal:
+
+Design and demonstrate a low-voltage solar PV controller where the FPGA performs real-time MPPT and protection logic, while the Orin Nano Super logs energy data, visualizes efficiency, and detects shading/fault patterns.
+
+Original target architecture:
+
+```text
+12V-24V solar panel or PV emulator
+  -> voltage and current sensing
+  -> ADC / power monitor
+  -> FPGA control loop
+  -> PWM and gate driver
+  -> low-voltage buck converter
+  -> resistor load or battery emulator
+  -> Orin dashboard and AI monitoring
+```
+
+Original planned FPGA role:
+
+```text
+1. Sample voltage and current.
+2. Calculate power.
+3. Run MPPT algorithm.
+4. Generate PWM.
+5. Apply overcurrent and overvoltage protection.
+6. Stream telemetry to Orin.
+```
+
+Original planned Orin Nano role:
+
+```text
+1. Dashboard for voltage, current, power, duty cycle, and efficiency.
+2. CSV/JSON data logging.
+3. Fault and shading pattern detection.
+4. Optional camera-based soiling or shading detection.
+5. Experiment reports and plots.
+```
+
+Original MVP scope:
+
+```text
+1. Stay low-voltage and isolated.
+2. Start with bench DC supply or small solar panel.
+3. Use resistor load first.
+4. Implement Perturb and Observe MPPT first.
+5. Add AI/fault classification after reliable control.
+```
+
+Original success metrics:
+
+```text
+1. FPGA reads voltage/current telemetry.
+2. FPGA changes PWM duty cycle.
+3. MPPT improves power compared to fixed duty cycle.
+4. Orin dashboard logs and plots the experiment.
+5. Shading or input change produces visible MPPT response.
+```
+
+CV value:
+
+This project is the strongest Australia-facing project because it combines renewable energy, embedded control, FPGA real-time logic, and edge AI.

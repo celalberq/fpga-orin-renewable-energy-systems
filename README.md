@@ -1,8 +1,21 @@
-# FPGA + Jetson Orin Solar Tracker and BESS Telemetry Platform
+# FPGA + Jetson Orin Renewable-Energy Systems
 
-An integrated renewable-energy prototype combining real light sensing,
-two-axis solar tracking, measured battery charge/discharge telemetry,
-FPGA-backed CRC/QPSK/OFDM communication profiling, and live UDP monitoring.
+A portfolio monorepo containing three distinct university engineering projects
+that were also integrated into one working renewable-energy demonstrator. Each
+project has its own design scope, implementation, tests, and evidence; the
+integration shares hardware measurements and one telemetry contract.
+
+## Three Projects
+
+| Project | Independent scope | Main validated result |
+|---|---|---|
+| [Solar Tracker and BESS](solar-tracker-bess/) | LDR and panel sensing, two-axis control, and signed battery telemetry | Physical light tracking plus measured charge and discharge |
+| [FPGA Digital Communications](fpga-digital-communications/) | CRC framing, QPSK mapping, and OFDM resource accounting | Live 161-byte frames and Nexys Video pipeline proof |
+| [Network Telemetry Dashboard](network-telemetry-dashboard/) | UDP transport, validation, reliability monitoring, visualization, and logging | 368/368 valid continuous-demo packets with zero sequence gaps |
+
+The projects can be reviewed separately through the links above. The
+`system-integration/` directory contains only their shared architecture,
+cross-project runbooks, final report, presentation, and demonstration media.
 
 ## System Overview
 
@@ -23,13 +36,8 @@ flowchart LR
     COMM --> DASH["Dashboard + CSV evidence"]
 ```
 
-The workspace is organized as three layers of one system:
-
-| Project | Role | Main validated result |
-|---|---|---|
-| `proje3` | Renewable sensing, tracking, servo control, panel and BESS telemetry | Real two-axis tracking plus measured battery charge/discharge |
-| `proje1` | CRC framing and QPSK/OFDM communication profiling | Live unified 161-byte frames and Nexys Video pipeline proof |
-| `proje2` | UDP transport, validation, dashboard, and logging | 368/368 valid continuous-demo packets with zero sequence gaps |
+The diagram shows the final integration path; it does not collapse the three
+projects into a single claimed deliverable.
 
 ## Headline Results
 
@@ -66,9 +74,9 @@ The workspace is organized as three layers of one system:
 Nexys/MCP3208 sensor UART
   -> Orin LDR tracker + PCA9685 servo actuation + INA226 BESS measurement
   -> unified tracker/panel/BESS UDP JSON on port 5013
-  -> proje1 CRC/QPSK/OFDM communication bridge
+  -> FPGA digital-communications CRC/QPSK/OFDM bridge
   -> forwarded UDP JSON on port 5011
-  -> proje2 dashboard, validation, sequence-gap monitoring, and CSV logging
+  -> network telemetry dashboard, validation, sequence-gap monitoring, and CSV logging
 ```
 
 The final mixed communication frame contains tracker angles and target, tracking
@@ -85,31 +93,31 @@ QPSK padding:  28 symbols
 
 ## Primary Evidence
 
-- [Final bidirectional tracker+BESS demo](main_layout/demo_evidence/video/unified_tracker_bess_bidirectional_final_demo_2026-08-11.mp4)
-- [Final edited unified demo](main_layout/demo_evidence/video/unified_tracker_bess_integrated_demo_2026-08-11_edited.mp4)
-- [Final technical report](main_layout/demo_evidence/final_report/fpga_orin_solar_bess_final_report_2026_08_11.docx)
-- [Final technical report PDF](main_layout/demo_evidence/final_report/fpga_orin_solar_bess_final_report_2026_08_11.pdf)
-- [Final presentation](main_layout/demo_evidence/final_presentation/fpga_orin_solar_bess_final_presentation_2026_08_11.pptx)
-- [Current system status](main_layout/current_system_status_2026_08_11.txt)
-- [Authoritative hardware wiring, connectors, and BOM](main_layout/final_hardware_wiring_2026_08_11.md)
+- [Final bidirectional tracker+BESS demo](system-integration/demo_evidence/video/unified_tracker_bess_bidirectional_final_demo_2026-08-11.mp4)
+- [Final edited unified demo](system-integration/demo_evidence/video/unified_tracker_bess_integrated_demo_2026-08-11_edited.mp4)
+- [Final technical report](system-integration/demo_evidence/final_report/fpga_orin_renewable_energy_systems_final_report_2026_08_11.docx)
+- [Final technical report PDF](system-integration/demo_evidence/final_report/fpga_orin_renewable_energy_systems_final_report_2026_08_11.pdf)
+- [Final presentation](system-integration/demo_evidence/final_presentation/fpga_orin_renewable_energy_systems_final_presentation_2026_08_11.pptx)
+- [Current system status](system-integration/current_system_status_2026_08_11.txt)
+- [Authoritative hardware wiring, connectors, and BOM](system-integration/final_hardware_wiring_2026_08_11.md)
 - [Reproducible setup and verification](SETUP.md)
-- [Unified board-test record](proje3/docs/board_test_24_unified_tracker_bess_discharge.txt)
-- [Bidirectional BESS board-test record](proje3/docs/board_test_25_unified_tracker_bess_bidirectional_demo.txt)
-- [Charging board-test record](proje3/docs/board_test_23_real_bess_charge_udp_dashboard.txt)
-- [Discharge board-test record](proje3/docs/board_test_22_real_bess_ina226_discharge.txt)
-- [Final bidirectional bridge CSV](proje1/data/unified_tracker_bess_bidirectional_demo_bridge.csv)
-- [Final bidirectional dashboard CSV](proje2/data/unified_tracker_bess_bidirectional_demo_dashboard.csv)
-- [Architecture source](main_layout/demo_evidence/final_system_architecture_2026_08_11.md)
-- [CV and report summary](main_layout/demo_evidence/cv_report_summary.txt)
+- [Unified board-test record](solar-tracker-bess/docs/board_test_24_unified_tracker_bess_discharge.txt)
+- [Bidirectional BESS board-test record](solar-tracker-bess/docs/board_test_25_unified_tracker_bess_bidirectional_demo.txt)
+- [Charging board-test record](solar-tracker-bess/docs/board_test_23_real_bess_charge_udp_dashboard.txt)
+- [Discharge board-test record](solar-tracker-bess/docs/board_test_22_real_bess_ina226_discharge.txt)
+- [Final bidirectional bridge CSV](fpga-digital-communications/data/unified_tracker_bess_bidirectional_demo_bridge.csv)
+- [Final bidirectional dashboard CSV](network-telemetry-dashboard/data/unified_tracker_bess_bidirectional_demo_dashboard.csv)
+- [Architecture source](system-integration/demo_evidence/final_system_architecture_2026_08_11.md)
+- [CV and report summary](system-integration/demo_evidence/cv_report_summary.txt)
 
 ## Repository Map
 
-```text
-main_layout/  Shared architecture, status, reports, evidence, and videos
-proje1/       Digital communication simulations, HDL, bridge, and board tests
-proje2/       UDP/dashboard software, reliability tests, and network evidence
-proje3/       Solar/BESS sensing, Orin tracking software, HDL, and hardware tests
-```
+| Directory | Contents |
+|---|---|
+| `solar-tracker-bess/` | Renewable sensing, Orin tracking, PCA9685 control, BESS telemetry, HDL, and hardware tests |
+| `fpga-digital-communications/` | Communication simulations, CRC/QPSK/OFDM HDL, PC bridge, constraints, and board tests |
+| `network-telemetry-dashboard/` | UDP/dashboard software, reliability tests, and network evidence |
+| `system-integration/` | Shared architecture, wiring, reports, presentation, evidence, and videos |
 
 ## Safety and Limitations
 

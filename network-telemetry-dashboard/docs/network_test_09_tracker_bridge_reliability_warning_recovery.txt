@@ -1,0 +1,186 @@
+Network Telemetry Dashboard Network Test 09: Tracker Bridge Reliability Warning/Recovery
+===================================================================
+
+Status
+------
+
+```text
+PASS - live tracker bridge warning/recovery run
+```
+
+Goal
+----
+
+Demonstrate that the live integrated system can detect packet loss/corruption,
+raise a dashboard warning, and then recover after clean packets resume.
+
+This is stronger than the earlier reliability proxy test because it keeps the
+full project chain:
+
+```text
+solar-tracker-bess Orin tracker
+  -> fpga-digital-communications CRC/QPSK/OFDM bridge metadata
+  -> network-telemetry-dashboard reliability proxy fault injection
+  -> network-telemetry-dashboard dashboard link health and recovery
+```
+
+PC Terminal 1: Dashboard
+------------------------
+
+Fast option:
+
+```powershell
+cd "<repository-root>"
+powershell -ExecutionPolicy Bypass -File system-integration/demo_evidence/start_reliability_demo_pc.ps1
+```
+
+This starts the dashboard, reliability proxy, and fpga-digital-communications bridge on the PC.
+
+Manual option:
+
+```powershell
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_live_dashboard.py --udp-host 0.0.0.0 --udp-port 5011 --http-host 127.0.0.1 --http-port 8085 --bess-load-w 0.1 --recovery-window 10 --log network-telemetry-dashboard/data/solar_live_dashboard_reliability_bridge_log.csv
+```
+
+Open:
+
+```text
+http://127.0.0.1:8085
+```
+
+PC Terminal 2: Reliability Proxy
+--------------------------------
+
+This injects faults only during the first 30 received packets, then returns to
+clean forwarding. That lets the dashboard show warning first and recovered later.
+
+```powershell
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_reliability_proxy.py --bind-host 0.0.0.0 --bind-port 5012 --forward-host 127.0.0.1 --forward-port 5011 --drop-every 7 --corrupt-every 9 --inject-first 30 --log network-telemetry-dashboard/data/solar_reliability_proxy_bridge_log.csv
+```
+
+PC Terminal 3: FPGA Digital Communications Bridge
+----------------------------
+
+The bridge receives live Orin tracker packets on port 5013 and forwards enriched
+CRC/QPSK/OFDM JSON to the reliability proxy on port 5012.
+
+```powershell
+cd "<repository-root>"
+python fpga-digital-communications/code/pc_app/tracker_udp_comm_bridge.py --bind-host 0.0.0.0 --bind-port 5013 --forward-host 127.0.0.1 --forward-port 5012 --log fpga-digital-communications/data/tracker_udp_comm_bridge_reliability_log.csv
+```
+
+Orin Terminal: Tracker Gateway
+------------------------------
+
+```bash
+cd /home/msi
+python3 solar-tracker-bess/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5013 --lock-error-deg 10 --ina-enable --ina-bus 7 --ina-addr 0x44 --shunt-ohms 0.1
+```
+
+Expected Warning Phase
+----------------------
+
+During the first 30 packets:
+
+```text
+Proxy terminal:
+  DROP rx=...
+  FWD ... valid=0
+
+Dashboard:
+  Link State = warning
+  Invalid Packets increases
+  Sequence Gaps increases
+  Digital Comm Layer = CRC/QPSK/OFDM
+```
+
+Expected Recovery Phase
+-----------------------
+
+After packet 30, the proxy stops injecting faults.
+
+After 10 clean recent packets:
+
+```text
+Dashboard:
+  Link State = recovered
+  Recent telemetry is clean
+  Invalid Packets and Sequence Gaps still show the historical fault count
+  Digital Comm Layer remains CRC/QPSK/OFDM
+```
+
+Generate Evidence Summary
+-------------------------
+
+```powershell
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/reliability_evidence_analyzer.py --proxy-log network-telemetry-dashboard/data/solar_reliability_proxy_bridge_log.csv --dashboard-log network-telemetry-dashboard/data/solar_live_dashboard_reliability_bridge_log.csv --out network-telemetry-dashboard/data/solar_reliability_bridge_evidence_summary.txt --recent-window 10
+```
+
+Expected Evidence Summary
+-------------------------
+
+```text
+Proxy status: injection observed
+Dashboard status: warning evidence observed
+Recovery status: recovered recent window
+```
+
+Observed Live Result - 2026-08-05
+---------------------------------
+
+The live run used the full chain:
+
+```text
+Orin tracker -> fpga-digital-communications bridge -> reliability proxy -> dashboard
+```
+
+Dashboard warning screenshot:
+
+```text
+seq=17 gaps=2 bad=2
+Link State = warning
+Invalid Packets = 2
+Sequence Gaps = 2
+Digital Comm Layer = CRC/QPSK/OFDM
+Comm detail = 133B frame | 532 QPSK | 12 OFDM | gap 0
+```
+
+Evidence analyzer result:
+
+```text
+Proxy rows: 58
+Forwarded rows: 54
+Dropped rows: 4
+Corrupted rows: 3
+Dashboard valid rows: 51
+Dashboard invalid rows: 3
+Dashboard total sequence gaps: 4
+Recent window rows: 10
+Recent invalid rows: 0
+Recent sequence gaps: 0
+Recovery status: recovered recent window
+```
+
+Note: if the Orin sender stops, the dashboard later changes to stale. That is
+expected and means the receiver is no longer getting fresh packets. The warning
+and recovery evidence above comes from the live log before the sender stopped.
+
+Why This Matters
+----------------
+
+```text
+network-telemetry-dashboard becomes more than a dashboard.
+It proves network observability: packet loss, corruption, warning state, and
+recovery state while carrying real renewable tracker telemetry and fpga-digital-communications
+digital-communication metadata.
+```
+
+Nexys Video Vivado Part
+-----------------------
+
+```text
+xc7a200tsbg484-1
+```

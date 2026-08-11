@@ -1,0 +1,150 @@
+FPGA Digital Communications Board Test 04: OFDM Resource-Grid Counter
+================================================
+
+Goal
+----
+
+Move the first OFDM concept from Python simulation to the Nexys Video FPGA without
+starting with a full FFT/IFFT.
+
+The FPGA reports the OFDM packet accounting for the shared `p3` telemetry frame:
+FFT size, cyclic prefix, data/pilot subcarriers, required OFDM symbols, frame size,
+QPSK symbol count, and padding.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  ofdm_resource_grid_counter_top
+
+HDL sources:
+  fpga-digital-communications/code/hdl/uart_tx.v
+  fpga-digital-communications/code/hdl/ofdm_resource_grid_counter_top.v
+
+Constraints:
+  fpga-digital-communications/hardware/constraints/nexys_video_ofdm_resource_grid_counter.xdc
+```
+
+OFDM parameters
+---------------
+
+```text
+FFT size:
+  64
+
+Cyclic prefix:
+  16 samples
+
+Data subcarriers:
+  48
+
+Pilot subcarriers:
+  4
+
+Frame:
+  87 bytes / 696 bits
+
+QPSK symbols:
+  348
+
+OFDM symbols per packet:
+  8
+
+Padding:
+  72 bits
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  Constant OK.
+
+LD1:
+  Heartbeat toggles once per report.
+
+LD2:
+  UART busy.
+
+LD4-LD7:
+  Fixed 0101 marker for OFDM board test.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected output
+---------------
+
+```text
+p1o,seq=00001,fft=064,cp=016,data=048,pilot=004,ofdm=008,frame_b=00087,qpsk=00348,pad=00072,ok=1
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY/TeraTerm receives p1o lines on COM6.
+3. seq increments once per report.
+4. fft=064, cp=016, data=048, pilot=004, ofdm=008.
+5. frame_b=00087, qpsk=00348, pad=00072.
+6. ok=1.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed output:
+
+```text
+p1o,seq=00034,fft=064,cp=016,data=048,pilot=004,ofdm=008,frame_b=00087,qpsk=00348,pad=00072,ok=1
+p1o,seq=00035,fft=064,cp=016,data=048,pilot=004,ofdm=008,frame_b=00087,qpsk=00348,pad=00072,ok=1
+p1o,seq=00036,fft=064,cp=016,data=048,pilot=004,ofdm=008,frame_b=00087,qpsk=00348,pad=00072,ok=1
+p1o,seq=00051,fft=064,cp=016,data=048,pilot=004,ofdm=008,frame_b=00087,qpsk=00348,pad=00072,ok=1
+```
+
+Confirmed:
+
+```text
+seq increments once per report.
+FFT size, cyclic prefix, data carriers, pilot carriers, OFDM symbol count, frame size,
+QPSK symbol count, and padding match the Python OFDM simulation.
+```
+
+Why this matters
+----------------
+
+```text
+This is the safe FPGA stepping stone before full OFDM FFT/IFFT:
+  first prove packet sizing
+  then prove resource-grid placement
+  then add cyclic prefix buffering
+  then add FFT/IFFT or a vendor FFT IP path
+```

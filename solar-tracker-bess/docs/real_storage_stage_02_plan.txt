@@ -1,0 +1,213 @@
+Solar Tracker and BESS Real Storage Stage 02: Safe Battery Telemetry
+====================================================
+
+Goal
+----
+
+Add a real low-voltage storage element to the renewable telemetry system without
+using it to power the Nexys Video or Orin Nano Super.
+
+This makes the project more realistic:
+
+```text
+PV/sun-tracking side
+  -> solar voltage/current/power
+  -> storage voltage/current/state
+  -> FPGA telemetry packet
+  -> digital communication reliability layer
+  -> UDP/network dashboard
+  -> Orin supervisor later
+```
+
+Safety boundary
+---------------
+
+```text
+Allowed:
+  Use a protected 1-cell LiPo/Li-ion battery as a measured storage device.
+  Use a real charger/protection module between solar/USB supply and battery.
+  Measure battery voltage/current through sensors.
+  Keep Nexys Video and Orin on their normal power adapters.
+
+Not allowed in this stage:
+  Do not power Nexys Video from the LiPo battery.
+  Do not power Orin from the LiPo battery.
+  Do not connect solar panel directly to LiPo.
+  Do not charge LiPo without charger/protection circuitry.
+  Do not use grid/inverter/220 VAC hardware.
+```
+
+Recommended first real storage topology
+---------------------------------------
+
+```text
+Small 5V/6V solar panel or USB 5V bench source
+  -> 1S LiPo charger/protection module
+  -> protected 1S LiPo/Li-ion battery
+  -> small safe load
+
+Battery voltage divider
+  -> MCP3208 CH2
+
+Battery charge/discharge current sensor or INA226 path
+  -> MCP3208 CH3 or INA226 I2C path later
+```
+
+Measured fields
+---------------
+
+Add these after the real PV voltage/current stage is stable:
+
+```text
+bv_mv:
+  Battery voltage in millivolts.
+
+bi_ma:
+  Battery current in milliamps.
+  Positive = charging.
+  Negative = discharging.
+  If signed fields are inconvenient in the FPGA packet, send direction separately.
+
+bsoc:
+  Estimated battery state of charge in percent.
+  First version can be voltage-estimated.
+  Later version can use coulomb counting from current over time.
+
+bstate:
+  charge / discharge / idle / low / protect
+
+bprot:
+  Storage protection flag:
+    undervoltage warning
+    overvoltage warning
+    overcurrent warning
+    charger/protection active
+```
+
+Simple 1S LiPo SoC estimate
+---------------------------
+
+For a first dashboard model:
+
+```text
+4.20 V -> 100%
+3.90 V -> about 70%
+3.70 V -> about 45-55%
+3.50 V -> about 20%
+3.30 V -> low warning
+3.00 V -> stop/disconnect
+```
+
+This is not laboratory-accurate because LiPo voltage depends on load, temperature,
+and recovery time, but it is good enough for a first safe storage telemetry demo.
+
+Digital communication use
+-------------------------
+
+The battery fields make fpga-digital-communications stronger because the communication packet now
+carries mixed renewable data:
+
+```text
+PV voltage/current/power
+Battery voltage/current/SoC
+MPPT state
+Protection flags
+Sun-tracking/light sensor state later
+Sequence counter
+Checksum/CRC
+```
+
+FPGA Digital Communications can then test:
+
+```text
+CRC detection on a larger energy packet
+QPSK/OFDM packet payload transmission
+packet loss detection
+bit error impact on safety-critical fields
+```
+
+Network use
+-----------
+
+The battery fields make network-telemetry-dashboard stronger because the dashboard becomes a small
+renewable edge-monitoring system instead of only a PV graph:
+
+```text
+UDP/MQTT/HTTP packet stream
+PV production
+storage state of charge
+charge/discharge status
+link quality
+fault/protection state
+CSV/JSON logs for reports
+```
+
+Orin Nano Super role
+--------------------
+
+When Orin is added:
+
+```text
+Receive FPGA packets.
+Validate sequence/CRC.
+Log energy and battery trends.
+Run dashboard/API.
+Detect abnormal battery/PV behavior.
+Optionally use camera or light sensors for sun-tracking decisions.
+Send high-level commands to FPGA.
+```
+
+Nexys Video role
+----------------
+
+```text
+Sample voltage/current sensors.
+Apply real-time protection thresholds.
+Generate PWM/servo timing where needed.
+Build packet fields.
+Add sequence/checksum/CRC.
+Send telemetry to Orin/PC.
+```
+
+Next implementation steps
+-------------------------
+
+```text
+1. Finish real PV sensing with MCP3208 CH0/CH1.
+2. Keep dashboard BESS simulation active.
+3. Add battery telemetry fields to the packet format as v2.
+4. Add measured battery voltage on MCP3208 CH2 using a safe divider.
+5. Add measured battery current through INA226 or an analog current sensor.
+6. Replace simulated BESS SoC with measured/estimated SoC.
+7. Extend fpga-digital-communications CRC/QPSK/OFDM tests to the larger packet.
+8. Extend network-telemetry-dashboard dashboard/logs to show measured storage state.
+```
+
+Progress recorded 2026-08-11
+----------------------------
+
+```text
+PASS: protected 1S cell and TP4056 output brought up.
+PASS: existing INA226 moved from panel power sensing to the BESS high-side path.
+PASS: calibrated battery voltage on Orin I2C bus 7, address 0x44.
+PASS: direct L9110 fan discharge measured for 40/40 samples.
+PASS: approximately 2.954 V, -231 mA, and -0.683 W under the bench load.
+PASS: negative discharge direction preserved in the fpga-digital-communications compact frame.
+PASS: network-telemetry-dashboard can use real measured BESS power instead of its simulated load model.
+
+PASS: supervised five-second charge precheck at approximately +222 mA.
+PASS: integrated 40-packet charge run at +233 to +236 mA and +0.895 to +0.908 W.
+PASS: positive charging sign preserved through UDP, CRC/QPSK/OFDM, dashboard,
+and CSV logging with 40/40 valid packets and zero sequence gaps.
+
+PASS: unified four-LDR tracker and real BESS discharge run completed with both
+servo axes active, panel telemetry and signed battery telemetry in one packet.
+PASS: unified fpga-digital-communications/network-telemetry-dashboard path delivered 60/60 valid 161-byte frames with zero
+sequence gaps and the dashboard kept panel and battery power separate.
+PASS: real discharge remained approximately 2.974 to 2.990 V, -217 to -222 mA,
+and -0.647 to -0.659 W while tracking moved and reached locked states.
+
+Remaining hardware limitation: temporary mechanical terminals are suitable only
+for supervised bench tests. Use mechanically reliable terminals before extended
+or unattended charging.
+```

@@ -1,0 +1,188 @@
+Solar Tracker and BESS Board Test 03: Shared Telemetry Packet V1
+================================================
+
+Goal
+----
+
+Create the first shared telemetry packet that will be reused by all three projects.
+
+This is still board-only and safe:
+
+```text
+No solar panel.
+No battery.
+No buck converter.
+No external sensors.
+```
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_packet_v1_uart_top
+
+HDL sources:
+  solar-tracker-bess/code/hdl/pwm_generator.v
+  solar-tracker-bess/code/hdl/uart_tx.v
+  solar-tracker-bess/code/hdl/solar_packet_v1_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_packet_v1_uart.xdc
+```
+
+Board behavior
+--------------
+
+```text
+SW0-SW7:
+  8-bit duty command.
+
+LD0:
+  PWM output.
+
+LD1:
+  Packet heartbeat.
+
+LD2:
+  UART busy indicator.
+
+LD3:
+  Fault flag.
+
+LD4-LD7:
+  Upper duty bits.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected telemetry
+------------------
+
+Example:
+
+```text
+p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+```
+
+Fields:
+
+```text
+p3:
+  Renewable telemetry source.
+
+seq:
+  Packet sequence counter.
+
+d_pct:
+  Duty percentage.
+
+v_mv:
+  Fake voltage in millivolts.
+
+i_ma:
+  Fake current in milliamps.
+
+p_mw:
+  Fake power in milliwatts.
+
+mppt:
+  Temporary direction indicator based on switch duty movement:
+    up = duty increased since previous packet
+    dn = duty decreased since previous packet
+    hd = duty held
+
+f:
+  Temporary fault flag.
+  1 when duty_raw >= 0xF0.
+
+chk:
+  Temporary 8-bit XOR checksum over the numeric/state fields.
+  This is not a final polynomial CRC yet.
+
+raw:
+  Raw 8-bit switch/duty command in hexadecimal.
+  Included so the PC parser can fully validate chk.
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY receives repeated p3 packet lines on COM6.
+3. seq increments once per packet.
+4. d_pct, v_mv, i_ma, and p_mw change when switches change.
+5. mppt changes to up/dn/hd depending on switch movement.
+6. f becomes 1 near the highest duty commands.
+7. chk changes when the packet contents change.
+8. PC parser reports OK while switches change.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Revision:
+
+```text
+raw=XX was added after the first PASS so the PC/Orin parser can fully validate chk
+for all switch states.
+Result:
+  PASS.
+  PC logger reports OK while SW0-SW7 move.
+```
+
+Observed telemetry:
+
+```text
+p3,seq=00040,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=E5,raw=80
+p3,seq=00041,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=hd,f=0,chk=E5,raw=80
+p3,seq=00044,d_pct=00003,v_mv=12160,i_ma=00548,p_mw=06663,mppt=dn,f=0,chk=B1,raw=08
+p3,seq=00057,d_pct=00096,v_mv=16940,i_ma=01982,p_mw=33575,mppt=up,f=1,chk=DD,raw=F7
+p3,seq=00060,d_pct=00100,v_mv=17100,i_ma=02030,p_mw=34713,mppt=hd,f=1,chk=DF,raw=FF
+```
+
+Confirmed:
+
+```text
+seq increments once per packet.
+d_pct, v_mv, i_ma, and p_mw respond to SW0-SW7.
+mppt reports up, dn, and hd based on duty movement.
+f becomes 1 at very high duty.
+chk changes with seq and packet contents.
+```
+
+Why this matters
+----------------
+
+```text
+This packet becomes the shared payload for:
+  solar-tracker-bess renewable control/telemetry
+  fpga-digital-communications digital communication reliability tests
+  network-telemetry-dashboard network parsing/logging tests
+```

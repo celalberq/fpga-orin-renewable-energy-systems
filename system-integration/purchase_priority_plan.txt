@@ -1,0 +1,72 @@
+Purchase Priority Plan
+======================
+
+Goal:
+
+Avoid buying expensive FPGA/RF/power hardware too early. Buy parts in an order that supports safe testing and keeps all three projects moving.
+
+Buy first:
+
+```text
+1. Jumper wires and basic wiring kit
+2. Logic level converter
+3. Breadboard, if in stock
+4. Basic resistor set
+5. Ethernet cables
+6. Multimeter if not already available
+```
+
+Buy soon after the basic build docs/code start:
+
+```text
+1. MCP3208 ADC or similar SPI ADC for solar sensing
+   Current decision: buy now for solar-tracker-bess real sensing stage 01.
+2. INA226 or INA219 current/power sensor for solar sensing
+   Current decision: buy INA226 now as calibration/reference and later I2C path.
+3. Fuses and fuse holders for solar safety
+4. Managed switch with port mirroring for network work
+5. Small resistive loads
+```
+
+Buy after first simulations and basic HDL are useful:
+
+```text
+1. Low-voltage DC supply or small solar source
+2. Proper gate driver
+3. Buck converter power-stage components
+4. ADC/DAC front-end for digital communication
+5. FPGA-specific Pmod/FMC expansion boards
+```
+
+Procurement route note:
+
+```text
+If Turkish Digilent distributors are out of stock:
+  1. Try direct Digilent-to-Turkey first.
+  2. Expect extra end-use/export information for Turkey.
+  3. If direct shipping is blocked, too expensive, or customs handling is too painful, use Germany/EU fallback.
+  4. For Germany fallback, buy from Digilent or a reliable EU/Germany seller, then have one board brought to Turkey as personal study hardware.
+  5. Keep invoice and original packaging.
+  6. Recheck Turkey customs rules before travel.
+```
+
+Do not buy yet:
+
+```text
+1. High-power inverter
+2. Grid-tied solar equipment
+3. Expensive SDR
+4. Large battery pack
+5. High-voltage power electronics
+6. SFP modules or DAC cable
+```
+
+Reason:
+
+The first useful demos can be built with simulations, low-voltage sensing, dashboards, and simple FPGA/Orin communication. Expensive hardware should come after the architecture proves itself.
+
+Current buy-ready checklist:
+
+```text
+system-integration/buy_ready_peripherals_and_orin_plan.txt
+```

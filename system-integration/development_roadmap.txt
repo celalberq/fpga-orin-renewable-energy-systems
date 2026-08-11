@@ -1,0 +1,238 @@
+Development Roadmap
+===================
+
+Goal:
+
+Build three organized summer projects around a Nexys Video FPGA, Jetson Orin
+Nano, and PC dashboard, then integrate them as one renewable-energy telemetry
+prototype.
+
+Post-graduation alignment:
+
+```text
+Main external direction:
+  Australia master's applications around computer engineering + renewable energy systems.
+
+Best-facing project:
+  solar-tracker-bess Renewable Energy Solar Project, extended toward solar+BESS monitoring, MPPT simulation, and SCADA-style telemetry.
+
+Core technical identity:
+  FPGA/embedded/software/data systems applied to renewable energy.
+
+Strong support:
+  Digital communication for telemetry, signal processing, and reliable data movement.
+
+Basic support:
+  Networking for Ethernet literacy and infrastructure monitoring.
+```
+
+Recommended build order:
+
+```text
+Phase 0: Documentation and platform setup
+Phase 1: Nexys Video bring-up and UART telemetry
+Phase 2: Shared renewable telemetry packet on FPGA
+Phase 3: PC parser/logger for shared packet
+Phase 4: solar-tracker-bess MPPT fake-control and then real sensor path
+Phase 5: fpga-digital-communications digital communication reliability layer using the same packet
+Phase 6: network-telemetry-dashboard network transport/parsing layer using the same packet
+Phase 7: Orin Nano Super dashboard/logging/AI supervisor
+Phase 8: Turn each layer into demo, report, and CV artifact
+```
+
+Why this order:
+
+```text
+Solar first:
+  It is the best Australia-facing project and has a safe low-voltage MVP.
+
+Digital communication second:
+  It strengthens the computer/FPGA side with DSP, modulation, and telemetry fundamentals.
+
+Network third:
+  It is useful as basic infrastructure literacy, but it should not become the main identity.
+```
+
+Phase 0: Documentation and platform setup
+
+```text
+Output:
+  - L1 and L2 design docs for all projects
+  - shared architecture docs
+  - FPGA requirement matrix
+  - peripheral/cost notes
+  - GitHub-ready folder layout
+```
+
+Phase 1: Nexys Video bring-up and UART telemetry
+
+```text
+Output:
+  - LED/switch test
+  - UART hello-world
+  - confirmed JTAG/PROG and J13/COM6 paths
+  - safe board-only baseline
+```
+
+Phase 2: Shared renewable telemetry packet on FPGA
+
+```text
+Output:
+  - PWM generator test
+  - scaled d_pct/v_mv/i_ma/p_mw/f fields
+  - sequence counter
+  - MPPT state field
+  - checksum/CRC field
+```
+
+Phase 3: PC parser/logger for shared packet
+
+```text
+Output:
+  - UART parser
+  - CSV log
+  - checksum validation
+  - sequence loss detection
+  - first plot/dashboard from same packet
+```
+
+Phase 4: solar-tracker-bess MPPT fake-control and real sensor path
+
+```text
+Output:
+  - fake PV model
+  - Perturb and Observe MPPT state machine
+  - voltage/current sensing test
+  - real calibrated sensor path later
+
+Current status:
+  - solar_mppt_auto_uart_top.v created
+  - auto duty perturb/reverse loop prepared for Nexys Video
+  - same p3 packet and UDP dashboard path reused
+  - live Nexys Video pass confirmed automatic duty movement and dashboard MPPT/protection state
+```
+
+Phase 5: fpga-digital-communications digital communication reliability layer
+
+```text
+Output:
+  - use shared solar telemetry packet as payload
+  - shared packet framing/CRC simulation
+  - Nexys Video frame/CRC loopback over UART
+  - Python QPSK packet-link simulation
+  - HDL mapper/demapper loopback
+  - BER counter
+  - internal FPGA loopback
+  - frame error and checksum results
+
+Current status:
+  - shared_packet_comm_sim.py done and CSV generated
+  - comm_frame_loopback_top.v passed on Nexys Video
+  - qpsk_packet_link_sim.py done and CSV generated
+  - qpsk_loopback_top.v passed on Nexys Video
+  - qpsk_channel_model_top.v passed on Nexys Video
+  - ofdm_packet_link_sim.py done and CSV generated
+  - ofdm_resource_grid_counter_top.v passed on Nexys Video
+  - ofdm_cp_grid_sequencer_top.v passed on Nexys Video
+  - tracker frame/CRC/QPSK/OFDM batch pipeline passed on Nexys Video
+  - unified live tracker+BESS baseline passed 60/60 frames with zero gaps
+  - continuous bidirectional demo passed 368/368 CRC-valid frames with zero gaps
+```
+
+Phase 6: network-telemetry-dashboard network transport/parsing layer
+
+```text
+Output:
+  - use shared solar telemetry packet as payload
+  - packet parsing simulation
+  - metadata format definition
+  - PC dashboard with simulated traffic first
+  - later FPGA Ethernet input on Nexys Video
+
+Current status:
+  - stored Ethernet frame parser exists
+  - solar_telemetry_udp_gateway.py created
+  - solar_telemetry_udp_receiver.py created
+  - solar_live_dashboard.py created and smoke-tested
+  - PC can bridge live p3 UART telemetry into UDP JSON
+  - live dashboard passed with SCADA-style power/duty/fault view
+  - BESS state-of-charge simulation added to dashboard and smoke-tested
+  - telemetry link-health panel added and smoke-tested
+  - real BESS charge/discharge state is displayed from INA226 telemetry
+  - unified tracker/panel/BESS baseline passed 60/60 packets with zero gaps
+  - continuous dashboard passed 368/368 packets with zero gaps while BESS state
+    changed idle -> charging -> idle -> discharging -> idle
+```
+
+Phase 7: Orin Nano Super dashboard/logging/AI supervisor
+
+```text
+Output:
+  - Orin receives same telemetry packet
+  - dashboard
+  - CSV/JSON/database logging
+  - fault/shading/anomaly analysis
+  - optional camera-based panel monitoring
+
+Current status:
+  - Orin reads the real Nexys/MCP3208 four-LDR UART stream
+  - calibrated two-axis PCA9685 tracking passed with the replacement mechanism
+  - real tracker -> CRC/QPSK/OFDM bridge -> dashboard passed with zero gaps
+  - fixed-vs-tracking weak-light A/B showed 24.141% mean-power gain
+  - locked-state panel shading warning and automatic recovery passed live
+```
+
+Phase 8: Portfolio output
+
+```text
+For each project:
+  - 1 page summary
+  - block diagram
+  - demo video
+  - performance plots
+  - GitHub README
+  - CV bullet
+
+Current status:
+  - tracker subsystem edited video accepted
+  - unified tracker+BESS edited video accepted
+  - continuous bidirectional tracker+BESS final demo accepted
+  - final dated system status and one-page report created
+  - evidence index and CV summary updated with measured BESS results
+  - polished final technical report created in Word and PDF
+  - seven-slide final presentation created and overflow-checked
+```
+
+Australia-facing additions:
+
+```text
+For solar-tracker-bess:
+  - solar+BESS block diagram
+  - simple single-line diagram
+  - MPPT simulation plot
+  - BESS state-of-charge simulation
+  - SCADA-style dashboard screenshot
+  - short explanation of relevance to utility-scale solar, BESS, and EPC/project engineering
+```
+
+Suggested summer sequence:
+
+```text
+Week 1-2:
+  Finish docs, tool setup, Python simulations.
+
+Week 3-4:
+  Solar sensing, PWM, and MPPT simulation.
+
+Week 5-6:
+  Digital communication simulation and HDL loopback blocks.
+
+Week 7-8:
+  Basic network metadata dashboard and parser simulation.
+
+Week 9-10:
+  Nexys Video board bring-up and first real FPGA integration.
+
+Week 11-12:
+  Polish demos, reports, screenshots, and CV material.
+```

@@ -1,0 +1,184 @@
+Solar Tracker and BESS Board Test 04: Auto MPPT UART + Dashboard
+=================================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Goal
+----
+
+Move from manual switch-controlled telemetry to an FPGA-owned MPPT control loop.
+
+The FPGA now:
+
+```text
+1. Generates PWM duty internally.
+2. Simulates a PV power curve around a switch-selected maximum-power point.
+3. Compares current power with previous power.
+4. Keeps or reverses the perturb direction.
+5. Streams the same p3 telemetry packet to the existing UDP dashboard.
+```
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_mppt_auto_uart_top
+
+HDL sources:
+  solar-tracker-bess/code/hdl/uart_tx.v
+  solar-tracker-bess/code/hdl/pwm_generator.v
+  solar-tracker-bess/code/hdl/solar_mppt_auto_uart_top.v
+
+Constraints:
+  solar-tracker-bess/hardware/constraints/nexys_video_solar_mppt_auto_uart.xdc
+```
+
+Switch meaning
+--------------
+
+```text
+SW0-SW2:
+  Simulated maximum-power point location.
+  Change these to move the fake PV curve and watch MPPT respond.
+
+SW3-SW5:
+  Simulated irradiance/current level.
+  Higher value means more available current and power.
+
+SW7:
+  Demo fault input.
+  1 forces the protection flag.
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  PWM output.
+
+LD1:
+  Telemetry heartbeat.
+
+LD2:
+  UART busy.
+
+LD3:
+  Fault/protection flag.
+
+LD4:
+  Current MPPT perturb direction.
+
+LD5-LD7:
+  SW0-SW2 maximum-power-point selector.
+```
+
+Expected packet shape
+---------------------
+
+```text
+p3,seq=00001,d_pct=00012,v_mv=11640,i_ma=00960,p_mw=11174,mppt=up,f=0,chk=XX,raw=20
+```
+
+The values will change automatically as the FPGA searches around the simulated
+maximum-power point.
+
+Dashboard run
+-------------
+
+Terminal 1:
+
+```text
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_live_dashboard.py --udp-host 127.0.0.1 --udp-port 5007 --http-host 127.0.0.1 --http-port 8081
+```
+
+Open:
+
+```text
+http://127.0.0.1:8081
+```
+
+Terminal 2:
+
+```text
+cd "<repository-root>"
+python network-telemetry-dashboard/code/pc_app/solar_telemetry_udp_gateway.py --port COM6 --baud 115200 --udp-host 127.0.0.1 --udp-port 5007
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. COM6 receives valid p3 packets.
+3. Dashboard shows duty changing without manually moving SW0-SW7 as duty.
+4. MPPT Status changes between Power increased, Power decreased, and Hold.
+5. Power and duty trend lines move.
+6. SW0-SW2 changes move the target point and the controller responds.
+7. SW7=1 shows FAULT/protection on the dashboard.
+```
+
+Observed live result
+--------------------
+
+```text
+Date:
+  2026-07-13
+
+Board:
+  Nexys Video running solar_mppt_auto_uart_top
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Dashboard:
+  http://127.0.0.1:8081
+
+Observed dashboard values:
+  seq=236
+  gaps=0
+  bad=0
+  power=8.05 W
+  duty=25%
+  voltage=12.28 V
+  current=0.66 A
+  MPPT Status=Power increased
+  Protection=OK
+
+Observed raw packet:
+  p3,seq=00236,d_pct=00025,v_mv=12280,i_ma=00656,p_mw=08055,mppt=up,f=0,chk=99,raw=40
+
+Observed gateway behavior:
+  UDP packets reached 127.0.0.1:5007.
+  Gateway reported OK for all shown packets.
+  seq incremented continuously through the captured section.
+  duty changed automatically without using SW0-SW7 as direct duty input.
+  mppt moved through up, dn, and hd states.
+  f=1 was observed briefly, then returned to f=0, proving the protection path.
+```
+
+Why this matters
+----------------
+
+```text
+This is the first actual controller version of the solar project:
+  FPGA control loop
+  PWM output
+  simulated PV curve
+  MPPT decision
+  protection flag
+  networked dashboard
+```

@@ -1,0 +1,79 @@
+FPGA Digital Communications Communication Test 05: Tracker QPSK Packet Link
+======================================================
+
+Status
+------
+
+```text
+PASS
+```
+
+Goal
+----
+
+Run the current tracker/INA226 telemetry packet through the QPSK packet-link
+model.
+
+Input frame
+-----------
+
+```text
+payload:
+  trk tracker telemetry packet
+
+payload_bytes:
+  129
+
+frame_bytes:
+  133
+
+QPSK symbols:
+  532
+```
+
+Observed simulation
+-------------------
+
+```text
+ebn0_db frames ber        fer        frame_errors crc_detected undetected
+0.0     350    0.07867884 1.00000000 350          350          0
+2.0     350    0.03770140 1.00000000 350          350          0
+4.0     350    0.01217508 1.00000000 350          350          0
+6.0     350    0.00247046 0.93142857 326          326          1
+8.0     350    0.00017991 0.17142857 60           60           0
+10.0    350    0.00000000 0.00000000 0            0            0
+12.0    350    0.00000000 0.00000000 0            0            0
+```
+
+Interpretation
+--------------
+
+```text
+The longer tracker packet needs 532 QPSK symbols instead of the old 348 symbols.
+BER and FER still collapse to zero at high Eb/N0.
+CRC catches corrupted frames in noisy operating points.
+```
+
+Files
+-----
+
+```text
+fpga-digital-communications/code/sim/tracker_qpsk_packet_link_sim.py
+fpga-digital-communications/data/tracker_qpsk_packet_link_sim.csv
+fpga-digital-communications/data/tracker_qpsk_packet_link_constellation.csv
+```
+
+Run
+---
+
+```text
+cd "<repository-root>"
+python fpga-digital-communications/code/sim/tracker_qpsk_packet_link_sim.py
+```
+
+Nexys Video Vivado part
+-----------------------
+
+```text
+xc7a200tsbg484-1
+```
