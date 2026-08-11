@@ -1,0 +1,96 @@
+Peripherals And Turkey Cost Notes: proje3 Solar
+===============================================
+
+Price note:
+
+Checked on 2026-06-16. Recheck before buying.
+
+Core peripherals:
+
+```text
+1. MCP3208 ADC DIP-16
+   Use: SPI ADC for analog voltage/current readings.
+   Observed price: 269.61 TL
+   Source: Direnc.net
+   URL: https://www.direnc.net/analogtan-digitale-donusturucu-entegreler
+
+2. INA226 IIC current/power monitor module
+   Use: power telemetry and calibration.
+   Observed price: 79.56 TL
+   Source: Direnc.net
+   URL: https://www.direnc.net/akim-sensorleri
+
+3. INA219 I2C current sensor module
+   Use: lower-cost alternative to INA226.
+   Observed price: 59.67 TL
+   Source: Direnc.net
+   URL: https://www.direnc.net/akim-sensorleri
+
+4. ACS712 current sensor module
+   Use: simple analog current sensing option.
+   Observed price: 56.83 TL for 20A module
+   Source: Direnc.net
+   URL: https://www.direnc.net/akim-sensorleri
+
+5. Small solar cells for early tests
+   Use: low-power input testing only.
+   Observed examples:
+     1.5V / 100mA small solar cell: 52.93 TL
+     12V / 150mA small solar cell: 340.85 TL, stock must be checked
+   Source: Direnc.net
+   URL: https://www.direnc.net/gunes-pilleri
+
+6. LM2596 mini adjustable step-down regulator board
+   Use: auxiliary 5V/3.3V rail only, not the main MPPT converter.
+   Observed price: 87.93 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/voltaj-regulator-karti
+
+7. Logic level converter 3.3V-5V
+   Use: only if a module uses 5V logic.
+   Observed price: 19.16 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/voltaj-regulator-karti
+
+8. MOSFET modules for early switching tests
+   Use: basic switching experiments, not final high-quality buck converter.
+   Observed examples:
+     FR120N MOSFET control module: 81.17 TL
+     LR7843 MOSFET driver board: 81.17 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/role-karti
+
+9. Glass fuses
+   Use: input protection.
+   Observed price range: 1.35 TL to 1.80 TL
+   Source: Robotistan
+   URL: https://www.robotistan.com/sigorta
+
+10. Jumper and wiring
+    Use: sensor and control wiring.
+    Observed examples:
+      40-pin M-M jumper: 55.80 TL
+      24AWG 20m wire: 116.67 TL
+    Source: Robotistan
+    URL: https://www.robotistan.com/kablo-donusturucu
+```
+
+Still to check before final hardware:
+
+```text
+1. 20W-50W 12V solar panel.
+2. Gate driver IC/module suitable for the selected MOSFET.
+3. Inductor, diode/synchronous MOSFET, capacitors, and shunt resistor for buck converter.
+4. Load resistor bank or electronic load.
+5. Bench supply with current limiting.
+6. TVS diode and reverse-polarity protection.
+7. Proper terminal blocks and enclosure.
+```
+
+Budget direction:
+
+```text
+Sensor + wiring prototype: about 500 TL to 1000 TL excluding FPGA and Orin.
+Low-power PWM test: add MOSFET module, fuse, passives, and safe load.
+Real MPPT converter: final cost depends on solar panel, load, gate driver, and power stage quality.
+```

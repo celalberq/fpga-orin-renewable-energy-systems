@@ -1,0 +1,164 @@
+Proje1 Communication Test 03: OFDM Packet Framing Simulation
+============================================================
+
+Goal
+----
+
+Move from single-carrier QPSK to the first OFDM packet model while keeping the same
+shared renewable telemetry frame.
+
+This test takes the framed `p3` packet, maps bits to QPSK symbols, places those symbols
+into OFDM data subcarriers, inserts pilots, adds a cyclic prefix, applies AWGN, removes
+the cyclic prefix, FFTs back to subcarriers, demaps QPSK, reconstructs the frame, and
+checks CRC/frame validity.
+
+Board / Vivado code
+-------------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+```
+
+This test is simulation-only. FPGA OFDM HDL comes after the resource grid and packet
+framing behavior are stable.
+
+OFDM parameters
+---------------
+
+```text
+FFT size:
+  64
+
+Cyclic prefix:
+  16 samples
+
+Active subcarriers:
+  -26..-1 and +1..+26
+
+Pilot subcarriers:
+  -21, -7, +7, +21
+
+Data subcarriers:
+  48
+
+Payload frame:
+  87 bytes / 696 bits
+
+QPSK symbols from frame:
+  348
+
+OFDM symbols per packet:
+  8
+
+Padding:
+  72 bits
+```
+
+Script
+------
+
+```text
+proje1/code/sim/ofdm_packet_link_sim.py
+```
+
+Run:
+
+```text
+python proje1/code/sim/ofdm_packet_link_sim.py
+```
+
+Outputs:
+
+```text
+proje1/data/ofdm_packet_link_sim.csv
+proje1/data/ofdm_resource_grid_example.csv
+```
+
+Metrics
+-------
+
+```text
+ber:
+  Bit error rate after OFDM receive and QPSK demapping.
+
+fer:
+  Frame error rate after reconstructing the packet and checking preamble/length/CRC.
+
+crc_detected_errors:
+  Corrupted frames rejected by the receiver.
+
+undetected_errors:
+  Corrupted frames that still passed frame checks.
+```
+
+Pass condition
+--------------
+
+```text
+1. Simulation runs.
+2. CSV outputs are generated.
+3. Resource grid output shows data and pilot carriers.
+4. BER decreases as Eb/N0 increases.
+5. FER collapses toward zero as Eb/N0 increases.
+6. High Eb/N0 reaches zero or near-zero frame errors.
+7. The shared p3 telemetry frame remains the payload.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed simulation:
+
+```text
+ebn0_db frames ber        fer        frame_errors crc_detected undetected
+0.0     120    0.12300048 1.00000000 120          120          0
+2.0     120    0.07464080 1.00000000 120          120          0
+4.0     120    0.03414751 0.99166667 119          119          1
+6.0     120    0.01075192 1.00000000 120          120          0
+8.0     120    0.00146073 0.65000000 78           78           0
+10.0    120    0.00013170 0.07500000 9            9            0
+12.0    120    0.00001197 0.00833333 1            1            0
+14.0    120    0.00000000 0.00000000 0            0            0
+```
+
+Confirmed:
+
+```text
+frame_bytes=87
+frame_bits=696
+fft_size=64
+cp_len=16
+data_subcarriers=48
+pilot_subcarriers=4
+ofdm_symbols_per_packet=8
+pad_bits=72
+```
+
+Theory note:
+
+```text
+FER can stay high even after BER starts dropping because one frame contains 696 bits.
+This is why communication systems need both physical-layer BER metrics and packet/CRC
+metrics.
+```
+
+Next step after this
+--------------------
+
+```text
+Create staged FPGA OFDM blocks:
+  ofdm_resource_grid_builder.v
+  cyclic_prefix_plan.v
+  ofdm_packet_counter_top.v
+
+The first FPGA version should count OFDM resource-grid placement and packet capacity
+before implementing a full FFT/IFFT.
+```

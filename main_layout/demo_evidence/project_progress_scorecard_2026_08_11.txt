@@ -1,0 +1,47 @@
+Project Progress Scorecard - 2026-08-11
+=======================================
+
+Overall Portfolio
+-----------------
+
+```text
+Current score: 9.8 / 10
+
+The integrated prototype now includes real four-LDR tracking, working pan and
+tilt mechanics, panel-power estimation, measured battery charge/discharge,
+Nexys Video communication proof, zero-gap UDP/dashboard integration, clean CSV
+evidence, and accepted subsystem, unified, and continuous bidirectional demo
+videos.
+```
+
+Project Scores
+--------------
+
+```text
+Proje3 renewable energy:     9.9 / 10
+Proje1 digital communication: 8.8 / 10
+Proje2 network monitoring:    8.8 / 10
+```
+
+Strongest Evidence
+------------------
+
+```text
+Real tracking mean-power gain: +24.141%
+Real BESS discharge: approximately -0.683 W
+Real BESS charging: +0.895 to +0.908 W
+Continuous mixed run: 368/368 valid dashboard and CRC frames, 0 gaps
+Continuous BESS states: idle -> charging -> idle -> discharging -> idle
+Continuous tracker: 213 locked samples, 0.012-degree best error
+Unified frame: 161 bytes, 644 QPSK symbols, 14 OFDM symbols
+Shading detection and automatic recovery: PASS
+```
+
+Remaining Work
+--------------
+
+```text
+Required: none for the validated portfolio baseline.
+Optional: outdoor sunlight data, improved mechanical terminals/enclosure,
+full FPGA IFFT/FFT modem, or remote/cloud storage.
+```

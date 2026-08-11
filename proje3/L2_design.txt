@@ -1,0 +1,110 @@
+L2 Design: Renewable Energy Solar Project
+=========================================
+
+Detailed system blocks:
+
+```text
+PV input or DC supply
+  -> fuse and reverse protection
+  -> voltage divider
+  -> current sensor / shunt monitor
+  -> ADC or digital power monitor
+  -> FPGA sampling/filtering
+  -> MPPT control unit
+  -> PWM generator
+  -> MOSFET gate driver
+  -> buck power stage
+  -> load/battery emulator
+  -> telemetry FIFO
+  -> Orin dashboard and fault detector
+```
+
+Implementation levels:
+
+```text
+Level A: simulate PV curve and MPPT in Python/HDL testbench
+Level B: FPGA reads fake/simulated ADC values and updates duty cycle
+Level C: FPGA reads real voltage/current sensors
+Level D: FPGA drives low-power PWM test circuit
+Level E: FPGA controls real low-voltage buck converter under safe current limit
+Level F: Orin adds AI fault/shading detection
+```
+
+FPGA modules to create later:
+
+```text
+adc_spi_reader.v
+i2c_power_monitor_reader.v
+sample_filter.v
+power_calculator.v
+mppt_perturb_observe.v
+pwm_generator.v: created
+fault_protection.v
+telemetry_uart_or_spi.v: initial UART telemetry created
+top_solar_mppt.v
+```
+
+Current board-only telemetry scaling:
+
+```text
+duty_raw = SW0-SW7
+d_pct    = duty_raw * 100 / 255
+v_mv     = 12000 + duty_raw * 20
+i_ma     = 500 + duty_raw * 6
+p_mw     = v_mv * i_ma / 1000
+f        = 1 when duty_raw >= 0xF0
+```
+
+Orin software modules to create later:
+
+```text
+telemetry_reader.py
+solar_dashboard.py
+experiment_logger.py
+mppt_plotter.py
+fault_classifier.py
+camera_soiling_detector.py
+```
+
+Initial interface recommendation:
+
+```text
+Sensors:
+  MCP3208 SPI ADC for analog voltage/current readings.
+  INA226 or INA219 for calibration and power-monitor telemetry.
+
+FPGA to Orin:
+  UART first.
+  SPI second.
+  Ethernet later if available.
+
+Power stage:
+  Start with safe low-voltage PWM test.
+  Move to real buck converter only after sensor readings and protection logic are verified.
+```
+
+Important hardware note:
+
+Do not use an LM2596 module as the main MPPT-controlled converter. It has its own internal regulator control, so it is useful as an auxiliary supply, not as the FPGA-controlled buck power stage.
+
+Risk control:
+
+```text
+1. Do not connect to the grid.
+2. Stay below 24V for prototype work.
+3. Start below 50W.
+4. Use a fuse and current limit.
+5. Test PWM with dummy load before connecting solar hardware.
+6. Add emergency cutoff behavior in FPGA protection logic.
+```
+
+Deliverables:
+
+```text
+1. L1 and L2 design docs.
+2. MPPT simulation plots.
+3. FPGA sensor/PWM demo.
+4. Low-voltage MPPT demo.
+5. Orin dashboard screenshot.
+6. Solar experiment report and demo video.
+```

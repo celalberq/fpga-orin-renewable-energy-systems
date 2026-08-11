@@ -1,0 +1,119 @@
+Turkey Peripheral Cost Sources
+==============================
+
+Price note:
+
+These prices were checked from Turkish seller pages on 2026-06-16. Prices and stock can change quickly. Before buying, open the source links again and confirm stock, VAT, cargo, and exact product revision.
+
+Useful sourced parts:
+
+```text
+ADC:
+  MCP3208 DIP-16 ADC
+  Observed price: 269.61 TL
+  Source: Direnc.net
+  URL: https://www.direnc.net/analogtan-digitale-donusturucu-entegreler
+
+Current/power sensors:
+  INA226 IIC bidirectional current/power monitor module
+  Observed price: 79.56 TL
+  Source: Direnc.net
+  URL: https://www.direnc.net/akim-sensorleri
+
+  INA219 I2C bidirectional current sensor module
+  Observed price: 59.67 TL
+  Source: Direnc.net
+  URL: https://www.direnc.net/akim-sensorleri
+
+  ACS712 20A current sensor module
+  Observed price: 56.83 TL
+  Source: Direnc.net
+  URL: https://www.direnc.net/akim-sensorleri
+
+Power modules:
+  LM2596 mini adjustable step-down regulator board
+  Observed price: 87.93 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/voltaj-regulator-karti
+
+  MT3608 adjustable step-up regulator board
+  Observed price: 62.00 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/voltaj-regulator-karti
+
+  Logic level converter 3.3V-5V
+  Observed price: 19.16 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/voltaj-regulator-karti
+
+MOSFET / switching modules:
+  FR120N MOSFET control module
+  Observed price: 81.17 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/role-karti
+
+  LR7843 MOSFET driver board
+  Observed price: 81.17 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/role-karti
+
+Protection:
+  5x20 mm and 6x30 mm glass fuses
+  Observed price range: 1.35 TL to 1.80 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/sigorta
+
+Solar:
+  1.5V / 100mA small solar cell
+  Observed price: 52.93 TL
+  Source: Direnc.net
+  URL: https://www.direnc.net/gunes-pilleri
+
+  12V / 150mA small solar cell
+  Observed price: 340.85 TL, stock must be checked
+  Source: Direnc.net
+  URL: https://www.direnc.net/gunes-pilleri
+
+RF / communication:
+  PT2262 1 km 4-channel RF transmitter module
+  Observed price: 249.70 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/rf-1
+
+  433MHz 5dBi SMA antenna
+  Observed price: 66.66 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/anten-ve-konektor
+
+  433MHz magnetic SMA antenna
+  Observed price: 99.71 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/anten-ve-konektor
+
+Cables:
+  40-pin male-male jumper cable set
+  Observed price: 55.80 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/kablo-donusturucu
+
+  40-pin female-male jumper cable set
+  Observed price: 52.98 TL
+  Source: Robotistan
+  URL: https://www.robotistan.com/kablo-donusturucu
+
+  CAT5E Ethernet cable 2m
+  Source page exists, but rendered price was 0 TL during check, so recheck before buying.
+  Source: Robotistan
+  URL: https://www.robotistan.com/ethernet-kablosu-cat-5e-2-metre
+```
+
+Items that still need final purchase-time checking:
+
+```text
+1. 20W-50W 12V solar panel
+2. Managed gigabit switch with port mirroring
+3. Optional SDR board for digital communication RF extension
+4. Electronic load or resistor load bank
+5. Bench power supply
+6. Oscilloscope or logic analyzer
+```

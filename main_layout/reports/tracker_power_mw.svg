@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="64" y="24" font-family="Segoe UI, Arial" font-size="18" font-weight="700">Solar Power Measurement (mW)</text>
+<line x1="64" y1="312" x2="880" y2="312" stroke="#8a96a3"/>
+<line x1="64" y1="36" x2="64" y2="312" stroke="#8a96a3"/>
+<line x1="64" y1="36.0" x2="880" y2="36.0" stroke="#edf1f4"/>
+<text x="12" y="40.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">0.01</text>
+<line x1="64" y1="105.0" x2="880" y2="105.0" stroke="#edf1f4"/>
+<text x="12" y="109.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">0.01</text>
+<line x1="64" y1="174.0" x2="880" y2="174.0" stroke="#edf1f4"/>
+<text x="12" y="178.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">0.01</text>
+<line x1="64" y1="243.0" x2="880" y2="243.0" stroke="#edf1f4"/>
+<text x="12" y="247.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">0.00</text>
+<line x1="64" y1="312.0" x2="880" y2="312.0" stroke="#edf1f4"/>
+<text x="12" y="316.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">0.00</text>
+<polyline points="64.0,262.0 77.8,293.0 91.7,262.0 105.5,262.0 119.3,293.0 133.2,262.0 147.0,262.0 160.8,262.0 174.6,262.0 188.5,262.0 202.3,262.0 216.1,262.0 230.0,220.5 243.8,220.5 257.6,262.0 271.5,220.5 285.3,220.5 299.1,262.0 312.9,220.5 326.8,262.0 340.6,262.0 354.4,220.5 368.3,220.5 382.1,220.5 395.9,220.5 409.8,220.5 423.6,262.0 437.4,184.9 451.3,147.3 465.1,147.3 478.9,147.3 492.7,147.3 506.6,184.9 520.4,184.9 534.2,220.5 548.1,184.9 561.9,184.9 575.7,220.5 589.6,220.5 603.4,220.5 617.2,184.9 631.1,184.9 644.9,97.3 658.7,147.3 672.5,184.9 686.4,184.9 700.2,184.9 714.0,184.9 727.9,147.3 741.7,147.3 755.5,55.0 769.4,147.3 783.2,147.3 797.0,184.9 810.8,184.9 824.7,147.3 838.5,147.3 852.3,184.9 866.2,147.3 880.0,184.9" fill="none" stroke="#138a4b" stroke-width="2.5"/>
+<rect x="64" y="336" width="12" height="12" fill="#138a4b"/>
+<text x="82" y="346" font-family="Segoe UI, Arial" font-size="12">power</text>
+</svg>

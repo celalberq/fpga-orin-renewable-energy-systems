@@ -1,0 +1,4 @@
+timestamp_utc,seq,pan_deg,tilt_deg,sun_pan_deg,sun_tilt_deg,track_error_deg,state,v_mv,i_ma,p_mw,servo_enabled,udp_host,udp_port,raw_line
+2026-08-04T18:34:00.060151+00:00,0,90.0,91.142,90.0,102.347,11.205,seeking,5377.125,322.111,1732.031,0,127.0.0.1,5999,"trk,seq=00000,pan=090.00,tilt=091.14,sun_pan=090.00,sun_tilt=102.35,err=11.21,state=seeking,ldr=4073/4073/3587/3587"
+2026-08-04T18:34:00.113556+00:00,1,90.013,92.183,90.177,102.39,10.208,seeking,5381.005,324.004,1743.467,0,127.0.0.1,5999,"trk,seq=00001,pan=090.01,tilt=092.18,sun_pan=090.18,sun_tilt=102.39,err=10.21,state=seeking,ldr=4061/4067/3617/3622"
+2026-08-04T18:34:00.164259+00:00,2,90.041,93.134,90.415,102.447,9.32,seeking,5384.158,325.545,1752.788,0,127.0.0.1,5999,"trk,seq=00002,pan=090.04,tilt=093.13,sun_pan=090.41,sun_tilt=102.45,err=09.32,state=seeking,ldr=4049/4061/3642/3654"

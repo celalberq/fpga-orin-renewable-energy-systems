@@ -1,0 +1,122 @@
+Live Demo Script - 2026-08-05
+============================
+
+Purpose
+-------
+
+Use this when recording or presenting the current integrated prototype.
+
+Core Claim
+----------
+
+```text
+This system connects renewable-energy tracking telemetry, digital communication
+profiling, and network observability in one working pipeline.
+```
+
+Demo Path
+---------
+
+```text
+Orin tracker / INA226 / mounted panel
+  -> UDP to PC port 5013
+  -> proje1 CRC/QPSK/OFDM bridge
+  -> reliability proxy
+  -> proje2 live dashboard
+```
+
+What To Show
+------------
+
+```text
+1. Dashboard receiving live packets.
+2. Source = Orin software solar tracker.
+3. Digital Comm Layer = CRC/QPSK/OFDM.
+4. Frame detail = 133B frame | 532 QPSK | 12 OFDM.
+5. Mounted panel moving through the pan/tilt servos.
+6. Tracker angles and tracking error changing over time.
+7. Warning phase during injected drops/corruption.
+8. Recovery phase after clean packets resume.
+9. Nexys Video UART board test for tracker CRC/QPSK/OFDM batch.
+```
+
+Success Criteria
+----------------
+
+```text
+Healthy clean run:
+  dashboard packets valid
+  bridge ok=1
+  sequence gaps = 0
+
+Reliability run:
+  warning appears during injected faults
+  invalid packet count increases
+  sequence-gap count increases
+  later recent window has 0 invalid and 0 gaps
+```
+
+Evidence Numbers
+----------------
+
+```text
+Tracker valid dashboard rows: 573
+Tracker sequence gaps: 0
+Tracker locked rows: 110
+Best tracking error: 2.817 deg
+Bridge frame OK rows: 575
+Bridge sequence gaps: 0
+
+Reliability proxy:
+  proxy rows: 58
+  dropped packets: 4
+  corrupted packets: 3
+  dashboard invalid packets: 3
+  dashboard total sequence gaps: 4
+  recent recovery window: 10 clean packets, 0 invalid, 0 gaps
+```
+
+Run Order
+---------
+
+PC:
+
+```powershell
+cd "C:\Users\Msi\Documents\yaz proje"
+powershell -ExecutionPolicy Bypass -File main_layout/demo_evidence/start_reliability_demo_pc.ps1
+```
+
+Orin:
+
+```bash
+cd /home/msi
+python3 proje3/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5013 --max-packets 120 --interval 0.25 --control-gain 35 --lock-error-deg 10 --ina-enable --ina-bus 7 --ina-addr 0x44 --shunt-ohms 0.1 --drive-servos --pca-bus 7 --pca-addr 0x40 --pan-channel 15 --tilt-channel 12 --pan-min 70 --pan-max 110 --tilt-min 80 --tilt-max 100
+```
+
+Open:
+
+```text
+http://127.0.0.1:8085
+```
+
+Stop PC Services
+----------------
+
+```powershell
+cd "C:\Users\Msi\Documents\yaz proje"
+powershell -ExecutionPolicy Bypass -File main_layout/demo_evidence/stop_reliability_demo_pc.ps1
+```
+
+Notes
+-----
+
+```text
+If the dashboard shows stale after stopping the Orin gateway, that is normal.
+It means fresh telemetry stopped arriving, not that the reliability test failed.
+
+Indoor solar power may be near zero because the panel is not under strong light.
+Do not overclaim production power until sunlight or a stronger light source is used.
+
+The current panel mount is prototype-grade but usable: cardboard adapter/base
+with 4-5 elastic bands for stability.
+```

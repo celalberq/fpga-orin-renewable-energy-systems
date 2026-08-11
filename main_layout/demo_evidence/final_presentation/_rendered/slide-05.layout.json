@@ -1,0 +1,593 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/rcdrge",
+    "id": "rcdrge",
+    "slide": 5,
+    "layoutId": "e234534b-1a12-4349-9534-14db8bcd45b9",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "5f7b5e02-21ad-42cd-9077-dd0ec98845c8",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Arial"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "e234534b-1a12-4349-9534-14db8bcd45b9",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "5f7b5e02-21ad-42cd-9077-dd0ec98845c8",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "5f7b5e02-21ad-42cd-9077-dd0ec98845c8",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/tk3uxgna",
+      "id": "1",
+      "bbox": [
+        42,
+        36,
+        1120,
+        88
+      ],
+      "geometry": "rect",
+      "text": "Real BESS current is proven in both directions",
+      "textPreview": "Real BESS current is proven in both directions",
+      "resolvedFontSize": 40,
+      "resolvedTextStyle": {
+        "fontSize": 40,
+        "typeface": "Arial",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Real BESS current is proven in both directions"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Real BESS current is proven in both directions",
+          "resolvedTextStyle": {
+            "fontSize": 40,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Real BESS current is proven in both directions",
+              "fontSize": 40,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6hsbmloz",
+      "id": "2",
+      "bbox": [
+        1184,
+        660,
+        54,
+        24
+      ],
+      "geometry": "rect",
+      "text": "5",
+      "textPreview": "5",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "right",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "5"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "5",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Arial",
+            "color": "#59636E",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "5",
+              "fontSize": 14,
+              "typeface": "Arial",
+              "color": "#59636E",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/7i1cvqpk",
+      "id": "3",
+      "bbox": [
+        42,
+        170,
+        350,
+        30
+      ],
+      "geometry": "rect",
+      "text": "SIGNED STORAGE TELEMETRY",
+      "textPreview": "SIGNED STORAGE TELEMETRY",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Arial",
+        "color": "#3D8DFF",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SIGNED STORAGE TELEMETRY"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SIGNED STORAGE TELEMETRY",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Arial",
+            "color": "#3D8DFF",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SIGNED STORAGE TELEMETRY",
+              "fontSize": 18,
+              "typeface": "Arial",
+              "color": "#3D8DFF",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gnutsv61",
+      "id": "4",
+      "bbox": [
+        42,
+        222,
+        500,
+        54
+      ],
+      "geometry": "rect",
+      "text": "+0.90 W charging",
+      "textPreview": "+0.90 W charging",
+      "resolvedFontSize": 37,
+      "resolvedTextStyle": {
+        "fontSize": 37,
+        "typeface": "Arial",
+        "color": "#16804A",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "+0.90 W charging"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "+0.90 W charging",
+          "resolvedTextStyle": {
+            "fontSize": 37,
+            "typeface": "Arial",
+            "color": "#16804A",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "+0.90 W charging",
+              "fontSize": 37,
+              "typeface": "Arial",
+              "color": "#16804A",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ho3u10nm",
+      "id": "5",
+      "bbox": [
+        42,
+        292,
+        500,
+        54
+      ],
+      "geometry": "rect",
+      "text": "-0.68 W discharge",
+      "textPreview": "-0.68 W discharge",
+      "resolvedFontSize": 37,
+      "resolvedTextStyle": {
+        "fontSize": 37,
+        "typeface": "Arial",
+        "color": "#A86600",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "-0.68 W discharge"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "-0.68 W discharge",
+          "resolvedTextStyle": {
+            "fontSize": 37,
+            "typeface": "Arial",
+            "color": "#A86600",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "-0.68 W discharge",
+              "fontSize": 37,
+              "typeface": "Arial",
+              "color": "#A86600",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ulcbqlov",
+      "id": "6",
+      "bbox": [
+        42,
+        390,
+        500,
+        136
+      ],
+      "geometry": "rect",
+      "text": "INA226 sign is preserved through Orin, the CRC/QPSK/OFDM bridge, UDP transport, dashboard state, and CSV logs.",
+      "textPreview": "INA226 sign is preserved through Orin, the CRC/QPSK/OFDM bridge, UDP transport, dashboard state, and CSV logs.",
+      "resolvedFontSize": 21,
+      "resolvedTextStyle": {
+        "fontSize": 21,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "INA226 sign is preserved through Orin, the"
+          },
+          {
+            "index": 2,
+            "text": "CRC/QPSK/OFDM bridge, UDP transport, dashboard"
+          },
+          {
+            "index": 3,
+            "text": "state, and CSV logs."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "INA226 sign is preserved through Orin, the CRC/QPSK/OFDM bridge, UDP transport, dashboard state, and CSV logs.",
+          "resolvedTextStyle": {
+            "fontSize": 21,
+            "typeface": "Arial",
+            "color": "#59636E"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "INA226 sign is preserved through Orin, the CRC/QPSK/OFDM bridge, UDP transport, dashboard state, and CSV logs.",
+              "fontSize": 21,
+              "typeface": "Arial",
+              "color": "#59636E"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fmlczq5g",
+      "id": "7",
+      "bbox": [
+        42,
+        548,
+        500,
+        64
+      ],
+      "geometry": "rect",
+      "text": "Charge: +233 to +236 mA\nDischarge: approximately -231 mA",
+      "textPreview": "Charge: +233 to +236 mA | Discharge: approximately -231 mA",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Arial",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Charge: +233 to +236 mA"
+          },
+          {
+            "index": 2,
+            "text": "Discharge: approximately -231 mA"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Charge: +233 to +236 mA",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Charge: +233 to +236 mA",
+              "fontSize": 18,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        },
+        {
+          "index": 2,
+          "text": "Discharge: approximately -231 mA",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Discharge: approximately -231 mA",
+              "fontSize": 18,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4redwf6x",
+      "id": "8",
+      "bbox": [
+        620,
+        146,
+        620,
+        476
+      ],
+      "geometry": "rect",
+      "fillColor": "#F7FAFC",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 9,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/wnmdwr2x",
+      "id": "9",
+      "bbox": [
+        620,
+        146,
+        620,
+        476
+      ],
+      "alt": "Live INA226 battery charging dashboard with 0.24 A, 0.91 W, and zero gaps",
+      "contentType": "image/png",
+      "imageCrop": {
+        "left": 0,
+        "top": 0,
+        "right": 0,
+        "bottom": 0.18
+      },
+      "imageFit": "cover",
+      "asset": {
+        "assetId": "6297ea3d-066a-4994-a1fc-59a60622ad4e",
+        "contentType": "image/png",
+        "byteLength": 88892
+      }
+    }
+  ],
+  "composeRuns": []
+}

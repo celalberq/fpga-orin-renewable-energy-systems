@@ -1,0 +1,6 @@
+seq,payload,payload_bytes,frame_bytes
+0,"trk,seq=00000,pan=090.0,tilt=089.7,sun_pan=090.0,sun_tilt=102.3,err=012.7,st=seek,v_mv=05376,i_ma=00411,p_mw=02210,src=ina,act=sw",129,133
+12,"trk,seq=00012,pan=108.9,tilt=099.1,sun_pan=127.0,sun_tilt=108.0,err=020.2,st=seek,v_mv=05173,i_ma=00395,p_mw=02043,src=ina,act=sw",129,133
+23,"trk,seq=00023,pan=124.9,tilt=102.6,sun_pan=127.0,sun_tilt=102.8,err=002.1,st=lock,v_mv=05506,i_ma=00421,p_mw=02318,src=ina,act=sw",129,133
+35,"trk,seq=00035,pan=090.4,tilt=088.6,sun_pan=090.0,sun_tilt=089.0,err=000.5,st=lock,v_mv=05510,i_ma=00421,p_mw=02320,src=ina,act=sw",129,133
+52,"trk,seq=00052,pan=047.6,tilt=070.8,sun_pan=048.0,sun_tilt=070.5,err=000.5,st=lock,v_mv=05510,i_ma=00421,p_mw=02320,src=ina,act=sw",129,133

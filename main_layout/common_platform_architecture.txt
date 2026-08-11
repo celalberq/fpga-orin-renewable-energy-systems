@@ -1,0 +1,65 @@
+Common Platform Architecture
+============================
+
+Baseline compute devices:
+
+```text
+FPGA board: Digilent Nexys Video
+  - real-time I/O
+  - deterministic signal processing
+  - packet parsing
+  - PWM and protection logic
+  - ADC/DAC or sensor interface timing
+
+Jetson Orin Nano Super, later
+  - AI inference
+  - data logging
+  - dashboard
+  - experiment control
+  - report/demo generation
+
+Laptop/PC, temporary
+  - replaces Orin until Orin is available
+  - serial/Ethernet telemetry logging
+  - Python scripts and dashboards
+  - simulation/reference models
+```
+
+Preferred communication links between FPGA and PC/Orin:
+
+```text
+Stage 1: UART for simple telemetry and debugging
+Stage 2: SPI for faster command/telemetry exchange
+Stage 3: Ethernet for higher-rate telemetry and network experiments
+```
+
+Common software layers:
+
+```text
+FPGA HDL
+  - Verilog/SystemVerilog or VHDL
+  - simulation testbenches
+  - timing constraints
+  - pin constraints
+
+PC/Orin software
+  - Python services
+  - dashboard
+  - logging to CSV/JSON
+  - optional AI model inference
+```
+
+Common demo output:
+
+```text
+1. Live dashboard
+2. Short demo video
+3. Experiment plots
+4. L1/L2 design report
+5. GitHub repository with clean folders
+6. CV bullet and project summary
+```
+
+Common design rule:
+
+The FPGA must do work that is genuinely real-time or hardware-accelerated. The Orin should not replace the FPGA logic; it should supervise, visualize, and add intelligence.

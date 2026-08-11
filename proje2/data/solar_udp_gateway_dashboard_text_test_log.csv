@@ -1,0 +1,3 @@
+timestamp_utc,valid,error,seq_gap,seq,d_pct,v_mv,i_ma,p_mw,mppt,fault,chk,computed_chk,udp_host,udp_port,raw_line
+2026-07-12T18:39:57.583104+00:00,1,,,75,100,17100,2030,34713,hd,1,A8,A8,127.0.0.1,5006,"p3,seq=00075,d_pct=00100,v_mv=17100,i_ma=02030,p_mw=34713,mppt=hd,f=1,chk=A8,raw=FF"
+2026-07-12T18:41:20.106297+00:00,1,,,75,100,17100,2030,34713,hd,1,A8,A8,127.0.0.1,5007,"p3,seq=00075,d_pct=00100,v_mv=17100,i_ma=02030,p_mw=34713,mppt=hd,f=1,chk=A8,raw=FF"

@@ -1,0 +1,200 @@
+Proje1 Board Test 03: QPSK Channel/Noise Model
+==============================================
+
+Goal
+----
+
+Add a configurable digital channel model after the FPGA QPSK mapper.
+
+The FPGA maps the same 87-byte framed `p3` telemetry packet to 348 QPSK symbols,
+passes the symbols through a deterministic pseudo-noise model, demaps the symbols,
+counts symbol/bit errors, calculates BER in ppm, and prints the result over UART.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  qpsk_channel_model_top
+
+HDL sources:
+  proje1/code/hdl/uart_tx.v
+  proje1/code/hdl/qpsk_mapper.v
+  proje1/code/hdl/qpsk_demapper.v
+  proje1/code/hdl/qpsk_channel_model_top.v
+
+Constraints:
+  proje1/hardware/constraints/nexys_video_qpsk_channel_model.xdc
+```
+
+Frame under test
+----------------
+
+```text
+preamble:
+  0xA5 0x5A
+
+length:
+  0x53
+
+payload:
+  p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+
+crc:
+  0x0C
+
+frame size:
+  87 bytes / 696 bits
+
+QPSK symbols:
+  348
+```
+
+Switch behavior
+---------------
+
+```text
+SW0-SW2:
+  Channel/noise mode.
+
+Mode 0:
+  Clean channel.
+
+Modes 1-7:
+  Increasing pseudo-noise thresholds.
+
+SW3-SW7:
+  Unused in this test.
+```
+
+Expected deterministic result
+-----------------------------
+
+```text
+mode threshold sym_err bit_err ber_ppm
+0    0         00000   00000   000000
+1    4         00002   00002   002873
+2    8         00010   00010   014367
+3    16        00034   00034   048850
+4    32        00076   00080   114942
+5    48        00112   00121   173850
+6    64        00148   00168   241379
+7    96        00217   00259   372126
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  Last channel check OK.
+
+LD1:
+  Noise enabled.
+
+LD2:
+  UART busy.
+
+LD3:
+  Heartbeat toggles once per checked frame.
+
+LD4-LD6:
+  Current channel mode.
+
+LD7:
+  Last frame had at least one bit error.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected output examples
+------------------------
+
+Clean channel:
+
+```text
+p1n,seq=00001,mode=0,syms=00348,bits=00696,sym_err=00000,bit_err=00000,ber=000000,ok=1
+```
+
+Noisy channel:
+
+```text
+p1n,seq=00002,mode=4,syms=00348,bits=00696,sym_err=00076,bit_err=00080,ber=114942,ok=0
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY/TeraTerm receives p1n lines on COM6.
+3. Mode 0 reports zero errors and ok=1.
+4. Modes 1-7 report increasing BER-style behavior.
+5. The output is repeatable for each mode.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed output:
+
+```text
+p1n,seq=00023,mode=0,syms=00348,bits=00696,sym_err=00000,bit_err=00000,ber=000000,ok=1
+p1n,seq=00032,mode=2,syms=00348,bits=00696,sym_err=00010,bit_err=00010,ber=014367,ok=0
+p1n,seq=00034,mode=3,syms=00348,bits=00696,sym_err=00034,bit_err=00034,ber=048850,ok=0
+p1n,seq=00036,mode=7,syms=00348,bits=00696,sym_err=00217,bit_err=00259,ber=372126,ok=0
+```
+
+Confirmed:
+
+```text
+Mode 0 clean channel passes with ok=1.
+Mode 2 matches expected bit_err=00010 and ber=014367.
+Mode 3 matches expected bit_err=00034 and ber=048850.
+Mode 7 matches expected bit_err=00259 and ber=372126.
+Output is repeatable for each selected mode.
+```
+
+Terminal note:
+
+```text
+One captured line showed spacing inside the BER field and one final line ended at ok=.
+These are serial terminal capture artifacts from reading while a line was being printed,
+not failed packet behavior.
+```
+
+Why this matters
+----------------
+
+```text
+This turns the QPSK demo into a communication experiment:
+  clean channel -> no errors
+  noisy channel -> symbol errors, bit errors, BER ppm
+
+The same pattern later becomes the base for OFDM and adaptive modulation.
+```

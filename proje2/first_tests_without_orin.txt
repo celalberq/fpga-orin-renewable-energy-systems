@@ -1,0 +1,46 @@
+First Tests Without Orin: proje2 Network
+========================================
+
+Temporary host:
+
+```text
+Laptop/PC replaces Orin for now.
+```
+
+First tests:
+
+```text
+1. Define Ethernet/IP/TCP/UDP metadata fields.
+2. Build parser testbench using fixed example frames.
+3. Count frame type, protocol, source/destination fields.
+4. Send fake metadata over UART:
+   project=net,proto=udp,src=192.168.1.10,dst=192.168.1.20,len=128
+5. PC Python script logs metadata to CSV.
+6. Bridge live proje3 solar telemetry to UDP JSON: CREATED.
+7. Receive UDP JSON and log it as network telemetry: CREATED.
+8. Serve live browser dashboard from UDP JSON: READY FOR LIVE TEST.
+```
+
+Nexys Video features to use first:
+
+```text
+1. USB-UART for parser metadata.
+2. LEDs for packet/protocol indicators.
+3. Switches for rule enable/disable.
+4. Ethernet PHY later, after parser simulation works.
+```
+
+Do not start with:
+
+```text
+1. Inline firewall mode.
+2. Full payload inspection.
+3. Live Ethernet before the parser testbench passes.
+```
+
+Definition of ready for next stage:
+
+```text
+The parser correctly extracts metadata from fixed Ethernet frame samples in simulation,
+and the PC can bridge the shared solar telemetry packet into a UDP network stream.
+```

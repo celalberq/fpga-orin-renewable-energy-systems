@@ -1,0 +1,215 @@
+Proje3 Real Sensing Stage 01: Voltage/Current Input
+====================================================
+
+Status
+------
+
+```text
+CH0 REAL SOLAR VOLTAGE PASS / CH1 CURRENT SENSING PENDING
+```
+
+Goal
+----
+
+Move the solar project from simulated voltage/current values to real measured
+analog values while keeping the same p3 telemetry packet and dashboard.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_real_sense_uart_top
+
+HDL sources:
+  proje3/code/hdl/uart_tx.v
+  proje3/code/hdl/mcp3208_reader.v
+  proje3/code/hdl/solar_real_sense_uart_top.v
+
+Constraints:
+  proje3/hardware/constraints/nexys_video_solar_real_sense_uart.xdc
+```
+
+Sensing architecture
+--------------------
+
+```text
+MCP3208 CH0:
+  PV/input voltage through a resistor divider.
+
+MCP3208 CH1:
+  Analog current-sensor output, limited to 0V-3.3V.
+
+INA226:
+  Buy as the more accurate current/voltage/power monitor.
+  Use it first as a calibration/reference path from Orin.
+  Add FPGA I2C later after the SPI ADC path is stable.
+```
+
+Why MCP3208 first
+-----------------
+
+```text
+MCP3208 is a simple SPI ADC with 8 channels and 12-bit conversion.
+This is easier to bring up on FPGA than starting with an I2C power monitor.
+```
+
+Official source:
+
+```text
+https://www.microchip.com/en-us/product/mcp3208
+```
+
+Why INA226 second
+-----------------
+
+```text
+INA226 is better for calibrated current, voltage, and power measurement.
+It uses I2C/SMBus, supports bus-voltage/current/power reporting, and is a good
+next stage once the basic real telemetry path works.
+```
+
+Official source:
+
+```text
+https://www.ti.com/product/INA226
+```
+
+Pmod wiring for MCP3208 on Nexys Video JB
+----------------------------------------
+
+```text
+Nexys Video JB1 -> MCP3208 CS/SHDN
+Nexys Video JB2 -> MCP3208 DIN
+Nexys Video JB3 -> MCP3208 DOUT
+Nexys Video JB4 -> MCP3208 CLK
+Nexys Video 3.3V -> MCP3208 VDD and VREF
+Nexys Video GND -> MCP3208 AGND and DGND
+```
+
+The Digilent master XDC maps JB1-JB4 to:
+
+```text
+JB1 = V9
+JB2 = V8
+JB3 = V7
+JB4 = W7
+```
+
+Source:
+
+```text
+https://github.com/Digilent/digilent-xdc/blob/master/Nexys-Video-Master.xdc
+```
+
+Voltage divider for CH0
+-----------------------
+
+Use this first low-voltage divider:
+
+```text
+Rtop    = 100k
+Rbottom = 22k
+```
+
+Formula:
+
+```text
+adc_mv = adc_counts * 3300 / 4095
+vin_mv = adc_mv * (100k + 22k) / 22k
+       ~= adc_counts * 18300 / 4095
+```
+
+This maps about 0V-18.3V input into 0V-3.3V ADC range.
+
+Safety rule:
+
+```text
+Measure the divider output with a multimeter before connecting it to MCP3208.
+MCP3208 input must not exceed VREF.
+Nexys Video Pmod pins must not exceed 3.3V.
+Use common ground.
+Use a fuse/current-limited source.
+```
+
+Current channel for CH1
+-----------------------
+
+Stage 01 uses a simple placeholder calibration:
+
+```text
+current_ma = adc_ch1_counts * 3300 / 4095
+```
+
+That means 1 mV at CH1 is treated as 1 mA until the actual sensor module is
+calibrated.
+
+Good first test options:
+
+```text
+1. Drive CH1 from a potentiometer or safe 0V-3.3V signal.
+2. Confirm the dashboard current changes.
+3. Replace the placeholder scale with the actual current-sensor scale.
+4. Later add INA226 over I2C for cleaner real current/power measurement.
+```
+
+Current hardware status:
+
+```text
+MCP3208 CH0 real solar voltage is passing.
+MCP3208 CH1 is grounded as a placeholder.
+Next current/power stage is INA226 on Orin I2C:
+  proje3/docs/board_test_07_ina226_orin_i2c.txt
+```
+
+Protection behavior
+-------------------
+
+The first real-sense top raises the p3 fault flag when:
+
+```text
+SW7 = 1
+or duty_raw >= 0xF0
+or measured voltage > 18.0V
+or measured current > 3.0A
+```
+
+Expected packet shape
+---------------------
+
+```text
+p3,seq=00001,d_pct=00012,v_mv=01234,i_ma=00567,p_mw=00699,mppt=up,f=0,chk=XX,raw=20
+```
+
+Test sequence after parts arrive
+--------------------------------
+
+```text
+1. Build only the voltage divider on a breadboard.
+2. Measure divider output with a multimeter.
+3. Power MCP3208 from Nexys 3.3V and GND.
+4. Connect MCP3208 CH0 to divider output.
+5. Program solar_real_sense_uart_top.
+6. Open UART/gateway/dashboard.
+7. Confirm v_mv changes when input voltage changes.
+8. Connect CH1 to a safe 0V-3.3V test signal.
+9. Confirm i_ma and p_mw change.
+10. Calibrate the current scale.
+```
+
+Do not do yet
+-------------
+
+```text
+Do not connect a battery pack directly.
+Do not connect a large solar panel directly.
+Do not connect an inverter.
+Do not connect any power-stage gate driver until sensing is proven.
+Do not let ADC or FPGA pins see more than 3.3V.
+```

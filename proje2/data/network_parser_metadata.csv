@@ -1,0 +1,2 @@
+packet_length,destination_mac,source_mac,ethertype,ip_version,ip_header_bytes,ip_total_length,ip_protocol,source_ip,destination_ip,source_port,destination_port,alert_flag
+46,02:11:22:33:44:55,02:aa:bb:cc:dd:ee,0x0800,4,20,32,17,192.168.1.10,192.168.1.20,1234,5678,none

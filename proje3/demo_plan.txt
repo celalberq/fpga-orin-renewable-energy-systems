@@ -1,0 +1,30 @@
+Demo Plan: proje3 Solar
+=======================
+
+Demo title:
+
+FPGA Solar MPPT Controller with Orin AI Monitoring
+
+Demo flow:
+
+```text
+1. Start with fixed duty cycle.
+2. Show voltage/current/power on Orin dashboard.
+3. Enable FPGA MPPT.
+4. Show duty cycle adapting.
+5. Shade panel or change DC input.
+6. Show MPPT response and fault/shading label.
+7. Export efficiency plot.
+```
+
+Minimum demo:
+
+```text
+MPPT simulation + real sensor telemetry + FPGA PWM output.
+```
+
+Best demo:
+
+```text
+Low-voltage solar panel or PV emulator -> FPGA MPPT -> buck converter -> load -> Orin dashboard.
+```

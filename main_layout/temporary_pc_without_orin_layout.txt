@@ -1,0 +1,71 @@
+Temporary Layout Without Orin Nano
+==================================
+
+Purpose:
+
+The Orin Nano is not available yet, so the laptop/desktop PC will temporarily replace the Orin for dashboarding, telemetry, logging, and experiment control.
+
+Temporary architecture:
+
+```text
+Sensors / network / test inputs
+        |
+Nexys Video FPGA
+        |
+USB-UART or Ethernet
+        |
+Laptop/PC Python scripts
+        |
+CSV logs + plots + dashboard
+```
+
+What the PC replaces:
+
+```text
+1. Orin telemetry reader
+2. Orin dashboard
+3. Orin experiment logger
+4. Orin AI/fault/anomaly scripts
+5. Orin control commands
+```
+
+What the PC does not replace:
+
+```text
+1. FPGA real-time control
+2. FPGA packet parsing
+3. FPGA baseband processing
+4. FPGA PWM/sensor timing
+```
+
+Recommended protocol strategy:
+
+```text
+Stage 1:
+  FPGA sends simple ASCII lines over UART.
+  Example: project=solar,v=12.31,i=0.83,p=10.21,duty=42
+
+Stage 2:
+  FPGA sends compact binary packets over UART/SPI.
+
+Stage 3:
+  FPGA sends UDP packets over Ethernet for higher-rate telemetry.
+```
+
+Why ASCII first:
+
+```text
+1. Easy to debug with a serial terminal.
+2. Easy to log with Python.
+3. Good enough for first demos.
+4. Can be replaced later without changing the high-level project structure.
+```
+
+Migration to Orin later:
+
+```text
+1. Keep the same telemetry packet names.
+2. Move Python scripts from PC to Orin.
+3. Replace PC dashboard target with Orin dashboard target.
+4. Keep CSV/data formats the same.
+```

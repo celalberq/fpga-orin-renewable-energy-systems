@@ -1,0 +1,40 @@
+Reliability Evidence Summary
+============================
+
+Proxy log: proje2\data\solar_reliability_proxy_bridge_log.csv
+Dashboard log: proje2\data\solar_live_dashboard_reliability_bridge_log.csv
+
+Proxy Results
+-------------
+
+Status: injection observed
+Proxy rows: 58
+Forwarded rows: 54
+Dropped rows: 4
+Corrupted rows: 3
+Duplicate rows: 0
+Max forwarded sequence gap: 1
+
+Proxy action counts:
+  drop: 4
+  forward: 51
+  forward_corrupt: 3
+
+Dashboard Results
+-----------------
+
+Status: warning evidence observed
+Dashboard rows: 54
+Dashboard valid rows: 51
+Dashboard invalid rows: 3
+Dashboard total sequence gaps: 4
+Recent window rows: 10
+Recent invalid rows: 0
+Recent sequence gaps: 0
+Recovery status: recovered recent window
+
+Interpretation
+--------------
+
+A strong demo shows proxy injection first, dashboard warning during the bad
+window, then a recovered dashboard state after clean packets resume.

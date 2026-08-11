@@ -1,0 +1,14 @@
+# Shared PC and Jetson serial support.
+pyserial==3.5
+
+# Jetson/Linux I2C access. The hardware scripts still fail clearly when no bus
+# is present, while the hardware-independent regression suite remains runnable.
+smbus2==0.5.0; platform_system == "Linux"
+
+# Camera support for non-Jetson development. On Jetson, use the JetPack/system
+# OpenCV package so CSI/GStreamer support is preserved.
+opencv-python==4.12.0.88; platform_machine != "aarch64"
+
+# Rebuilding the final Word report and its image assets.
+python-docx==1.2.0
+Pillow==12.2.0

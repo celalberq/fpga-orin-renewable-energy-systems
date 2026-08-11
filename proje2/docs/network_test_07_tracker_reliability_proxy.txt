@@ -1,0 +1,159 @@
+Proje2 Network Test 07: Tracker Packet Reliability Proxy
+========================================================
+
+Status
+------
+
+```text
+PASS - standalone proxy live run
+```
+
+Goal
+----
+
+Insert a controlled UDP reliability layer between the Orin tracker sender and
+the dashboard. This demonstrates packet loss, injected corruption, duplicates,
+sequence-gap detection, and dashboard link-health behavior using the same
+renewable-energy tracker packet.
+
+Data path
+---------
+
+```text
+Orin software tracker + optional INA226
+  -> UDP to PC reliability proxy
+  -> packet loss / corruption / duplicate injection
+  -> UDP to dashboard
+  -> dashboard link health counters
+```
+
+Run dashboard on PC
+-------------------
+
+```text
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje2/code/pc_app/solar_live_dashboard.py --udp-host 0.0.0.0 --udp-port 5011 --http-host 127.0.0.1 --http-port 8085 --bess-load-w 0.1
+```
+
+Open:
+
+```text
+http://127.0.0.1:8085
+```
+
+Run reliability proxy on PC
+---------------------------
+
+Clean forward path first:
+
+```text
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje2/code/pc_app/solar_reliability_proxy.py --bind-host 0.0.0.0 --bind-port 5012 --forward-host 127.0.0.1 --forward-port 5011
+```
+
+Run Orin tracker into the proxy
+-------------------------------
+
+Use the PC IPv4 address. Last working PC address was:
+
+```text
+192.168.1.219
+```
+
+Software tracker only:
+
+```text
+cd /home/msi
+python3 proje3/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5012 --lock-error-deg 10
+```
+
+Software tracker plus real INA226 values:
+
+```text
+python3 proje3/code/orin_app/tracker_softloop_udp_gateway.py --udp-host 192.168.1.219 --udp-port 5012 --lock-error-deg 10 --ina-enable --ina-bus 7 --ina-addr 0x44 --shunt-ohms 0.1
+```
+
+Expected clean result
+---------------------
+
+```text
+Dashboard Link State: healthy
+Invalid Packets: 0
+Sequence Gaps: 0
+Tracker State: seeking / locked
+Actuator: software
+```
+
+Inject packet loss
+------------------
+
+Stop the proxy with `Ctrl+C`, then restart:
+
+```text
+python proje2/code/pc_app/solar_reliability_proxy.py --bind-host 0.0.0.0 --bind-port 5012 --forward-host 127.0.0.1 --forward-port 5011 --drop-every 7
+```
+
+Expected dashboard result:
+
+```text
+Link State: warning
+Sequence Gaps increases
+Valid packets continue arriving
+```
+
+Inject corruption
+-----------------
+
+```text
+python proje2/code/pc_app/solar_reliability_proxy.py --bind-host 0.0.0.0 --bind-port 5012 --forward-host 127.0.0.1 --forward-port 5011 --corrupt-every 9
+```
+
+Expected dashboard result:
+
+```text
+Link State: warning
+Invalid Packets increases
+Latest raw packet may show proxy_injected_corruption
+```
+
+Inject both loss and corruption
+-------------------------------
+
+```text
+python proje2/code/pc_app/solar_reliability_proxy.py --bind-host 0.0.0.0 --bind-port 5012 --forward-host 127.0.0.1 --forward-port 5011 --drop-every 7 --corrupt-every 9
+```
+
+Why this matters
+----------------
+
+```text
+proje3 provides renewable tracker telemetry.
+proje2 shows real network reliability behavior.
+proje1 can later frame/protect the same packet using CRC, QPSK, and OFDM.
+```
+
+Observed result
+---------------
+
+The standalone reliability proxy produced controlled drops and dashboard-visible
+sequence gaps.
+
+Example proxy log evidence:
+
+```text
+DROP rx=63 seq=62
+FWD rx=64 seq=63 gap=1 valid=1
+```
+
+For the newer full bridge path, use:
+
+```text
+network_test_09_tracker_bridge_reliability_warning_recovery.txt
+```
+
+Nexys Video Vivado part
+-----------------------
+
+```text
+xc7a200tsbg484-1
+```

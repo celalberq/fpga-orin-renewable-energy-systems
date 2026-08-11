@@ -1,0 +1,90 @@
+Nexys Video Bring-Up Plan
+=========================
+
+Goal:
+
+Confirm that the Nexys Video board, toolchain, basic I/O, UART, and Ethernet path work before starting project-specific HDL.
+
+Bring-up order:
+
+```text
+1. Visual inspection
+2. USB/JTAG programming
+3. LED and switch test
+4. Clock/reset test
+5. USB-UART test
+6. Pmod GPIO test
+7. Ethernet link test
+8. Simple telemetry logger on PC
+```
+
+Step 1: Visual inspection
+
+```text
+Check:
+  - board is not physically damaged
+  - USB cable is good
+  - power supply matches board requirements
+  - jumpers/switches are in default positions
+  - anti-static bag/box is kept
+```
+
+Step 2: Toolchain/programming
+
+```text
+Output:
+  - Vivado detects the board
+  - JTAG programming works
+  - first bitstream loads successfully
+```
+
+Step 3: LED/switch test
+
+```text
+Output:
+  - switches control LEDs
+  - push buttons are readable
+  - 100 MHz or board clock is alive
+
+Current status:
+  - PASS
+  - Vivado Hardware Manager connects and programmed bitstream runs on the board.
+```
+
+Step 4: UART test
+
+```text
+Output:
+  - FPGA sends hello/status lines to PC
+  - PC receives data with a serial terminal
+  - Python script logs UART data to a file
+
+Current status:
+  - PASS with PuTTY on J13 / COM6 at 115200 baud.
+  - Correct UART direction:
+      FPGA TX output = AA19 / uart_rx_out
+      FPGA RX input  = V18 / uart_tx_in
+```
+
+Step 5: Ethernet test
+
+```text
+Output:
+  - Ethernet PHY link LED turns on
+  - basic packet/UDP example is tested later
+  - network project can move toward live traffic
+```
+
+Step 6: Project readiness gate
+
+```text
+Board is ready for project work when:
+  - LED/switch test passes after programming our bitstream: DONE
+  - UART telemetry works: DONE
+  - constraints file is verified: DONE
+  - basic clock/reset style is chosen: DONE for bring-up
+```
+
+Important:
+
+Do not connect solar power electronics or external sensors until the board bring-up tests pass.

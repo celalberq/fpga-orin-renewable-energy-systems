@@ -1,0 +1,192 @@
+Proje1 Board Test 02: QPSK Mapper/Demapper Loopback
+===================================================
+
+Goal
+----
+
+Move the QPSK layer from Python simulation to the Nexys Video FPGA.
+
+The FPGA reads the same 87-byte framed `p3` telemetry packet, maps each bit pair to
+QPSK I/Q signs, demaps the signs back to bits, counts symbol/bit errors, and prints
+the result over UART.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  qpsk_loopback_top
+
+HDL sources:
+  proje1/code/hdl/uart_tx.v
+  proje1/code/hdl/qpsk_mapper.v
+  proje1/code/hdl/qpsk_demapper.v
+  proje1/code/hdl/qpsk_loopback_top.v
+
+Constraints:
+  proje1/hardware/constraints/nexys_video_qpsk_loopback.xdc
+```
+
+Frame under test
+----------------
+
+```text
+preamble:
+  0xA5 0x5A
+
+length:
+  0x53
+
+payload:
+  p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+
+crc:
+  0x0C
+
+frame size:
+  87 bytes
+
+QPSK symbols:
+  348
+```
+
+QPSK mapping
+------------
+
+```text
+00 -> I=+1, Q=+1
+01 -> I=-1, Q=+1
+11 -> I=-1, Q=-1
+10 -> I=+1, Q=-1
+```
+
+Switch behavior
+---------------
+
+```text
+SW0-SW7 = 00000000:
+  Clean digital QPSK loopback.
+
+Any nonzero SW0-SW7:
+  The switch value selects one QPSK symbol index.
+  The selected symbol has both I and Q signs flipped before demapping.
+  Expected result:
+    sym_err=00001
+    bit_err=00002
+```
+
+Revision note:
+
+```text
+Initial board run showed sym_err=00002 and bit_err=00004 for low switch values
+such as mask=02 because the injection compare used only symbol_index[7:0].
+Since the frame has 348 symbols, low 8-bit symbol indexes repeat after 256.
+
+The HDL now compares the full 9-bit symbol index against {1'b0, SW0-SW7}, so each
+nonzero switch value injects exactly one QPSK symbol error.
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  Last QPSK loopback check OK.
+
+LD1:
+  Last frame had injected symbol error.
+
+LD2:
+  UART busy.
+
+LD3:
+  Heartbeat toggles once per checked frame.
+
+LD4-LD7:
+  Upper switch bits.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected output
+---------------
+
+No injected error:
+
+```text
+p1q,seq=00001,syms=00348,inj=0,sym_err=00000,bit_err=00000,mask=00,ok=1
+```
+
+Injected symbol error:
+
+```text
+p1q,seq=00002,syms=00348,inj=1,sym_err=00001,bit_err=00002,mask=01,ok=0
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY/TeraTerm receives p1q lines on COM6.
+3. With SW0-SW7 off, ok=1 and both error counters are zero.
+4. With any switch on, inj=1, sym_err=00001, bit_err=00002, and ok=0.
+5. Returning switches to 00 returns ok to 1.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed output after full 9-bit injection-index fix:
+
+```text
+p1q,seq=00064,syms=00348,inj=0,sym_err=00000,bit_err=00000,mask=00,ok=1
+p1q,seq=00067,syms=00348,inj=1,sym_err=00001,bit_err=00002,mask=02,ok=0
+p1q,seq=00072,syms=00348,inj=1,sym_err=00001,bit_err=00002,mask=0A,ok=0
+p1q,seq=00075,syms=00348,inj=1,sym_err=00001,bit_err=00002,mask=2A,ok=0
+p1q,seq=00077,syms=00348,inj=1,sym_err=00001,bit_err=00002,mask=AA,ok=0
+p1q,seq=00090,syms=00348,inj=1,sym_err=00001,bit_err=00002,mask=FF,ok=0
+```
+
+Confirmed:
+
+```text
+Clean loopback passes with ok=1.
+Every nonzero switch mask injects exactly one QPSK symbol error.
+Each injected symbol flips both I and Q signs, creating two bit errors.
+The fixed HDL matches the expected board-test behavior.
+```
+
+Why this matters
+----------------
+
+```text
+This proves the first modulation block on FPGA while keeping the same renewable
+telemetry packet as the payload. The next step can add a channel/noise model, then
+later OFDM framing.
+```

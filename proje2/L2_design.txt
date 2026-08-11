@@ -1,0 +1,87 @@
+L2 Design: Network Project
+==========================
+
+Detailed system blocks:
+
+```text
+Ethernet PHY / MAC
+  -> frame receive FIFO
+  -> Ethernet header parser
+  -> IPv4 parser
+  -> TCP/UDP/ICMP parser
+  -> flow key extractor
+  -> counters and rule flags
+  -> metadata FIFO
+  -> UART/SPI/Ethernet telemetry to Orin
+  -> dashboard and anomaly detection
+```
+
+Implementation levels:
+
+```text
+Level A: parse saved PCAP-like frame samples in simulation
+Level B: receive Ethernet frames from FPGA board Ethernet port
+Level C: monitor mode using switch mirror port
+Level D: add rule flags and flow counters
+Level E: inline mode with 2 Ethernet ports or SFP if final FPGA supports it
+```
+
+FPGA modules to create later:
+
+```text
+eth_rx_wrapper.v
+frame_fifo.v
+eth_header_parser.v
+ipv4_parser.v
+tcp_udp_parser.v
+flow_counter.v
+rule_engine.v
+metadata_fifo.v
+telemetry_uart_or_spi.v
+top_network_monitor.v
+```
+
+Orin software modules to create later:
+
+```text
+telemetry_reader.py
+network_dashboard.py
+traffic_labeler.py
+anomaly_detector.py
+experiment_runner.py
+pcap_compare_tools.py
+```
+
+Initial interface recommendation:
+
+```text
+Traffic input:
+  Switch mirror port to FPGA Ethernet input.
+
+FPGA to Orin:
+  UART for first metadata tests.
+  Ethernet preferred once stable.
+
+Orin to network:
+  Normal Linux Ethernet/Wi-Fi for dashboard access and experiments.
+```
+
+Risk control:
+
+```text
+1. Start with monitor mode, not inline firewall mode.
+2. Do not require 2 Ethernet ports for the first demo.
+3. Keep packet payload inspection out of MVP.
+4. Start with metadata only to keep privacy and logic complexity manageable.
+```
+
+Deliverables:
+
+```text
+1. L1 and L2 design docs.
+2. FPGA parser simulation.
+3. Live traffic monitor demo.
+4. Orin dashboard screenshot.
+5. Normal vs abnormal traffic dataset.
+6. Final short demo video.
+```

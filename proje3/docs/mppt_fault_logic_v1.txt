@@ -1,0 +1,132 @@
+Proje3 MPPT and Fault Logic V1
+==============================
+
+Purpose
+-------
+
+Explain the current board-only MPPT and protection logic used by the live
+dashboard demo.
+
+Important distinction
+---------------------
+
+```text
+The FPGA packet stays compact:
+  mppt=up
+  mppt=dn
+  mppt=hd
+  f=0 or f=1
+
+The PC/Orin dashboard expands those codes into readable engineering text:
+  Power increased
+  Power decreased
+  Hold
+  OK
+  FAULT with reason
+```
+
+MPPT
+----
+
+MPPT means Maximum Power Point Tracking.
+
+The goal is to operate the solar input near the point where it produces the most
+power.
+
+Current board-only logic:
+
+```text
+current_power_mw = v_mv * i_ma / 1000
+
+if current_power_mw > previous_power_mw:
+  mppt=up
+  dashboard: Power increased
+
+if current_power_mw < previous_power_mw:
+  mppt=dn
+  dashboard: Power decreased
+
+if current_power_mw == previous_power_mw:
+  mppt=hd
+  dashboard: Hold
+```
+
+Meaning of Hold
+---------------
+
+```text
+Hold does not mean the system is off.
+
+Hold means the controller is not seeing a power improvement or drop compared
+with the previous packet, so it keeps the current operating point for now.
+```
+
+Why the packet still uses up/dn/hd
+----------------------------------
+
+```text
+The FPGA UART packet should stay short and simple.
+
+The dashboard can translate compact codes into human-readable labels without
+making the FPGA message longer or harder to parse.
+```
+
+Fault
+-----
+
+Current board-only fault logic:
+
+```text
+f=1 when raw duty >= 0xF0
+```
+
+Dashboard expansion:
+
+```text
+f=0:
+  OK
+  No protection flag active.
+
+f=1 and raw >= 0xF0:
+  FAULT
+  High duty demo protection active: raw duty is at or above 0xF0.
+```
+
+Why this is a demo fault
+------------------------
+
+```text
+No high-power hardware is connected yet.
+
+The current fault is a protection demonstration so the dashboard, logger, and
+future Orin software can already handle abnormal states.
+```
+
+Future real fault sources
+-------------------------
+
+```text
+over-voltage
+over-current
+over-power
+battery over-charge
+battery under-voltage
+temperature too high
+sensor disconnected
+emergency stop
+PWM disabled by protection logic
+```
+
+Current Vivado board build
+--------------------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_packet_v1_uart_top
+```

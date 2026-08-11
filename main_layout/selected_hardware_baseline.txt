@@ -1,0 +1,53 @@
+Selected Hardware Baseline
+==========================
+
+Status:
+
+```text
+Selected FPGA board: Digilent Nexys Video
+Digilent part number: 410-316
+FPGA device: Xilinx/AMD Artix-7 XC7A200T-1SBG484C
+Purchase status: bought
+Orin Nano Super status: not available yet
+Temporary host: laptop/desktop PC
+```
+
+Why Nexys Video was selected:
+
+```text
+1. Best fit for all three projects.
+2. Has Gigabit Ethernet for the network project.
+3. Has a large Artix-7 FPGA for communication/DSP work.
+4. Has strong expansion options through Pmod and FMC.
+5. Has enough memory and I/O to keep the summer projects flexible.
+```
+
+Current platform layout without Orin:
+
+```text
+Nexys Video
+  -> USB-JTAG to laptop/PC for programming
+  -> USB-UART to laptop/PC for telemetry
+  -> Ethernet to laptop/router/switch for network experiments
+  -> Pmod/FMC later for sensors, ADC/DAC, or solar hardware
+
+Laptop/PC
+  -> Vivado/project builds
+  -> serial monitor
+  -> Python telemetry scripts
+  -> dashboards and plots
+  -> dataset logging
+```
+
+Future platform layout with Orin:
+
+```text
+Nexys Video
+  -> UART/SPI/Ethernet
+  -> Jetson Orin Nano Super
+  -> dashboard, AI, logging, and experiment control
+```
+
+Design rule:
+
+Build the communication protocol between FPGA and PC in a way that can later move to the Orin with minimal changes. The PC-side Python scripts should be written as if the PC is temporarily playing the Orin role.

@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="360" viewBox="0 0 900 360">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="64" y="24" font-family="Segoe UI, Arial" font-size="18" font-weight="700">Tracker Error (deg)</text>
+<line x1="64" y1="312" x2="880" y2="312" stroke="#8a96a3"/>
+<line x1="64" y1="36" x2="64" y2="312" stroke="#8a96a3"/>
+<line x1="64" y1="36.0" x2="880" y2="36.0" stroke="#edf1f4"/>
+<text x="12" y="40.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">61.06</text>
+<line x1="64" y1="105.0" x2="880" y2="105.0" stroke="#edf1f4"/>
+<text x="12" y="109.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">44.67</text>
+<line x1="64" y1="174.0" x2="880" y2="174.0" stroke="#edf1f4"/>
+<text x="12" y="178.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">28.28</text>
+<line x1="64" y1="243.0" x2="880" y2="243.0" stroke="#edf1f4"/>
+<text x="12" y="247.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">11.89</text>
+<line x1="64" y1="312.0" x2="880" y2="312.0" stroke="#edf1f4"/>
+<text x="12" y="316.0" font-family="Segoe UI, Arial" font-size="12" fill="#66717c">-4.49</text>
+<polyline points="64.0,55.0 77.8,58.9 91.7,67.2 105.5,78.1 119.3,87.4 133.2,95.0 147.0,101.8 160.8,110.8 174.6,118.6 188.5,127.6 202.3,134.4 216.1,139.0 230.0,142.3 243.8,147.3 257.6,148.2 271.5,147.9 285.3,148.4 299.1,162.3 312.9,166.3 326.8,191.8 340.6,199.9 354.4,204.8 368.3,217.8 382.1,233.4 395.9,249.8 409.8,265.1 423.6,278.1 437.4,282.0 451.3,288.5 465.1,290.9 478.9,288.9 492.7,290.7 506.6,288.0 520.4,284.4 534.2,288.5 548.1,283.6 561.9,293.0 575.7,290.3 589.6,289.1 603.4,289.3 617.2,290.1 631.1,281.2 644.9,286.6 658.7,284.5 672.5,276.4 686.4,292.0 700.2,289.4 714.0,291.1 727.9,292.1 741.7,286.3 755.5,280.7 769.4,282.7 783.2,289.4 797.0,289.2 810.8,288.9 824.7,287.4 838.5,291.8 852.3,291.1 866.2,291.6 880.0,291.4" fill="none" stroke="#1f5f99" stroke-width="2.5"/>
+<rect x="64" y="336" width="12" height="12" fill="#1f5f99"/>
+<text x="82" y="346" font-family="Segoe UI, Arial" font-size="12">tracking error</text>
+</svg>

@@ -1,0 +1,157 @@
+Fast-Track Execution Plan
+=========================
+
+Reason
+------
+
+The careful one-by-one FPGA tests were useful for confidence, but the project now
+needs bigger integrated milestones.
+
+New rule
+--------
+
+```text
+Do not spend every step on a tiny isolated board proof.
+
+Use board tests only when they unlock a bigger system layer.
+Group the work into integrated demos that connect proje3, proje1, and proje2.
+```
+
+Milestone A: Integrated Solar Telemetry Network Demo
+----------------------------------------------------
+
+```text
+Input:
+  proje3 p3 solar packet from Nexys Video UART
+
+PC/Orin-style gateway:
+  validate checksum
+  check sequence gaps
+  convert to JSON
+  send UDP packet
+  log CSV
+
+Network side:
+  receive UDP JSON
+  log CSV
+  print status
+
+Status:
+  CREATED
+```
+
+Files:
+
+```text
+proje2/code/pc_app/solar_telemetry_udp_gateway.py
+proje2/code/pc_app/solar_telemetry_udp_receiver.py
+proje2/code/pc_app/solar_live_dashboard.py
+proje2/docs/network_test_01_solar_udp_gateway.txt
+proje2/docs/network_test_02_live_dashboard.txt
+```
+
+Milestone B: Integrated Reliability Demo
+----------------------------------------
+
+```text
+Input:
+  same p3 solar packet
+
+proje1:
+  wrap packet with communication metadata
+  simulate QPSK/OFDM reliability
+  report CRC/BER/frame error results
+
+proje2:
+  forward the result as network JSON
+```
+
+Milestone C: Actual Renewable Controller Demo
+---------------------------------------------
+
+```text
+Input:
+  switches first, real voltage/current sensors later
+
+proje3:
+  MPPT state machine
+  PWM duty output
+  fault threshold
+  power estimate
+
+PC/Orin:
+  dashboard and logger
+
+Status:
+  LIVE PASS
+
+Files:
+  proje3/code/hdl/solar_mppt_auto_uart_top.v
+  proje3/hardware/constraints/nexys_video_solar_mppt_auto_uart.xdc
+  proje3/docs/board_test_04_auto_mppt_uart_dashboard.txt
+  proje2/docs/network_test_03_bess_soc_dashboard.txt
+```
+
+Milestone C2: Solar+BESS Dashboard Demo
+---------------------------------------
+
+```text
+Input:
+  live p3 solar power telemetry
+
+Dashboard:
+  simulated load
+  battery charge/discharge state
+  state of charge
+  stored energy
+
+Status:
+  SMOKE PASS / READY FOR LIVE TEST
+```
+
+Milestone C3: Integrated Link Health
+------------------------------------
+
+```text
+Input:
+  validated p3 packet stream
+
+Dashboard:
+  packet rate
+  valid packet count
+  invalid packet count
+  sequence gaps
+  link state
+
+Status:
+  SMOKE PASS / READY FOR LIVE TEST
+
+Files:
+  proje2/docs/network_test_04_link_health_dashboard.txt
+```
+
+Milestone D: Orin Replacement
+-----------------------------
+
+```text
+Move the PC scripts to Orin Nano Super when available.
+
+Orin role:
+  dashboard
+  database/CSV logging
+  network receiver
+  fault/anomaly detection
+  optional panel camera inspection
+```
+
+Short build order from now
+--------------------------
+
+```text
+1. Run network_test_01_solar_udp_gateway.
+2. Run network_test_02_live_dashboard for p_mw, d_pct, fault.
+3. Run network_test_03_bess_soc_dashboard.
+4. Run network_test_04_link_health_dashboard.
+5. Add real sensor path planning.
+6. Only then return to heavier FPGA OFDM/FFT internals.
+```

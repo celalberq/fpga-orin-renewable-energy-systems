@@ -1,0 +1,146 @@
+Proje1 Communication Test 02: QPSK Packet Link Simulation
+=========================================================
+
+Goal
+----
+
+Add the first modulation layer under the same shared renewable telemetry packet.
+
+This test takes the framed `p3` payload from Test 01, maps its bits to QPSK symbols,
+adds AWGN noise, demaps the symbols, reconstructs the frame, and checks CRC/frame
+validity.
+
+Board / Vivado code
+-------------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+```
+
+This test is simulation-only. FPGA QPSK HDL comes after the packet-level QPSK behavior
+is understood.
+
+Input frame
+-----------
+
+```text
+preamble:
+  0xA5 0x5A
+
+length:
+  0x53
+
+payload:
+  shared p3 renewable telemetry packet
+
+crc:
+  CRC-8 polynomial 0x07 over length + payload
+```
+
+QPSK mapping
+------------
+
+```text
+00 -> I=+1, Q=+1
+01 -> I=-1, Q=+1
+11 -> I=-1, Q=-1
+10 -> I=+1, Q=-1
+```
+
+Script
+------
+
+```text
+proje1/code/sim/qpsk_packet_link_sim.py
+```
+
+Run:
+
+```text
+python proje1/code/sim/qpsk_packet_link_sim.py
+```
+
+Outputs:
+
+```text
+proje1/data/qpsk_packet_link_sim.csv
+proje1/data/qpsk_packet_link_constellation.csv
+```
+
+Metrics
+-------
+
+```text
+ebn0_db:
+  Simulated energy-per-bit to noise-density ratio.
+
+ber:
+  Bit error rate after QPSK demapping.
+
+fer:
+  Frame error rate after reconstructing the frame and checking preamble/length/CRC.
+
+crc_detected_errors:
+  Corrupted frames rejected by the receiver.
+
+undetected_errors:
+  Corrupted frames that still passed frame checks.
+```
+
+Pass condition
+--------------
+
+```text
+1. Simulation runs.
+2. CSV outputs are generated.
+3. BER decreases as Eb/N0 increases.
+4. FER decreases as Eb/N0 increases.
+5. High Eb/N0 reaches zero or near-zero frame errors.
+6. The shared p3 telemetry frame remains the payload.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed simulation:
+
+```text
+ebn0_db frames ber        fer        frame_errors crc_detected undetected
+0.0     500    0.07911782 1.00000000 500          500          0
+2.0     500    0.03731609 0.99800000 499          499          1
+4.0     500    0.01237644 0.99800000 499          499          1
+6.0     500    0.00247989 0.81400000 407          407          2
+8.0     500    0.00015517 0.10400000 52           52           0
+10.0    500    0.00000000 0.00000000 0            0            0
+12.0    500    0.00000000 0.00000000 0            0            0
+```
+
+Confirmed:
+
+```text
+example_frame_bytes=87
+example_qpsk_symbols=348
+BER decreases as Eb/N0 increases.
+FER reaches zero at high Eb/N0 in this deterministic run.
+CRC detects corrupted frames; rare undetected cases appear at noisy operating points.
+```
+
+Next step after this
+--------------------
+
+```text
+Create FPGA QPSK mapper/demapper blocks:
+  qpsk_mapper.v
+  qpsk_demapper.v
+  qpsk_loopback_top.v
+
+First board version can use digital I/Q symbols internally before any analog/RF hardware.
+```

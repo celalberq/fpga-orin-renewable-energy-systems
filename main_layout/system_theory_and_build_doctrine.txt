@@ -1,0 +1,419 @@
+System Theory and Build Doctrine
+================================
+
+Purpose
+-------
+
+This document is the base theory for the whole summer project system.
+
+It should prevent the same architecture conversation from repeating.
+When choosing the next implementation step, follow this document unless the project goal changes.
+
+Main thesis
+-----------
+
+Build one integrated embedded renewable telemetry platform:
+
+```text
+PV / solar data
+  -> Nexys Video FPGA real-time acquisition, control, packetization, and protection
+  -> reliable telemetry and communication experiments
+  -> networked logging and monitoring
+  -> PC first, Jetson Orin Nano Super later for dashboard, storage, analysis, and AI
+```
+
+The three projects are not separate random demos.
+They are three technical layers of one system:
+
+```text
+proje3 = renewable source, sensing, PWM, MPPT, safety
+proje1 = digital communication reliability for the same telemetry
+proje2 = network transport/parsing/monitoring for the same telemetry
+```
+
+Expanded final concept:
+
+```text
+expanded_final_system_concept.txt
+```
+
+Use that file for the final project vision including Orin, networking, battery state,
+and optional sun-tracking extensions.
+
+Why this is stronger
+--------------------
+
+```text
+1. It looks like a real engineering system, not three disconnected student labs.
+2. It matches the desired profile: computer engineering + renewable energy first.
+3. It gives digital communication a real reason to exist: reliable telemetry.
+4. It gives networking a real reason to exist: infrastructure monitoring and SCADA-style data movement.
+5. It justifies one FPGA + one Orin Nano Super across all projects.
+6. It creates a clean CV story for Australia higher education and renewable-energy roles.
+```
+
+Hardware roles
+--------------
+
+Nexys Video FPGA role:
+
+```text
+Real-time deterministic layer.
+
+The FPGA should do:
+  - PWM generation
+  - precise timing
+  - ADC/SPI/I2C sensor interface timing
+  - voltage/current sample filtering
+  - power calculation
+  - MPPT state machine
+  - fault/protection logic
+  - packet framing
+  - checksums/CRC
+  - low-latency telemetry output
+  - digital communication experiments on telemetry frames
+  - basic packet parsing experiments
+
+Reason:
+  FPGA logic is deterministic, parallel, and timing-controlled.
+  It proves hardware/software integration skill beyond normal software dashboards.
+```
+
+Jetson Orin Nano Super role:
+
+```text
+Linux edge-compute supervisor layer.
+
+The Orin should do:
+  - serial/Ethernet telemetry receiver
+  - CSV/JSON/database logging
+  - dashboard/web UI
+  - plotting and experiment reports
+  - fault/shading/anomaly analysis
+  - optional camera-based panel soiling/shading detection
+  - optional AI inference
+  - network service/API for telemetry
+
+Reason:
+  Orin is strong for Linux, AI, visualization, storage, networking, and Python/C++ services.
+  It should not replace FPGA timing/control logic.
+```
+
+Laptop/PC temporary role:
+
+```text
+Before Orin arrives, the PC replaces Orin.
+
+The PC should do:
+  - PuTTY/serial terminal checks
+  - Python/C logging scripts
+  - CSV data capture
+  - simple plots
+  - dashboard mockups
+  - validation of packet formats
+```
+
+Responsibility boundary
+-----------------------
+
+Do not blur these roles:
+
+```text
+FPGA:
+  hard real-time, I/O timing, PWM, protection, packet generation.
+
+Orin/PC:
+  logging, dashboard, AI, reports, non-real-time analysis.
+
+Digital communication:
+  reliability and signal/packet integrity of telemetry.
+
+Networking:
+  moving telemetry through Ethernet/UDP/TCP-style infrastructure and parsing metadata.
+```
+
+Data flow
+---------
+
+Stage 0: Current board-only fake data
+
+```text
+Switches
+  -> FPGA fake v/i/p/duty values
+  -> UART packet
+  -> PuTTY/Python logger
+```
+
+Stage 1: Shared telemetry packet
+
+```text
+Switches / fake PV model
+  -> FPGA telemetry packet v1
+  -> seq + checksum
+  -> PC logger/parser
+```
+
+Stage 2: Real sensor data
+
+```text
+Voltage/current sensors
+  -> ADC or power monitor
+  -> FPGA filter + scaling
+  -> telemetry packet v1/v2
+  -> PC/Orin logger
+```
+
+Stage 3: Control loop
+
+```text
+Measured v/i
+  -> FPGA power calculation
+  -> MPPT decision
+  -> PWM duty update
+  -> fault protection
+  -> telemetry packet
+```
+
+Stage 4: Digital communication reliability
+
+```text
+Telemetry packet
+  -> frame encoder
+  -> checksum/CRC
+  -> QPSK/OFDM simulation or FPGA loopback
+  -> frame decoder
+  -> BER/frame error/packet loss metrics
+```
+
+Stage 5: Network monitoring
+
+```text
+Telemetry packet
+  -> PC/Orin UDP or Ethernet-style packet
+  -> network parser
+  -> metadata
+  -> dashboard/logging/anomaly flags
+```
+
+Core theory blocks
+------------------
+
+Renewable energy / MPPT theory:
+
+```text
+PV panel has a non-linear I-V curve.
+Power is P = V * I.
+The maximum power point changes with irradiance, temperature, and load.
+MPPT changes duty cycle to search for the point where power is maximized.
+Perturb and Observe:
+  - change duty slightly
+  - observe whether power increased or decreased
+  - keep direction if power improves
+  - reverse direction if power decreases
+```
+
+PWM / buck converter theory:
+
+```text
+PWM duty controls the average switch on-time.
+In an ideal buck converter:
+  Vout approximately equals duty * Vin.
+Real behavior depends on load, inductor, capacitor, switching frequency, losses, and controller stability.
+For safety, the first stages use LED/fake telemetry only.
+Real power stage comes later with low voltage, fuse, current limit, and dummy load.
+```
+
+Telemetry theory:
+
+```text
+Telemetry is not just printing text.
+Good telemetry needs:
+  - stable field names
+  - units
+  - fixed-point scaling
+  - sequence counter
+  - state/fault flags
+  - checksum/CRC
+  - logs that can be plotted later
+```
+
+Digital communication theory:
+
+```text
+Digital communication protects and measures data movement.
+For this project, communication is useful when it carries renewable telemetry frames.
+
+Important concepts:
+  - bit stream
+  - frame
+  - symbol
+  - modulation
+  - channel/noise
+  - demodulation
+  - BER
+  - frame error rate
+  - checksum/CRC
+
+First practical target:
+  Use the same solar telemetry packet.
+  Encode/decode it.
+  Measure bit errors or frame errors in simulation/loopback.
+```
+
+Networking theory:
+
+```text
+Networking moves telemetry through infrastructure.
+For this project, networking is useful when it carries or observes the renewable telemetry stream.
+
+Important concepts:
+  - Ethernet frame
+  - IP packet
+  - UDP/TCP ports
+  - packet length
+  - sequence number
+  - packet loss
+  - timestamp
+  - metadata parsing
+  - anomaly flag
+
+First practical target:
+  Parse/log telemetry packets.
+  Later wrap telemetry in UDP and monitor packet metadata.
+```
+
+Shared packet doctrine
+----------------------
+
+All three projects should use the same base packet:
+
+```text
+p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+```
+
+Rules:
+
+```text
+1. Field names stay stable.
+2. Units are explicit in field names.
+3. Numeric fields are fixed-width decimal where possible.
+4. FPGA packet includes seq and checksum/CRC.
+5. PC/Orin parser rejects or flags bad packets.
+6. proje1 can encode/transmit/test the same packet.
+7. proje2 can parse/transport/log the same packet.
+```
+
+Build sequence from now
+-----------------------
+
+Step 1: Shared packet v1 on FPGA
+
+```text
+Add:
+  seq
+  mppt state
+  crc/checksum
+
+Keep:
+  d_pct
+  v_mv
+  i_ma
+  p_mw
+  f
+
+Output:
+  p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+```
+
+Step 2: PC parser/logger
+
+```text
+Read UART.
+Parse fields.
+Validate checksum.
+Log CSV.
+Print packet loss using seq.
+```
+
+Step 3: proje3 MPPT fake-control
+
+```text
+Use fake PV model first.
+Auto-adjust duty.
+Report mppt=up/down/hold.
+Keep fault rules.
+```
+
+Step 4: proje1 digital communication layer
+
+```text
+Use the same packet as payload.
+Create frame encoder/decoder.
+Add checksum/CRC verification.
+Simulate bit errors.
+Report BER/frame error rate.
+Later build FPGA loopback.
+```
+
+Step 5: proje2 network layer
+
+```text
+Use the same packet as payload.
+PC/Orin sends/receives UDP-style telemetry.
+Parser extracts packet metadata.
+Dashboard/logging reports packet rate, loss, and fault status.
+Later add FPGA Ethernet experiments.
+```
+
+Step 6: Real sensors
+
+```text
+Add ADC or power monitor.
+Replace fake v_mv/i_ma with calibrated values.
+Keep packet format stable.
+```
+
+Step 7: Low-voltage power stage
+
+```text
+Only after sensors and protection work.
+Use low voltage.
+Use fuse/current limit.
+Use dummy load first.
+Do not connect grid.
+```
+
+Step 8: Orin integration
+
+```text
+Move PC parser/logger to Orin.
+Add dashboard.
+Add database/CSV logging.
+Add fault/shading analysis.
+Optional camera demo.
+```
+
+What not to do
+--------------
+
+```text
+Do not build unrelated QPSK/network demos that ignore the solar telemetry packet.
+Do not let Orin replace the FPGA PWM/control/protection logic.
+Do not connect power electronics before sensor/protection stages.
+Do not change packet fields randomly after logging tools depend on them.
+Do not make networking the main identity; keep it as infrastructure support.
+```
+
+Portfolio story
+---------------
+
+Use this wording:
+
+```text
+I built an FPGA-based renewable telemetry and control platform.
+The Nexys Video handles real-time PWM, telemetry packetization, and protection logic.
+The communication layer studies reliable transfer of renewable telemetry frames.
+The networking layer moves and monitors the same data for SCADA-style infrastructure logging.
+The Orin Nano Super is planned as the edge Linux/AI supervisor for dashboarding, logging,
+fault analysis, and optional camera-based panel monitoring.
+```

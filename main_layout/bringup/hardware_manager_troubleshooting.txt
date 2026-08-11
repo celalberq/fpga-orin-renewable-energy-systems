@@ -1,0 +1,127 @@
+Vivado Hardware Manager Troubleshooting
+=======================================
+
+Current symptom:
+
+```text
+HARDWARE MANAGER - unconnected
+No hardware target is open
+Program Device is not clickable
+Windows Device Manager shows FTDI USB Serial Converter
+```
+
+Meaning:
+
+```text
+Windows sees the USB interface, but Vivado has not opened the JTAG hardware target yet.
+The FTDI device is a good sign, but it is not enough by itself.
+```
+
+Expected Vivado result:
+
+```text
+Hardware Manager -> Open target -> Auto Connect
+
+Vivado should show a target/device similar to:
+  xc7a200t_0
+
+Only then should Program Device become clickable.
+```
+
+Current PC observation:
+
+```text
+Windows currently sees:
+  USB Serial Port (COM6)
+  USB Serial Converter
+  USB JTAG/serial debug unit
+
+This proves a USB serial/FTDI interface is present.
+It does not prove Vivado has access to the JTAG programming cable.
+
+Command-line check:
+  XSDB connected to the local hardware server but listed no JTAG targets.
+
+Conclusion:
+  The issue is below the Vivado project/HDL level.
+  Focus on USB port, cable, board power, driver binding, and hw_server restart.
+
+Important Nexys Video port note:
+  If the cable is connected to the board connector labeled UART, Windows can show COM6
+  but Vivado will not see the FPGA for programming.
+
+  For bitstream programming, connect the USB cable to the Digilent Adept / USB-JTAG /
+  PROG programming port, not the UART-only connector.
+
+Observed mapping:
+  J13 = UART connector = COM6 on this PC.
+```
+
+First actions:
+
+```text
+1. Connect the Nexys Video USB-JTAG / PROG / Digilent Adept programming port to the PC
+   with a data-capable USB cable.
+   Do not use the UART-only connector for programming.
+2. Power the board on.
+3. In Vivado:
+     Flow Navigator -> Open Hardware Manager
+     Open target -> Auto Connect
+4. If Auto Connect works, select xc7a200t_0 and program the bitstream.
+```
+
+If Auto Connect does not find the FPGA:
+
+```text
+1. Try a different USB cable.
+   Some USB cables are power-only.
+
+2. Try a different USB port on the PC.
+
+3. Confirm you are plugged into the Nexys Video PROG/UART USB port.
+   Do not use a USB host/HID/user peripheral port for programming.
+
+4. Confirm the board power switch is ON.
+
+5. Close and reopen Hardware Manager.
+
+6. Reinstall Vivado/Digilent cable drivers as Administrator.
+   This machine's Vivado path:
+     C:\AMDDesignTools\2025.2\Vivado
+
+   Driver installer paths:
+     C:\AMDDesignTools\2025.2\Vivado\data\xicom\cable_drivers\nt64\install_drivers_wrapper.bat
+     C:\AMDDesignTools\2025.2\Vivado\data\xicom\cable_drivers\nt64\digilent\install_digilent.exe
+
+7. After driver install:
+     unplug board
+     plug board back in
+     reopen Vivado
+     Open Hardware Manager
+     Open target -> Auto Connect
+```
+
+Vivado Tcl console check:
+
+```text
+open_hw_manager
+connect_hw_server
+open_hw_target
+get_hw_targets
+get_hw_devices
+```
+
+Expected output:
+
+```text
+get_hw_devices should include xc7a200t_0.
+```
+
+Do not continue to UART or project-specific tests until:
+
+```text
+Vivado sees xc7a200t_0
+Program Device is clickable
+led_switch_top bitstream is programmed
+LED/switch behavior is confirmed after programming
+```

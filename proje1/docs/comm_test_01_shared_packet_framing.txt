@@ -1,0 +1,123 @@
+Proje1 Communication Test 01: Shared Packet Framing and CRC
+===========================================================
+
+Goal
+----
+
+Start the digital communication project using the real shared renewable telemetry packet
+from proje3 as the payload.
+
+This keeps proje1 connected to the main renewable-energy system.
+
+Board / Vivado code
+-------------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+```
+
+This first test is simulation-only. FPGA HDL comes after the framing/CRC behavior is clear.
+
+Payload
+-------
+
+Example payload:
+
+```text
+p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+```
+
+Digital communication frame
+---------------------------
+
+```text
+preamble:
+  0xA5 0x5A
+
+length:
+  1 byte payload length
+
+payload:
+  ASCII shared telemetry packet
+
+crc:
+  CRC-8 over length + payload
+```
+
+Why this matters
+----------------
+
+```text
+proje3 generates the renewable telemetry.
+proje1 tests whether that telemetry can move reliably.
+proje2 later transports/logs the same telemetry through network-style infrastructure.
+```
+
+Simulation script
+-----------------
+
+```text
+proje1/code/sim/shared_packet_comm_sim.py
+```
+
+Run:
+
+```text
+python proje1/code/sim/shared_packet_comm_sim.py
+```
+
+Output:
+
+```text
+proje1/data/shared_packet_comm_sim.csv
+```
+
+Metrics
+-------
+
+```text
+target_ber:
+  Bit error probability injected into the frame.
+
+measured_ber:
+  Actual bit error rate observed in the simulation.
+
+corrupted_frames:
+  Frames changed by the simulated channel.
+
+crc_detected_errors:
+  Corrupted frames rejected by CRC/preamble/length checks.
+
+undetected_errors:
+  Corrupted frames that passed checks.
+  This should stay zero or very low; CRC-8 is useful for the first test but not the final protection layer.
+```
+
+Pass condition
+--------------
+
+```text
+1. Simulation runs.
+2. CSV is generated.
+3. Clean channel has zero frame errors.
+4. Corrupted frames are detected by CRC at nonzero BER.
+5. The shared p3 telemetry packet is used as the payload.
+```
+
+Next step after this
+--------------------
+
+```text
+Create FPGA loopback version:
+  shared packet payload
+  frame builder
+  CRC-8 generator
+  controlled error injection
+  frame checker
+  UART telemetry:
+    project=comm,frames=1000,bit_errors=...,frame_errors=...,undetected=...
+```

@@ -1,0 +1,168 @@
+Proje1 Board Test 01: Shared Packet Communication Frame Loopback
+================================================================
+
+Goal
+----
+
+Move from PC-only communication simulation to a first FPGA board test.
+
+The FPGA wraps the shared proje3 renewable telemetry packet in a digital communication
+frame, computes CRC-8, injects a controlled payload error from SW0-SW7, checks the
+received frame, and prints link-health counters over UART.
+
+Vivado board code
+-----------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  comm_frame_loopback_top
+
+HDL sources:
+  proje1/code/hdl/uart_tx.v
+  proje1/code/hdl/crc8_byte.v
+  proje1/code/hdl/comm_frame_loopback_top.v
+
+Constraints:
+  proje1/hardware/constraints/nexys_video_comm_frame_loopback.xdc
+```
+
+Frame format
+------------
+
+```text
+preamble:
+  0xA5 0x5A
+
+length:
+  0x53
+
+payload:
+  p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+
+crc:
+  CRC-8 polynomial 0x07 over length + payload
+```
+
+Current board test note:
+
+```text
+The preamble is part of the communication-frame design, but this test focuses the
+live hardware check on length + payload CRC behavior first.
+```
+
+Switch behavior
+---------------
+
+```text
+SW0-SW7 = 00000000:
+  No injected payload error.
+
+Any nonzero SW0-SW7:
+  The switch value is XORed into one payload byte before receiver-side CRC checking.
+  This should make rx CRC differ from tx CRC.
+```
+
+LED behavior
+------------
+
+```text
+LD0:
+  Last CRC check OK.
+
+LD1:
+  Last frame had injected error.
+
+LD2:
+  UART busy.
+
+LD3:
+  Heartbeat toggles once per checked frame.
+
+LD4-LD7:
+  Upper switch bits.
+```
+
+UART
+----
+
+```text
+Connector:
+  J13
+
+PC port:
+  COM6
+
+Baud:
+  115200
+
+Data:
+  8 data bits, no parity, 1 stop bit, flow control none
+```
+
+Expected output
+---------------
+
+No injected error:
+
+```text
+p1,seq=00001,payload=p3,len=00083,inj=0,tx=0C,rx=0C,crc_fail=00000,undet=00000,mask=00,ok=1
+```
+
+Injected error:
+
+```text
+p1,seq=00002,payload=p3,len=00083,inj=1,tx=0C,rx=XX,crc_fail=00001,undet=00000,mask=01,ok=0
+```
+
+Pass condition
+--------------
+
+```text
+1. Bitstream programs successfully.
+2. PuTTY/TeraTerm receives p1 lines on COM6.
+3. With SW0-SW7 off, ok=1 and tx equals rx.
+4. With any switch on, inj=1 and crc_fail increases.
+5. undet stays 00000 for this controlled single-byte corruption test.
+```
+
+Result
+------
+
+```text
+PASS
+```
+
+Observed output:
+
+```text
+p1,seq=00027,payload=p3,len=00083,inj=0,tx=0C,rx=0C,crc_fail=00000,undet=00000,mask=00,ok=1
+p1,seq=00033,payload=p3,len=00083,inj=1,tx=0C,rx=77,crc_fail=00001,undet=00000,mask=C3,ok=0
+p1,seq=00034,payload=p3,len=00083,inj=1,tx=0C,rx=9F,crc_fail=00002,undet=00000,mask=FF,ok=0
+p1,seq=00044,payload=p3,len=00083,inj=1,tx=0C,rx=40,crc_fail=00012,undet=00000,mask=C2,ok=0
+p1,seq=00045,payload=p3,len=00083,inj=0,tx=0C,rx=0C,crc_fail=00012,undet=00000,mask=00,ok=1
+```
+
+Confirmed:
+
+```text
+Clean frames pass with tx=rx=0C and ok=1.
+Injected frames fail CRC with ok=0.
+crc_fail increments during injected corruption.
+undet stays 00000.
+The link returns to ok=1 after SW0-SW7 return to 00.
+```
+
+Why this matters
+----------------
+
+```text
+proje3 already creates the renewable telemetry.
+proje1 now proves the FPGA communication layer can protect that telemetry with framing
+and CRC before we add QPSK, OFDM, and channel/noise models.
+```

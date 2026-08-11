@@ -1,0 +1,29 @@
+Demo Plan: proje2 Network
+=========================
+
+Demo title:
+
+FPGA Network Telemetry and AI Anomaly Monitor
+
+Demo flow:
+
+```text
+1. Generate normal ping/web/iperf traffic.
+2. Show FPGA packet counters and flow metadata.
+3. Generate scan or burst traffic.
+4. Show traffic pattern change on Orin dashboard.
+5. Trigger anomaly alert.
+6. Export labeled dataset and plot.
+```
+
+Minimum demo if FPGA Ethernet is delayed:
+
+```text
+Use simulated metadata or PCAP-derived frames first, then show the FPGA parser testbench.
+```
+
+Best demo:
+
+```text
+Managed switch mirror port -> FPGA Ethernet -> Orin dashboard -> alert.
+```

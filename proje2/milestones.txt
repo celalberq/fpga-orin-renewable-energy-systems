@@ -1,0 +1,59 @@
+Milestones: proje2 Network
+==========================
+
+Milestone 1: Metadata format
+
+```text
+Output:
+  - define Ethernet/IP/TCP/UDP metadata fields
+  - define FPGA-to-Orin telemetry packet
+
+Current status:
+  - stored-frame parser exists
+  - shared p3 solar packet selected as first real network payload
+```
+
+Milestone 2: Parser simulation
+
+```text
+Output:
+  - parse example frames
+  - verify source/destination/protocol/length extraction
+```
+
+Milestone 3: Orin dashboard with simulated data
+
+```text
+Output:
+  - live graphs
+  - top flows
+  - alert panel
+
+Current status:
+  - solar_telemetry_udp_gateway.py created
+  - solar_telemetry_udp_receiver.py created
+  - solar_live_dashboard.py created and smoke-tested
+  - PC can act as temporary Orin receiver over UDP
+  - live Nexys Video p3 solar telemetry passed through UDP gateway and receiver
+  - live dashboard passed with power/duty/voltage/current/MPPT/fault trend
+  - BESS SoC dashboard simulation smoke-tested
+  - link health dashboard smoke-tested
+```
+
+Milestone 4: FPGA Ethernet receive
+
+```text
+Output:
+  - receive frames from Ethernet PHY
+  - increment counters
+  - stream metadata
+```
+
+Milestone 5: Anomaly detection
+
+```text
+Output:
+  - normal traffic baseline
+  - scan/flood detection
+  - final demo video
+```

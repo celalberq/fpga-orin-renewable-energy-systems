@@ -1,0 +1,111 @@
+Integrated FPGA and Jetson Orin Solar Tracker + Bidirectional BESS Telemetry
+===========================================================================
+
+Overview
+--------
+
+This project combines renewable-energy sensing and control, FPGA-backed digital
+communication profiling, and live network monitoring in one low-voltage bench
+prototype. Four KY-018 light sensors are sampled by an MCP3208 connected to a
+Digilent Nexys Video. A Jetson Orin Nano reads the FPGA UART stream, estimates
+the light direction, and drives a real two-axis panel mount through a PCA9685.
+The system also measures a protected 1S Li-ion battery through an INA226 during
+supervised charging and fan-load discharge.
+
+Architecture
+------------
+
+```text
+Four LDRs + panel divider -> MCP3208 -> Nexys Video UART -> Jetson Orin
+                                                            |
+                                                            +-> PCA9685 pan/tilt
+Battery + TP4056 + fan -> INA226 ----------------------------+
+                                                            |
+                                                            +-> mixed UDP telemetry
+                                                                -> CRC/QPSK/OFDM bridge
+                                                                -> live dashboard + CSV
+```
+
+The three portfolio projects form layers of the same system. Proje3 owns solar
+sensing, tracking, actuation, battery measurement, and protection semantics.
+Proje1 converts each live payload into a deterministic CRC-protected frame and
+calculates its QPSK/OFDM resource profile. Proje2 transports and displays the
+data, validates packets, detects sequence gaps, and records evidence.
+
+Implementation
+--------------
+
+The fixed four-LDR cross provides an absolute two-axis target. The Orin uses a
+sequential controller with deadbands and bounded servo steps to avoid axis
+chatter while allowing continuous correction. Panel power is estimated from
+MCP3208 voltage across a known 1k-ohm load. The INA226 is calibrated with a
+0.9501 bus-voltage scale and measures signed battery current: positive while
+charging and negative while discharging.
+
+The unified communication payload contains panel voltage and power, tracker
+angles and target, tracking error and state, actuator state, battery voltage,
+signed battery current and power, BESS state, sequence information, and source
+metadata. The live mixed profile uses a 157-byte payload and 161-byte frame,
+corresponding to 1288 bits, 644 QPSK symbols, 14 OFDM symbols, and 28 padding
+symbols. Related CRC, QPSK, OFDM placement, pilot, null, and cyclic-prefix
+accounting blocks were also validated on the Nexys Video.
+
+Measured Results
+----------------
+
+```text
+Continuous unified dashboard run:       368/368 valid packets, 0 gaps
+Continuous CRC-valid bridge frames:     368/368, 0 gaps
+Best observed tracker error:            0.012 degrees
+Locked tracker samples:                 213
+Fixed-vs-tracking mean-power gain:       +24.141%
+Fixed-vs-tracking energy gain:           +24.229%
+Shading/recovery test:                   120 valid packets, 0 gaps
+
+Real fan-load battery discharge:        about 2.954 V, -231 mA, -0.683 W
+Real supervised battery charging:       3.835-3.842 V, +233 to +236 mA,
+                                         +0.895 to +0.908 W
+
+Continuous BESS state sequence:          idle -> charging -> idle ->
+                                         discharging -> idle
+Continuous charging:                    +38.0 to +238.6 mA, average about
+                                         +0.83 W after settling
+Continuous discharge:                   -78.0 to -215.5 mA,
+                                         -0.257 to -0.638 W
+Final valid idle cell reading:           3.499-3.502 V, about -0.1 mA
+Unified communication profile:           161 bytes, 644 QPSK, 14 OFDM
+```
+
+Limitations
+-----------
+
+The mechanism, LDR cross, and temporary battery terminals are prototype-grade.
+Battery tests are supervised, and the TP4056 USB input is not used
+simultaneously with the fan because load sharing has not been validated. Indoor
+panel power is low because the available source is a handheld LED, so the
+reported panel A/B result is an estimate from voltage across a known resistor.
+At the beginning of the continuous demo, the monitored INA226 path was open, so
+its approximately 0.63 V bus reading is not used as a battery-voltage claim;
+valid battery-terminal voltage was restored for the final idle state.
+The digital communication subsystem demonstrates CRC/QPSK/OFDM packet profiling
+and FPGA pipeline validation rather than a complete over-the-air RF modem.
+
+Conclusion
+----------
+
+The completed prototype demonstrates an end-to-end renewable edge system:
+physical light sensing, real two-axis actuation, panel-power estimation, real
+battery charge/discharge measurement, FPGA communication validation, reliable
+UDP transport, and dashboard observability. It provides a coherent portfolio
+project spanning FPGA design, embedded Linux, renewable energy, networking,
+instrumentation, and evidence-driven engineering.
+
+Primary Evidence
+----------------
+
+```text
+main_layout/demo_evidence/video/unified_tracker_bess_bidirectional_final_demo_2026-08-11.mp4
+proje1/data/unified_tracker_bess_bidirectional_demo_bridge.csv
+proje2/data/unified_tracker_bess_bidirectional_demo_dashboard.csv
+proje3/docs/board_test_25_unified_tracker_bess_bidirectional_demo.txt
+```

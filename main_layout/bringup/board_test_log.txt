@@ -1,0 +1,105 @@
+Nexys Video Board Test Log
+==========================
+
+Board:
+
+```text
+Digilent Nexys Video 410-316
+FPGA part: xc7a200tsbg484-1
+```
+
+Test 1: LED/switch bring-up
+---------------------------
+
+Status:
+
+```text
+PASS
+```
+
+What worked:
+
+```text
+Vivado Hardware Manager connects through the JTAG/PROG port.
+The generated bitstream programs the Nexys Video successfully.
+SW0-SW7 control LD0-LD7 with the LED/switch design.
+```
+
+Files used:
+
+```text
+HDL:
+  main_layout/bringup/hdl/led_switch_top.v
+
+Constraints:
+  main_layout/bringup/constraints/nexys_video_led_switch.xdc
+```
+
+Next test:
+
+```text
+UART hello-world telemetry to PC.
+```
+
+UART port finding:
+
+```text
+Nexys Video connector J13 appears in Windows as COM6.
+Use J13 / COM6 for UART terminal output.
+Use the JTAG/PROG connector for Vivado programming.
+```
+
+UART pin check:
+
+```text
+The UART constraint matches Digilent Nexys-Video-Master.xdc:
+  V18 / uart_tx_in  = FT232R TXD into FPGA, so FPGA input
+  AA19 / uart_rx_out = FPGA output into FT232R RXD, so FPGA UART TX
+
+For FPGA-to-PC text output, the design must drive uart_rx_out on AA19.
+Earlier code incorrectly drove uart_tx_in on V18; that has been corrected.
+```
+
+Expected UART result:
+
+```text
+project=bringup,board=nexys_video,status=ok
+```
+
+Test 2: UART hello-world telemetry
+----------------------------------
+
+Status:
+
+```text
+PASS
+```
+
+What worked:
+
+```text
+J13 appears as COM6 on this PC.
+PuTTY receives the FPGA hello-world telemetry at 115200 baud.
+The corrected UART direction works:
+  FPGA TX output = AA19 / uart_rx_out
+  FPGA RX input  = V18 / uart_tx_in
+```
+
+Files used:
+
+```text
+HDL:
+  main_layout/bringup/hdl/uart_tx.v
+  main_layout/bringup/hdl/uart_hello_no_reset_top.v
+
+Constraints:
+  main_layout/bringup/constraints/nexys_video_uart_hello_no_reset.xdc
+```
+
+Board bring-up result:
+
+```text
+The Nexys Video is ready for first project-specific HDL tests.
+Next recommended project step:
+  proje3 PWM output / fake solar telemetry, because proje3 is the main portfolio direction.
+```

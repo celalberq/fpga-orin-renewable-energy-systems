@@ -1,0 +1,86 @@
+Procurement Notes: Turkey and Germany
+=====================================
+
+Problem:
+
+Digilent distributors in Turkey can be out of stock for long periods. A Germany/EU purchase route is realistic if a family member can receive or carry the board.
+
+Preferred buying routes:
+
+```text
+Route A: Try direct Digilent-to-Turkey first.
+  1. Add the exact board to Digilent cart.
+  2. Enter Turkey shipping address.
+  3. Check whether the checkout accepts the order.
+  4. Expect Digilent to request extra end-use/export information for Turkey.
+  5. Confirm total shipping cost and import handling risk before paying.
+
+Route B: Germany fallback.
+  1. Buy from Digilent or a reliable EU/Germany seller.
+  2. Have the board delivered to Germany.
+  3. Sister brings one board to Turkey as personal luggage for personal study/project use.
+  4. Keep the invoice, order confirmation, and product page/specification.
+  5. Recheck Turkey passenger customs limits before the flight.
+  6. Do not buy many identical boards because that can look commercial.
+```
+
+Digilent direct-shipping note:
+
+Digilent's shipping page does not list Turkey as a country where direct shipping is impossible. It says Turkey orders require extra EUS/EUI information before shipping, and Turkey is included in Digilent's EU Region chart for product availability.
+
+Source:
+
+```text
+https://digilent.com/shop/shipping-returns/
+```
+
+Important customs note:
+
+This is not legal advice. Rules and value limits can change. Before buying, check the current Turkey customs/Ticaret Bakanligi passenger goods rules. A Germany/EU purchase does not automatically avoid Turkish customs rules when the item enters Turkey.
+
+Germany VAT note:
+
+Germany prices normally include VAT. VAT refund/tax-free shopping may be possible only under the correct conditions, usually for non-EU residents exporting goods in personal luggage with proper paperwork. If your sister lives in Germany/EU and buys it as a German/EU resident, do not assume a tourist VAT refund applies.
+
+Warranty note:
+
+If the board is bought in Germany or from an EU seller, warranty/RMA will likely need to go back through that seller. Keep packaging and invoice.
+
+Transport note:
+
+```text
+1. Carry the FPGA board in original box or anti-static bag.
+2. Keep it in hand luggage if possible.
+3. Remove nothing from the board.
+4. Keep accessories, USB cable, and invoice together.
+5. FPGA boards normally do not contain lithium batteries, so airline battery rules are usually not the issue.
+```
+
+Board priority if using Germany/EU route:
+
+```text
+Best technical fit:
+  Nexys Video, if available and affordable.
+
+Best network-focused fit:
+  Zybo Z7-20, because it has Gigabit Ethernet.
+
+Best practical pure-FPGA fit:
+  Arty A7-100T, because it is balanced, documented, and lower risk.
+
+Avoid as main shared board:
+  Basys 3, because it lacks Ethernet.
+```
+
+Useful official Digilent product pages:
+
+```text
+Arty A7-100T:
+https://digilent.com/shop/arty-a7-100t-artix-7-fpga-development-board/
+
+Nexys Video:
+https://digilent.com/shop/nexys-video-amd-artix-7-fpga-trainer-board-for-multimedia-applications/
+
+Zybo Z7:
+https://digilent.com/shop/zybo-z7-zynq-7000-arm-fpga-soc-development-board/
+```

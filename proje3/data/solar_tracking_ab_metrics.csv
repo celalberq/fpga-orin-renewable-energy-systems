@@ -1,0 +1,16 @@
+metric,fixed,tracking
+samples,113,113
+active_duration_s,56.543,56.542
+voltage_mean_mv,95.655,106.593
+current_mean_ma,0.096,0.107
+power_mean_mw,0.009,0.011
+power_median_mw,0.010,0.011
+power_min_mw,0.009,0.010
+power_max_mw,0.010,0.012
+power_stdev_mw,0.000,0.000
+energy_mwh,0.000144,0.000179
+detection_pct,100.000,100.000
+locked_pct,0.000,82.301
+track_error_mean_deg,47.050,3.574
+power_gain_pct,baseline,24.141
+energy_gain_pct,baseline,24.229

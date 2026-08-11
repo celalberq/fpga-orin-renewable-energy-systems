@@ -1,0 +1,154 @@
+Unified Tracker + Bidirectional BESS Demo Runbook
+=================================================
+
+Purpose
+-------
+
+Record one continuous demonstration of the complete prototype while telemetry
+moves through idle, charging, idle, discharging, and idle. The tracker,
+communication bridge, dashboard, and CSV logging remain active for the entire
+run.
+
+Accurate claim
+--------------
+
+```text
+Small-scale real BESS charge/discharge monitoring and supervisory telemetry
+prototype integrated with a two-axis renewable-energy tracker.
+```
+
+The TP4056 is charged from USB-C in this test. Do not describe this run as
+solar battery charging or as an autonomous solar-storage power system.
+
+Safety boundary
+---------------
+
+```text
+- Never connect TP4056 USB-C and the fan load at the same time.
+- Disconnect USB-C before connecting the fan.
+- Disconnect the fan before reconnecting USB-C.
+- Keep the test supervised because the battery connections are prototype-grade.
+- Stop immediately if wiring becomes warm, voltage becomes unstable, or the
+  measured loaded battery voltage falls below 2.90 V.
+- Orin and Nexys use their normal external supplies throughout the demo.
+```
+
+Initial hardware state
+----------------------
+
+```text
+Battery installed.
+INA226 remains connected on Orin I2C bus 7 at address 0x44.
+PCA9685 remains connected on bus 7 at address 0x40.
+Fan disconnected.
+MT3608 disconnected.
+TP4056 USB-C disconnected.
+Nexys powered and connected to Orin as /dev/ttyUSB0.
+```
+
+PC Terminal 1: Dashboard
+------------------------
+
+```powershell
+cd "C:\Users\Msi\Documents\yaz proje"
+
+python proje2/code/pc_app/solar_live_dashboard.py `
+  --udp-host 0.0.0.0 --udp-port 5011 `
+  --http-host 127.0.0.1 --http-port 8085 `
+  --bess-capacity-wh 9.25 --bess-initial-soc 55 `
+  --bess-load-w 0 `
+  --log proje2/data/unified_tracker_bess_bidirectional_demo_dashboard.csv
+```
+
+Open http://127.0.0.1:8085 and leave the dashboard visible.
+
+PC Terminal 2: Communication Bridge
+-----------------------------------
+
+```powershell
+cd "C:\Users\Msi\Documents\yaz proje"
+
+python proje1/code/pc_app/tracker_udp_comm_bridge.py `
+  --bind-host 0.0.0.0 --bind-port 5013 `
+  --forward-host 127.0.0.1 --forward-port 5011 `
+  --max-packets 400 `
+  --log proje1/data/unified_tracker_bess_bidirectional_demo_bridge.csv
+```
+
+Orin Window: Unified Tracker + Real BESS
+----------------------------------------
+
+```bash
+cd /home/msi
+
+python3 proje3/code/orin_app/ldr_servo_tracker.py \
+  --port /dev/ttyUSB0 \
+  --calibration-in proje3/data/ldr_ab_calibration.json \
+  --sensor-mount fixed --control-mode sequential \
+  --max-packets 400 \
+  --drive-servos --bus 7 --addr 0x40 \
+  --ina-enable --ina-role bess --ina-addr 0x44 \
+  --shunt-ohms 0.1 --ina-bus-voltage-scale 0.9501 \
+  --battery-capacity-ah 2.5 --battery-nominal-voltage 3.7 \
+  --bess-idle-current-ma 2 \
+  --pan-channel 15 --tilt-channel 12 \
+  --pan-start 90 --tilt-start 90 \
+  --pan-min 10 --pan-max 170 \
+  --tilt-min 10 --tilt-max 170 \
+  --fixed-tilt-gain 120 \
+  --fixed-center-deadband 0.015 \
+  --fixed-hemisphere-deadband 0.05 \
+  --target-deadband-deg 1.0 \
+  --min-step 0.5 --max-step 3.0 \
+  --stable-samples 2 --invert-tilt \
+  --panel-load-ohms 1000 \
+  --udp-host 192.168.1.219 --udp-port 5013 \
+  --source-label "Orin unified tracker bidirectional BESS demo" \
+  --log proje3/data/unified_tracker_bess_bidirectional_demo.csv \
+  --overwrite-log
+```
+
+One-take demonstration sequence
+-------------------------------
+
+```text
+1. Start recording after all three windows are visible.
+2. Leave fan and USB-C disconnected for 5-10 seconds.
+   Expected BESS state: idle; current approximately zero.
+3. Move the handheld light once so pan and tilt visibly reacquire it, then leave
+   the light stationary.
+4. With the fan still disconnected, connect TP4056 USB-C.
+   Show the red LED and hold for 10-15 seconds.
+   Expected state: charging; positive current; about +0.9 W from the prior test.
+5. Disconnect USB-C. Wait 5-10 seconds for the dashboard to return to idle.
+6. Confirm USB-C is physically disconnected, then connect the fan load.
+   Hold for 8-12 seconds only.
+   Expected state: discharging; negative current; about -0.65 to -0.68 W.
+7. Disconnect the fan. Wait for the dashboard to return to idle.
+8. Keep recording for 5 seconds, then stop the Orin process with Ctrl+C.
+9. Stop the bridge and dashboard after their CSV files have flushed.
+```
+
+Acceptance criteria
+-------------------
+
+```text
+- One continuous video shows idle -> charging -> idle -> discharging -> idle.
+- Positive charging and negative discharging current are visible.
+- Tracker pan and tilt movement is visible in the same run.
+- Proje1 compact frames remain CRC valid.
+- Dashboard invalid packets and sequence gaps remain zero.
+- Final CSV files contain both charging and discharging rows.
+- USB-C and fan are never connected simultaneously.
+```
+
+Portfolio wording after a pass
+------------------------------
+
+```text
+Demonstrated a small-scale bidirectional BESS telemetry prototype integrated
+with an FPGA/Jetson two-axis solar tracker, continuously classifying real
+battery idle, charge, and discharge states while preserving signed power data
+through CRC/QPSK/OFDM profiling, UDP transport, dashboard visualization, and
+CSV evidence.
+```

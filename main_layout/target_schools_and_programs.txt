@@ -1,0 +1,309 @@
+Target Schools and Programs
+===========================
+
+Last updated:
+
+```text
+2026-07-03
+```
+
+Priority identity used for school selection
+-------------------------------------------
+
+Use the same priority stack as the project portfolio:
+
+```text
+Main strength:
+  Computer engineering + renewable energy systems
+
+Strong support:
+  Digital communication, signal processing, telemetry, and FPGA data movement
+
+Basic support:
+  Networking, Ethernet literacy, SCADA/infrastructure monitoring awareness
+```
+
+This means the best master's program is not pure power engineering, pure telecom, or pure networking.
+The best program is electrical/computer engineering that allows renewable energy, power systems, control,
+embedded systems, telemetry, data, or communication electives/projects.
+
+Application target shape
+------------------------
+
+Use this target mix:
+
+```text
+1. Two Melbourne-first electrical/computer/renewable programs
+2. One practical Melbourne backup
+3. One technical stretch outside Melbourne
+4. One energy-systems alternative only if the career target shifts more toward energy planning/policy
+```
+
+Tier 1: Best fit / first application targets
+--------------------------------------------
+
+1. Monash University
+
+```text
+Target program:
+  Master of Professional Engineering, Electrical Engineering specialisation
+  Course code: E6011
+  Qualification name: Master of Professional Electrical Engineering
+
+Why it fits:
+  - Strong Melbourne option.
+  - Fully professional engineering pathway.
+  - Electrical engineering can support renewables, power, embedded/FPGA, controls, and telemetry.
+  - Good brand for Australian applications and graduate employability.
+  - Best if the goal is a broad professional engineering path with renewable/embedded focus.
+
+How to present our portfolio:
+  - Lead with proje3 solar/BESS/SCADA-style renewable monitoring.
+  - Use Nexys Video FPGA work as the computer engineering differentiator.
+  - Use proje1 to show signal-processing and telemetry strength.
+  - Keep proje2 as basic Ethernet/infrastructure support.
+
+Risk:
+  - Entry requirement references a high credit / 65% average.
+  - Your GPA around 2.8-2.84 may need careful equivalency explanation, strong SOP, strong project portfolio,
+    English score, and possibly multiple applications.
+
+Action before applying:
+  - Verify Turkish GPA conversion with Monash admissions or an authorized agent.
+  - Verify Electrical Engineering course structure/electives and any February 2027 details.
+```
+
+2. University of Melbourne
+
+```text
+Target program:
+  Master of Electrical Engineering
+  Course code: MC-ELECENG
+
+Preferred specialisation/elective direction:
+  - Low-Carbon Power Systems
+  - Communications and Networks
+  - Autonomous Systems if it supports embedded/control/edge systems
+
+Why it fits:
+  - Strongest prestige option in Melbourne.
+  - Directly combines power grids, telecommunications, future electronics, and autonomous devices.
+  - Good match for computer + renewable with digital communication support.
+  - Industry projects/internships make the portfolio story stronger.
+
+How to present our portfolio:
+  - Tell the story as "embedded/FPGA renewable energy monitoring and control".
+  - Mention prior ADAS prototype as computer vision and embedded systems evidence.
+  - Use digital communication as telemetry/signal-processing support, not as an RF-heavy identity.
+
+Risk:
+  - Likely expensive and academically intense.
+  - May be competitive.
+  - Need to confirm admission equivalency and credit/advanced standing.
+
+Action before applying:
+  - Ask whether your current undergraduate background can reduce the duration.
+  - Check exact fees, scholarship chances, entry equivalency, and English score requirement.
+```
+
+Tier 2: Practical Melbourne fit / backup targets
+------------------------------------------------
+
+3. RMIT University
+
+```text
+Target area:
+  Exact postgraduate program still needs verification.
+  Search inside these RMIT areas:
+    - Electrical and electronic engineering
+    - Computer engineering
+    - Environmental and sustainable engineering
+    - Telecommunications engineering
+
+Why it fits:
+  - Melbourne-based and practical/industry-facing.
+  - Good fit with a portfolio built around FPGA, embedded systems, renewable monitoring, and practical demos.
+  - Good if EMMS / Melbourne renewables network becomes important.
+
+How to present our portfolio:
+  - Emphasise practical implementation:
+      Nexys Video bring-up
+      solar/BESS monitoring simulation
+      dashboard/logging
+      UART/Ethernet telemetry
+      clear hardware documentation
+
+Risk:
+  - Do not list a final exact RMIT program until the current official course page and accreditation are verified.
+  - Some RMIT pages group study areas and do not prove the exact master's structure by themselves.
+
+Action before applying:
+  - Find the exact 2027 international postgraduate course page.
+  - Confirm accreditation / professional recognition.
+  - Confirm whether the course has renewable, power, embedded, computer engineering, or telecom electives.
+```
+
+4. Swinburne University of Technology
+
+```text
+Target program:
+  Master of Engineering Science
+  Course code: MA-ENGSC
+
+Preferred specialisations:
+  - Electrical Engineering
+  - Electronics and Telecommunications Engineering
+
+Why it fits:
+  - Practical Melbourne/Hawthorn option.
+  - Electrical path connects to renewable energy and power generation.
+  - Electronics/telecommunications path supports digital communication and FPGA/embedded work.
+  - Good backup if Monash or Melbourne are too competitive or expensive.
+
+How to present our portfolio:
+  - Lead with computer/embedded renewable systems.
+  - Use proje1 as signal-processing/telecom evidence.
+  - Use prior ADAS prototype to show implementation maturity.
+
+Risk:
+  - Professional recognition wording is weaker than Monash's fully accredited pathway.
+  - Must verify whether it satisfies the professional goal you need.
+
+Action before applying:
+  - Confirm Engineers Australia outcome for the exact specialisation.
+  - Compare fees, scholarship options, and job placement/industry project opportunities.
+```
+
+Tier 3: Technical stretch / outside Melbourne
+---------------------------------------------
+
+5. UNSW Sydney
+
+```text
+Target program:
+  Master of Engineering Science, Electrical Engineering
+  Program code: 8338
+
+Why it fits:
+  - Very strong technical option for renewable energy, power systems, and signal processing.
+  - Good if you want a more research/advanced technical direction.
+  - Strong support for digital communication and renewable/power depth.
+
+How to present our portfolio:
+  - proje3 proves renewable monitoring/control interest.
+  - proje1 proves signal-processing and communication fundamentals.
+  - Nexys Video proves hardware/software implementation discipline.
+
+Risk:
+  - Sydney, not Melbourne, so weaker fit with the EMMS/Melbourne network plan.
+  - Entry requirement references a minimum 65% average.
+  - More advanced/research-oriented; may be less direct as a professional conversion path.
+
+Action before applying:
+  - Treat as a stretch application.
+  - Verify 2027 intake, GPA equivalency, fees, and professional recognition outcome.
+```
+
+Alternative, not primary
+------------------------
+
+University of Melbourne Master of Energy Systems:
+
+```text
+Use only as an alternative if the career story changes toward:
+  - energy planning
+  - policy/commercial energy systems
+  - market/operator analysis
+  - project/strategy roles
+
+Why it is not primary now:
+  - It is strong for energy-sector understanding, but weaker for the current computer/FPGA/embedded identity.
+  - It may not use the Nexys Video, digital communication, ADAS, and Orin Nano portfolio as strongly as Electrical Engineering.
+```
+
+Programs to avoid as primary targets for now
+--------------------------------------------
+
+Do not make these the main target unless the plan changes:
+
+```text
+1. Pure networking or cybersecurity master's
+   Reason:
+     Networking is only basic support for this plan.
+
+2. Pure telecommunications/RF master's
+   Reason:
+     Digital communication is strong support, but RF/electromagnetics should not become the main identity.
+
+3. Pure energy policy/business program
+   Reason:
+     It may weaken the computer engineering + renewable technical story.
+
+4. Analog/RF/electronics-heavy programs
+   Reason:
+     Your strongest proof is software/FPGA/CV/renewable monitoring, not analog or electromagnetics.
+```
+
+Current recommended shortlist
+-----------------------------
+
+```text
+Apply first if affordable and admission looks possible:
+  1. Monash - Master of Professional Engineering, Electrical Engineering
+  2. University of Melbourne - Master of Electrical Engineering
+
+Keep as practical Melbourne backups:
+  3. RMIT - exact postgraduate electrical/computer/renewable-related program to be verified
+  4. Swinburne - Master of Engineering Science, Electrical Engineering or Electronics and Telecommunications
+
+Keep as technical stretch:
+  5. UNSW - Master of Engineering Science, Electrical Engineering
+
+Keep as alternative only:
+  6. University of Melbourne - Master of Energy Systems
+```
+
+Application message
+-------------------
+
+Use one consistent story across SOP, CV, portfolio, and interviews:
+
+```text
+I am building a computer engineering profile for renewable energy systems.
+My focus is embedded/FPGA monitoring, telemetry, data logging, and control for solar/BESS/SCADA-style systems.
+My prior ADAS prototype shows computer vision and system integration experience.
+My summer portfolio adds renewable energy, digital communication, and basic networking proof.
+I want a master's program that lets me connect electrical engineering fundamentals with practical computer/embedded systems for Australia's renewable energy sector.
+```
+
+Source pages checked
+--------------------
+
+```text
+Monash Master of Professional Engineering:
+https://www.monash.edu/study/courses/find-a-course/professional-engineering-e6011
+
+University of Melbourne Master of Electrical Engineering:
+https://study.unimelb.edu.au/find/courses/graduate/master-of-electrical-engineering/
+
+University of Melbourne Master of Energy Systems:
+https://study.unimelb.edu.au/find/courses/graduate/master-of-energy-systems/
+
+RMIT electrical/electronic engineering study area:
+https://www.rmit.edu.au/study-with-us/engineering/electrical-and-electronic-engineering
+
+RMIT computer engineering study area:
+https://www.rmit.edu.au/study-with-us/engineering/computer-engineering
+
+RMIT environmental/sustainable engineering study area:
+https://www.rmit.edu.au/study-with-us/engineering/environmental-and-sustainable-engineering
+
+RMIT telecommunications engineering study area:
+https://www.rmit.edu.au/study-with-us/engineering/telecommunications-engineering
+
+Swinburne Master of Engineering Science:
+https://www.swinburne.edu.au/course/postgraduate/master-of-engineering-science/
+
+UNSW Master of Engineering Science, Electrical Engineering:
+https://www.unsw.edu.au/study/postgraduate/master-of-engineering-science-electrical-engineering
+```

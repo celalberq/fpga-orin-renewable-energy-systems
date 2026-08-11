@@ -1,0 +1,27 @@
+FPGA Requirements: proje1 Digital Communication
+===============================================
+
+Required:
+
+```text
+1. Enough DSP slices for modulation, filters, and FFT/IFFT work.
+2. Enough block RAM for OFDM symbols and packet buffers.
+3. PLL/MMCM support for stable internal clocks.
+4. UART and SPI for Orin communication.
+5. Expansion connector for ADC/DAC or PMOD modules.
+6. Good simulation flow and FFT examples.
+```
+
+Preferred:
+
+```text
+1. 50k+ logic cells.
+2. External DDR or SRAM.
+3. 1x Ethernet for high-speed telemetry.
+4. PMOD or FMC for ADC/DAC boards.
+5. Vendor FFT IP or enough resources for open-source FFT.
+```
+
+FPGA selection pressure:
+
+This project needs DSP resources, but it does not force the final FPGA choice as strongly as the network project. If the board can handle Ethernet for proje2, it will likely be strong enough for the initial OFDM MVP.

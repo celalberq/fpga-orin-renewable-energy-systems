@@ -1,0 +1,2 @@
+timestamp_utc,valid,error,seq_gap,seq,d_pct,v_mv,i_ma,p_mw,mppt,fault,chk,computed_chk,udp_host,udp_port,raw_line
+2026-07-12T16:22:05.936052+00:00,1,,,1,50,14560,1268,18462,up,0,CC,CC,127.0.0.1,5005,"p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80"

@@ -1,0 +1,171 @@
+Integrated Three-Project Architecture
+=====================================
+
+Purpose
+-------
+
+The three summer projects should share one base platform instead of becoming three unrelated demos.
+
+For the full theory, hardware roles, and step-by-step build doctrine, use:
+
+```text
+system_theory_and_build_doctrine.txt
+```
+
+Core idea:
+
+```text
+Renewable energy data is collected from the PV/solar side.
+The FPGA controls/samples/formats the data.
+Digital communication methods make the data movement reliable/measurable.
+Networking methods move the data toward PC/Orin dashboards and infrastructure monitoring.
+```
+
+Shared base platform
+--------------------
+
+```text
+Nexys Video FPGA
+  -> reads or generates solar telemetry
+  -> runs real-time PWM/control/protection
+  -> formats telemetry packets
+  -> sends packets through UART first
+  -> later sends packets through stronger digital comm and Ethernet/network paths
+
+PC first, Orin later
+  -> reads telemetry
+  -> logs data
+  -> displays dashboard
+  -> runs analysis/fault detection
+```
+
+Project roles
+-------------
+
+proje3: Renewable energy / solar
+
+```text
+Main data source and control project.
+
+Responsibilities:
+  - PV voltage/current/power data
+  - PWM duty
+  - MPPT state
+  - fault/protection flags
+  - safe low-voltage solar/BESS demo path
+```
+
+proje1: Digital communication
+
+```text
+Reliable telemetry communication project.
+
+Responsibilities:
+  - frame format
+  - sequence counter
+  - CRC/checksum
+  - QPSK/OFDM simulation later
+  - BER/error counters
+  - reliability comparison for the same solar telemetry data
+```
+
+proje2: Network
+
+```text
+Infrastructure/network telemetry project.
+
+Responsibilities:
+  - packet parsing
+  - UDP/Ethernet-style metadata
+  - dashboard/logging path
+  - network monitoring for the same solar telemetry stream
+  - later Orin/PC network service
+```
+
+Shared telemetry packet v1
+--------------------------
+
+Use one packet shape across all projects:
+
+```text
+p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+```
+
+Fields:
+
+```text
+project id:
+  p3 for renewable source.
+  Later p1 and p2 can wrap, test, transmit, or parse this same data.
+
+seq:
+  packet sequence counter.
+
+d_pct:
+  PWM duty percentage.
+
+v_mv:
+  voltage in millivolts.
+
+i_ma:
+  current in milliamps.
+
+p_mw:
+  power in milliwatts.
+
+mppt:
+  MPPT direction/state.
+
+f:
+  fault flag.
+
+chk:
+  simple checksum for communication and network validation.
+  Later this can be upgraded to a stronger CRC.
+
+raw:
+  raw 8-bit duty command, included so PC/Orin can validate chk.
+```
+
+Why this is better
+------------------
+
+```text
+1. proje3 becomes the main Australia-facing renewable/computer project.
+2. proje1 becomes useful because it improves the reliability of real telemetry data.
+3. proje2 becomes useful because it moves and monitors the same telemetry data.
+4. The CV story becomes one integrated engineering system, not three random projects.
+5. The same FPGA board and future Orin Nano Super are justified across all projects.
+```
+
+Next implementation direction
+-----------------------------
+
+```text
+1. Keep the working proje3 scaled telemetry as the base.
+2. Add seq and checksum fields to the FPGA UART packet: DONE.
+3. Add a small packet parser/logger on PC: UART parsing/logging PASS.
+4. Add raw=XX to make PC checksum validation complete for all switch states: PASS.
+5. Use the same packet format for proje1 communication tests.
+6. Use the same packet format for proje2 network parsing tests: STARTED.
+7. Bridge live p3 packets into UDP JSON for PC/Orin-style network transport: CREATED.
+```
+
+Current recommendation
+----------------------
+
+```text
+Do not jump to an unrelated digital communication demo yet.
+
+Next best step:
+  Run the integrated solar telemetry UDP gateway:
+    p3 packet from FPGA
+    checksum validation
+    JSON conversion
+    UDP transport
+    receiver CSV log
+
+Then:
+  proje1 tests communication reliability using this packet.
+  proje2 transports and logs this packet as network telemetry.
+```

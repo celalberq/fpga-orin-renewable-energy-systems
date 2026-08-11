@@ -1,0 +1,180 @@
+FPGA Candidate Matrix
+=====================
+
+Purpose:
+
+This file records the FPGA comparison and the final board decision.
+
+Final decision:
+
+```text
+Selected board: Digilent Nexys Video
+Part number: 410-316
+FPGA: Artix-7 XC7A200T-1SBG484C
+Status: bought
+Reason: best technical match for digital communication, network, and solar projects.
+```
+
+Important:
+
+Robotistan has an FPGA category page, but during the 2026-06-16 check the page did not expose reliable live prices for the suitable boards and appeared to show limited/out-of-stock availability. Use Robotistan or other Turkish sellers for availability checks before buying.
+
+Turkish availability check:
+
+```text
+Robotistan FPGA category:
+https://www.robotistan.com/fpga
+```
+
+Official specification sources:
+
+```text
+Nexys A7:
+https://digilent.com/shop/nexys-a7-amd-artix-7-fpga-trainer-board-recommended-for-ece-curriculum/
+
+Arty A7-100T:
+https://digilent.com/shop/arty-a7-100t-artix-7-fpga-development-board/
+
+Zybo Z7:
+https://digilent.com/shop/zybo-z7-zynq-7000-arm-fpga-soc-development-board/
+
+Basys 3:
+https://digilent.com/shop/basys-3-amd-artix-7-fpga-trainer-board-recommended-for-introductory-users/
+
+Nexys Video:
+https://digilent.com/shop/nexys-video-amd-artix-7-fpga-trainer-board-for-multimedia-applications/
+```
+
+Candidate summary:
+
+```text
+Board: Arty A7-100T
+FPGA: Artix-7 XC7A100T
+Logic: 101,440 logic cells
+DSP: 240 slices
+Memory: 4,860 Kbits BRAM + 256 MB DDR3L
+Ethernet: 10/100 Mbps
+Expansion: 4 Pmod + Arduino/chipKIT header
+Official MSRP checked: 299 USD
+Strength: balanced for learning, DSP, sensors, and general FPGA work
+Weakness: Ethernet is 10/100, not gigabit
+Fit:
+  proje1: strong
+  proje2: acceptable for monitor MVP, weaker for high-speed network
+  proje3: strong
+
+Board: Nexys A7-100T
+FPGA: Artix-7 XC7A100T
+Logic: 15,850 slices
+DSP: 240 slices
+Memory: 4,860 Kbits BRAM + 128 MiB DDR2
+Ethernet: 10/100 Mbps
+Expansion: 4 Pmod + XADC Pmod
+Official MSRP checked: 349 USD
+Strength: classroom-friendly, many switches/LEDs, strong learning board
+Weakness: Ethernet is 10/100 and not as compact/flexible as Arty A7
+Fit:
+  proje1: strong
+  proje2: acceptable for monitor MVP, weaker for high-speed network
+  proje3: strong
+
+Board: Zybo Z7-20
+FPGA/SoC: Zynq-7000 with ARM Cortex-A9 + FPGA fabric
+Memory: 1 GB DDR3L
+Ethernet: Gigabit Ethernet PHY
+Expansion: 6 Pmod on Z7-20, 5 Pmod on Z7-10
+Official MSRP checked: 299 USD base listing
+Strength: Gigabit Ethernet, strong embedded system board, good for network project
+Weakness: includes ARM processor, which overlaps with the Orin Nano role
+Fit:
+  proje1: good
+  proje2: strong
+  proje3: good
+
+Board: Nexys Video
+FPGA: Artix-7 XC7A200T
+Logic: 33,650 slices
+DSP: 740 slices
+Memory: 13 Mbits BRAM + 512 MB DDR3
+Ethernet: 10/100/1000 Ethernet PHY
+Expansion: FMC LPC + 4 Pmod
+Official status checked: out of stock on Digilent page
+Strength: best technical match for all three projects
+Weakness: availability and cost risk
+Fit:
+  proje1: excellent
+  proje2: excellent
+  proje3: strong
+
+Board: Basys 3
+FPGA: Artix-7 XC7A35T
+Logic: 33,280 logic cells
+DSP: 90 slices
+Memory: 1,800 Kbits BRAM
+Ethernet: none
+Expansion: 4 Pmod
+Official MSRP checked: 165 USD
+Strength: low-cost learning board
+Weakness: no Ethernet, too limiting for these three projects
+Fit:
+  proje1: limited
+  proje2: poor
+  proje3: acceptable
+```
+
+Distributor stock snapshot: 2026-06-17
+
+```text
+Distributor listing found by user:
+
+410-316 Nexys Video
+  Listed stock: 79
+  Listed price: GBP 466.61 ex VAT
+  Silicon: XC7A200T-1SBG484C
+  Notes: technically stronger board for all three projects.
+
+410-292 Nexys A7-100T
+  Listed stock: 91
+  Listed price: GBP 275.86 ex VAT
+  Silicon: XC7A100T
+  Notes: cheaper and still useful, but weaker for networking and high-DSP work.
+
+Important:
+  Screenshot price is ex VAT and appears to be GBP. Final Turkey landed cost may include VAT, shipping, customs/import handling, and currency conversion.
+```
+
+Purchase result:
+
+```text
+Nexys Video 410-316 was selected and bought.
+Nexys A7-100T 410-292 remains a cheaper comparison point only.
+```
+
+Historical recommendation logic:
+
+```text
+Best technical board if available:
+  Nexys Video
+
+Best practical board if keeping pure FPGA + Orin architecture:
+  Arty A7-100T
+
+Best network-focused board:
+  Zybo Z7-20
+
+Avoid as the main shared board:
+  Basys 3, because no onboard Ethernet
+```
+
+Original decision rule:
+
+```text
+If proje2 must be serious network hardware:
+  prioritize Gigabit Ethernet.
+
+If proje2 can be monitor-mode at 10/100 Mbps:
+  Arty A7-100T becomes a strong practical choice.
+
+If Turkey availability is poor:
+  do not overfit to one board; buy the best available board that satisfies Ethernet + expansion + DSP requirements.
+```

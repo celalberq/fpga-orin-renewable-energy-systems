@@ -1,0 +1,198 @@
+Hardware Arrival Kickoff - 2026-07-22
+=====================================
+
+Status
+------
+
+```text
+Parts arrived:
+  Nexys Video
+  Orin Nano Super
+  CSI camera
+  MCP3208 ADCs
+  INA226 modules
+  solar panels
+  LDR sensors
+  PCA9685 servo driver
+  servos and pan-tilt hardware
+  Li-ion storage demo parts
+  fan/load demo parts
+  breadboard, jumpers, fuses, klemens, resistors, capacitors
+```
+
+Immediate rule
+--------------
+
+```text
+Nexys Video and Orin Nano Super stay on their normal power supplies.
+Battery and solar hardware are measured by the system; they do not power the
+main boards during this stage.
+```
+
+Vivado build for first real hardware test
+-----------------------------------------
+
+```text
+Board:
+  Digilent Nexys Video 410-316
+
+Vivado part code:
+  xc7a200tsbg484-1
+
+Top module:
+  solar_real_sense_uart_top
+
+HDL:
+  proje3/code/hdl/uart_tx.v
+  proje3/code/hdl/mcp3208_reader.v
+  proje3/code/hdl/solar_real_sense_uart_top.v
+
+Constraints:
+  proje3/hardware/constraints/nexys_video_solar_real_sense_uart.xdc
+```
+
+First physical test: MCP3208 CH0 voltage
+----------------------------------------
+
+Goal:
+
+```text
+Prove that the FPGA reads a real analog voltage through MCP3208 and reports it
+through the same p3 UART -> UDP -> dashboard path.
+```
+
+MCP3208 DIP-16 wiring:
+
+```text
+MCP3208 pin 16 VDD  -> Nexys/Pmod 3.3V
+MCP3208 pin 15 VREF -> Nexys/Pmod 3.3V
+MCP3208 pin 14 AGND -> Nexys/Pmod GND
+MCP3208 pin 9  DGND -> Nexys/Pmod GND
+
+MCP3208 pin 10 CS/SHDN -> Nexys Video JB1 / adc_cs_n
+MCP3208 pin 11 DIN     -> Nexys Video JB2 / adc_mosi
+MCP3208 pin 12 DOUT    -> Nexys Video JB3 / adc_miso
+MCP3208 pin 13 CLK     -> Nexys Video JB4 / adc_sclk
+
+MCP3208 pin 1 CH0 -> voltage divider midpoint
+MCP3208 pin 2 CH1 -> GND for the first test so current does not float
+```
+
+Pmod JB signal mapping:
+
+```text
+JB1 = adc_cs_n
+JB2 = adc_mosi
+JB3 = adc_miso
+JB4 = adc_sclk
+```
+
+Voltage divider for CH0:
+
+```text
+Input voltage + -> 100k -> CH0 midpoint -> 22k -> GND
+```
+
+Expected safe first test:
+
+```text
+Use Nexys 3.3V as the divider input.
+CH0 midpoint should measure about 0.60 V with the multimeter.
+UART v_mv should report roughly 3300 mV after FPGA scaling.
+```
+
+Do not connect CH0 until the multimeter confirms:
+
+```text
+CH0 midpoint <= 3.3 V
+```
+
+Current placeholder
+-------------------
+
+For the first test:
+
+```text
+CH1 tied to GND means i_ma should be near 00000.
+p_mw should stay near 00000 because current is near zero.
+This is fine; this first test is only proving real voltage sensing.
+```
+
+After CH0 passes:
+
+```text
+Use a safe 0V-3.3V signal on CH1.
+Then move to INA226 calibration for real panel current/power.
+```
+
+Dashboard run path
+------------------
+
+Terminal 1:
+
+```text
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje2/code/pc_app/solar_live_dashboard.py --udp-host 127.0.0.1 --udp-port 5010 --http-host 127.0.0.1 --http-port 8084 --bess-capacity-wh 50 --bess-initial-soc 55 --bess-load-w 10
+```
+
+Open:
+
+```text
+http://127.0.0.1:8084
+```
+
+Terminal 2:
+
+```text
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje2/code/pc_app/solar_telemetry_udp_gateway.py --port COM6 --baud 115200 --udp-host 127.0.0.1 --udp-port 5010
+```
+
+Expected first real packet behavior
+-----------------------------------
+
+With CH0 driven by divided 3.3V and CH1 tied to GND:
+
+```text
+v_mv ~= 03000 to 03600
+i_ma ~= 00000
+p_mw ~= 00000
+f = 0
+raw = auto duty value from FPGA
+```
+
+With CH0 driven by divided 6V solar panel open circuit:
+
+```text
+v_mv may be around 05000 to 07500 depending on light.
+Still confirm CH0 midpoint with the multimeter before connecting it.
+```
+
+Bring-up order from here
+------------------------
+
+```text
+1. MCP3208 CH0 real voltage sensing: PASS.
+2. Preserve/photograph/label the working MCP3208 wiring.
+3. Orin Nano Super bring-up and dashboard migration.
+4. INA226 current/power on one panel using Orin/PC first.
+5. Two identical solar panels: fixed vs tracking comparison.
+6. PCA9685 + pan-tilt servo motion.
+7. Li-ion storage telemetry and visible fan discharge load.
+8. Orin CSI camera and AI/light-supervisor layer.
+9. Expand p3 packet to p3v2 with PV, battery, tracking, and link-health fields.
+```
+
+Storage/fan safety
+------------------
+
+```text
+Battery -> fuse -> MT3608 boost -> fan/load.
+Nexys/Orin only observe through sensors/dividers.
+
+Initial discharge policy:
+  SoC > 80%: allow fan discharge.
+  SoC < 50%: stop fan discharge.
+  battery < 3.3V: hard low-voltage warning.
+  battery near 3.0V: stop testing.
+```

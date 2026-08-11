@@ -1,0 +1,164 @@
+Proje3 Board Test 20: Real LDR Tracker UDP Dashboard
+====================================================
+
+Status
+------
+
+```text
+LIVE PASS - REAL LDR / SERVO / UDP / DASHBOARD
+```
+
+Date
+----
+
+```text
+2026-08-10
+```
+
+Live Result
+-----------
+
+```text
+Orin packets sent: 20 (seq 0 through 19)
+Bridge packets received: 20
+Bridge CRC frames valid: 20/20
+Bridge sequence gaps: 0
+Compact payload: 129 bytes
+Protected frame: 133 bytes / 1064 bits
+QPSK symbols: 532
+OFDM symbols: 12
+
+Dashboard packets received: 20
+Dashboard valid packets: 20/20
+Dashboard communication frames valid: 20/20
+Dashboard source: Orin real four-LDR solar tracker
+MCP3208 panel voltage: 58 to 67 mV
+Estimated 1k-ohm load power: 0.003364 to 0.004489 mW
+Servo output: off (intentional first dry run)
+```
+
+The real Nexys LDR stream crossed the Orin tracker, proje1 communication bridge,
+and proje2 dashboard without a packet error or sequence gap.
+
+Full Servo Result
+-----------------
+
+```text
+Orin packets sent: 60 (seq 0 through 59)
+Bridge packets received: 60
+Bridge CRC frames valid: 60/60
+Bridge sequence gaps: 0
+Dashboard packets valid: 60/60
+Dashboard communication frames valid: 60/60
+Servo-enabled packets: 60/60
+
+Initial panel command: 90.00 / 90.00 degrees
+Final panel command: 43.849 / 55.336 degrees
+Final LDR target: 43.799 / 55.724 degrees
+Final tracking error: 0.391 degrees
+Locked samples: 14
+MCP3208 panel voltage: 58 to 84 mV
+Estimated 1k-ohm load power: 0.003364 to 0.007056 mW
+```
+
+Visual confirmation: the physical panel moved and then stopped after converging.
+This closes the real LDR sensing, two-axis actuation, UDP bridge, communication
+profile, and dashboard integration path as a live pass.
+
+Goal
+----
+
+Send the working Nexys/MCP3208 four-LDR tracker, real PCA9685 pan/tilt state,
+and panel telemetry through the existing three-project live path:
+
+```text
+Nexys/MCP3208 LDR UART -> Orin real LDR tracker
+  -> UDP JSON port 5013
+  -> proje1 CRC/QPSK/OFDM communication bridge
+  -> forwarded UDP JSON port 5011
+  -> proje2 live dashboard and CSV log
+```
+
+Packet Contract
+---------------
+
+```text
+schema_variant: orin.ldr_tracker.v1
+tracker.pan_deg / tilt_deg
+tracker.sun_pan_deg / sun_tilt_deg
+tracker.track_error_deg / state
+tracker.ldr and normalized LDR errors
+light_sensor.panel_mv and four raw MCP3208 channels
+v_mv / i_ma / p_mw / power_source
+```
+
+The indoor weak-light mode uses the known 1k-ohm panel load and reports
+`power_source=mcp3208-1000-ohm-load-estimate`. Strong-light tests can omit
+`--panel-load-ohms` and use direct INA226 values instead.
+
+Transfer Updated Tracker
+------------------------
+
+Run in Windows PowerShell:
+
+```powershell
+scp "C:\Users\Msi\Documents\yaz proje\proje3\code\orin_app\ldr_servo_tracker.py" msi@192.168.1.30:/home/msi/proje3/code/orin_app/
+```
+
+Terminal 1: Dashboard on Windows
+--------------------------------
+
+```powershell
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje2/code/pc_app/solar_live_dashboard.py `
+  --udp-host 0.0.0.0 --udp-port 5011 `
+  --http-host 127.0.0.1 --http-port 8085 `
+  --log proje2/data/solar_live_dashboard_ldr_log.csv
+```
+
+Open `http://127.0.0.1:8085`.
+
+Terminal 2: Communication Bridge on Windows
+--------------------------------------------
+
+```powershell
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje1/code/pc_app/tracker_udp_comm_bridge.py `
+  --bind-host 0.0.0.0 --bind-port 5013 `
+  --forward-host 127.0.0.1 --forward-port 5011 `
+  --log proje1/data/ldr_tracker_udp_comm_bridge_log.csv
+```
+
+Terminal 3: Real Tracker on Orin
+--------------------------------
+
+Start with a 20-packet dry run. Servo output remains off, but real LDR targets
+and weak-light load estimates are sent through the complete dashboard path:
+
+```bash
+cd /home/msi
+python3 proje3/code/orin_app/ldr_servo_tracker.py \
+  --port /dev/ttyUSB0 \
+  --calibration-in proje3/data/ldr_ab_calibration.json \
+  --sensor-mount fixed --control-mode sequential \
+  --max-packets 20 \
+  --pan-start 90 --tilt-start 90 \
+  --pan-min 10 --pan-max 170 --tilt-min 10 --tilt-max 170 \
+  --fixed-tilt-gain 120 --fixed-center-deadband 0.015 \
+  --fixed-hemisphere-deadband 0.05 --target-deadband-deg 1.0 \
+  --min-step 0.5 --max-step 3.0 --stable-samples 2 --invert-tilt \
+  --panel-load-ohms 1000 \
+  --udp-host 192.168.1.219 --udp-port 5013 \
+  --source-label "Orin real four-LDR solar tracker"
+```
+
+Live Pass Criteria
+------------------
+
+```text
+1. Bridge prints OK with frame_b=00133, qpsk=00532, ofdm=012, ok=1.
+2. Dashboard source changes to Orin real four-LDR solar tracker.
+3. Dashboard shows LDR target and panel angles from the real tracker packet.
+4. Dashboard receives positive MCP3208 load-estimated voltage/power.
+5. No bridge gaps or invalid dashboard packets appear during the short run.
+```

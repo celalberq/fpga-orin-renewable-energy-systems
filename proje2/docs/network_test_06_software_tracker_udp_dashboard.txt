@@ -1,0 +1,83 @@
+Proje2 Network Test 06: Software Tracker UDP Dashboard
+======================================================
+
+Status
+------
+
+```text
+LIVE PASS
+```
+
+Live result:
+
+```text
+2026-08-05: PC dashboard received Orin software tracker packets.
+Tracker lock state appeared in the packet stream.
+INA226-enabled tracker packets reached the same dashboard path.
+```
+
+Goal
+----
+
+Show that the network/dashboard layer can carry higher-level tracker telemetry,
+not only raw solar voltage/current/power.
+
+Packet source
+-------------
+
+```text
+Orin software tracker
+  -> UDP JSON
+  -> PC dashboard
+```
+
+Extra fields displayed
+----------------------
+
+```text
+tracker.state
+tracker.pan_deg
+tracker.tilt_deg
+tracker.sun_pan_deg
+tracker.sun_tilt_deg
+tracker.track_error_deg
+tracker.lr_error
+tracker.tb_error
+tracker.servo_enabled
+```
+
+Run PC dashboard
+----------------
+
+```text
+cd "C:\Users\Msi\Documents\yaz proje"
+python proje2/code/pc_app/solar_live_dashboard.py --udp-host 0.0.0.0 --udp-port 5011 --http-host 127.0.0.1 --http-port 8085 --bess-load-w 0.1
+```
+
+Run Orin software tracker
+-------------------------
+
+```text
+cd /home/msi
+python3 proje3/code/orin_app/tracker_softloop_udp_gateway.py --udp-host PC_IP_ADDRESS --udp-port 5011
+```
+
+Expected result
+---------------
+
+```text
+Dashboard link becomes healthy.
+Tracker State changes between seeking and locked.
+Panel Angles move toward Light Direction.
+Tracking Error decreases after each virtual sun movement.
+CSV log includes tracker columns.
+```
+
+Why this strengthens the project
+--------------------------------
+
+```text
+proje3: control loop and renewable-energy state estimation
+proje2: UDP network telemetry and live dashboard
+proje1: later reliability layer can protect these same tracker packets
+```

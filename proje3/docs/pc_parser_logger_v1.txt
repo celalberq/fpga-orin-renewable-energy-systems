@@ -1,0 +1,118 @@
+Proje3 PC Parser/Logger V1
+==========================
+
+Goal
+----
+
+Read shared telemetry packet v1 from the Nexys Video UART port, parse the fields,
+check sequence behavior, compute a PC-side checksum, and log CSV rows.
+
+Script
+------
+
+```text
+proje3/code/pc_app/solar_packet_logger.py
+```
+
+Command
+-------
+
+```text
+python proje3/code/pc_app/solar_packet_logger.py --port COM6 --baud 115200 --log proje3/data/solar_packet_v1_log.csv
+```
+
+List ports:
+
+```text
+python proje3/code/pc_app/solar_packet_logger.py --list-ports
+```
+
+Input packet
+------------
+
+```text
+p3,seq=00001,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=CC,raw=80
+```
+
+CSV output
+----------
+
+```text
+timestamp_utc
+valid
+error
+seq_gap
+project
+seq
+raw
+d_pct
+v_mv
+i_ma
+p_mw
+mppt
+f
+chk
+computed_chk
+raw_line
+```
+
+Important checksum note
+-----------------------
+
+```text
+The FPGA v1 checksum includes raw duty.
+The packet now prints raw=XX, so the PC logger can validate chk for all switch states.
+```
+
+Why this matters
+----------------
+
+```text
+This parser/logger becomes the temporary PC version of the future Orin telemetry service.
+It is also the base for:
+  proje1 communication reliability checks
+  proje2 network logging and packet monitoring
+```
+
+Result
+------
+
+```text
+PASS for UART parser/logger connection.
+```
+
+Observed output:
+
+```text
+2026-07-10T16:40:53.617391+00:00 OK p3,seq=00806,d_pct=00000,v_mv=12000,i_ma=00500,p_mw=06000,mppt=hd,f=0,chk=79
+2026-07-10T16:40:54.623488+00:00 OK p3,seq=00807,d_pct=00000,v_mv=12000,i_ma=00500,p_mw=06000,mppt=hd,f=0,chk=78
+2026-07-10T16:41:07.708684+00:00 OK p3,seq=00820,d_pct=00000,v_mv=12000,i_ma=00500,p_mw=06000,mppt=hd,f=0,chk=6B
+```
+
+Confirmed:
+
+```text
+Python opens COM6.
+Packets are timestamped.
+seq increments correctly.
+The script reports OK on valid packets.
+CSV logging path is ready.
+```
+
+Raw-field checksum fix:
+
+```text
+Implemented.
+The packet now includes raw=XX.
+The PC logger now uses raw when recomputing chk.
+Offline parser test passes for a nonzero raw packet:
+  p3,seq=00040,d_pct=00050,v_mv=14560,i_ma=01268,p_mw=18462,mppt=up,f=0,chk=E5,raw=80
+```
+
+Next hardware check:
+
+```text
+PASS.
+The board was rebuilt with raw=XX in the packet.
+solar_packet_logger.py keeps reporting OK while SW0-SW7 move and packet fields change.
+```

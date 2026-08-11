@@ -1,0 +1,64 @@
+First Tests Without Orin: proje3 Solar
+======================================
+
+Temporary host:
+
+```text
+Laptop/PC replaces Orin for now.
+```
+
+First tests:
+
+```text
+1. Python PWM reference simulation: DONE
+2. HDL PWM generator source: DONE
+3. FPGA PWM output test without power electronics: PASS
+4. Duty-cycle command from switches: PASS
+5. UART telemetry to PC: PASS
+   p3,duty=0x80,v=0xA0,i=0x20,p=0x40,ok
+```
+
+Nexys Video features to use first:
+
+```text
+1. Switches for duty cycle or mode.
+2. LEDs for PWM/protection/fault status.
+3. USB-UART for telemetry.
+4. Pmod later for ADC/current sensor interface.
+```
+
+Do not start with:
+
+```text
+1. Real solar panel.
+2. Battery.
+3. Buck converter power stage.
+4. External power electronics connected to FPGA pins.
+```
+
+Definition of ready for next stage:
+
+```text
+PWM waveform is stable and telemetry is visible on the PC: DONE
+```
+
+Current Vivado test:
+
+```text
+Top module:
+  solar_packet_v1_uart_top
+
+HDL:
+  code/hdl/pwm_generator.v
+  code/hdl/uart_tx.v
+  code/hdl/solar_packet_v1_uart_top.v
+
+Constraints:
+  hardware/constraints/nexys_video_solar_packet_v1_uart.xdc
+
+Procedure:
+  docs/board_test_03_shared_packet_v1.txt
+
+Status:
+  PASS
+```

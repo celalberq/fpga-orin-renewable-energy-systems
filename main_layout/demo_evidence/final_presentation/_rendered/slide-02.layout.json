@@ -1,0 +1,927 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/g1tbg1",
+    "id": "g1tbg1",
+    "slide": 2,
+    "layoutId": "e234534b-1a12-4349-9534-14db8bcd45b9",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "5f7b5e02-21ad-42cd-9077-dd0ec98845c8",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Arial"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "e234534b-1a12-4349-9534-14db8bcd45b9",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "5f7b5e02-21ad-42cd-9077-dd0ec98845c8",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "5f7b5e02-21ad-42cd-9077-dd0ec98845c8",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/sfuh8n21",
+      "id": "1",
+      "bbox": [
+        42,
+        36,
+        1120,
+        88
+      ],
+      "geometry": "rect",
+      "text": "Three layers form one end-to-end system",
+      "textPreview": "Three layers form one end-to-end system",
+      "resolvedFontSize": 40,
+      "resolvedTextStyle": {
+        "fontSize": 40,
+        "typeface": "Arial",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Three layers form one end-to-end system"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Three layers form one end-to-end system",
+          "resolvedTextStyle": {
+            "fontSize": 40,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Three layers form one end-to-end system",
+              "fontSize": 40,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ru1gz2lg",
+      "id": "2",
+      "bbox": [
+        1184,
+        660,
+        54,
+        24
+      ],
+      "geometry": "rect",
+      "text": "2",
+      "textPreview": "2",
+      "resolvedFontSize": 14,
+      "resolvedTextStyle": {
+        "fontSize": 14,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "right",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "2"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "2",
+          "resolvedTextStyle": {
+            "fontSize": 14,
+            "typeface": "Arial",
+            "color": "#59636E",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "2",
+              "fontSize": 14,
+              "typeface": "Arial",
+              "color": "#59636E",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6tsz6xkv",
+      "id": "3",
+      "bbox": [
+        42,
+        118,
+        900,
+        58
+      ],
+      "geometry": "rect",
+      "text": "Physical measurements become an observable, CRC-profiled network stream.",
+      "textPreview": "Physical measurements become an observable, CRC-profiled network stream.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Physical measurements become an observable, CRC-profiled network stream."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Physical measurements become an observable, CRC-profiled network stream.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#59636E"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Physical measurements become an observable, CRC-profiled network stream.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#59636E"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1k3y5c3i",
+      "id": "4",
+      "bbox": [
+        76,
+        352,
+        1128,
+        0
+      ],
+      "geometry": "straightConnector1",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gjuhc72x",
+      "id": "5",
+      "bbox": [
+        76,
+        344,
+        18,
+        18
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#000000",
+      "lineColor": "#000000",
+      "lineWidth": 1
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/filg32lc",
+      "id": "6",
+      "bbox": [
+        464,
+        344,
+        18,
+        18
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#000000",
+      "lineColor": "#000000",
+      "lineWidth": 1
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ehczaxkr",
+      "id": "7",
+      "bbox": [
+        852,
+        344,
+        18,
+        18
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#000000",
+      "lineColor": "#000000",
+      "lineWidth": 1
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/hojyt83e",
+      "id": "8",
+      "bbox": [
+        42,
+        292,
+        320,
+        30
+      ],
+      "geometry": "rect",
+      "text": "SENSE + CONTROL",
+      "textPreview": "SENSE + CONTROL",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "fontSize": 17,
+        "typeface": "Arial",
+        "color": "#3D8DFF",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "SENSE + CONTROL"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "SENSE + CONTROL",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "typeface": "Arial",
+            "color": "#3D8DFF",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "SENSE + CONTROL",
+              "fontSize": 17,
+              "typeface": "Arial",
+              "color": "#3D8DFF",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/wnah032t",
+      "id": "9",
+      "bbox": [
+        42,
+        394,
+        340,
+        50
+      ],
+      "geometry": "rect",
+      "text": "Proje3 renewable layer",
+      "textPreview": "Proje3 renewable layer",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "fontSize": 25,
+        "typeface": "Arial",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Proje3 renewable layer"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Proje3 renewable layer",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Proje3 renewable layer",
+              "fontSize": 25,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/69grils7",
+      "id": "10",
+      "bbox": [
+        42,
+        454,
+        340,
+        142
+      ],
+      "geometry": "rect",
+      "text": "Four LDRs and panel voltage enter through MCP3208. Orin controls both servos and reads signed INA226 battery telemetry.",
+      "textPreview": "Four LDRs and panel voltage enter through MCP3208. Orin controls both servos and reads signed INA226 battery telemetry.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 4,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Four LDRs and panel voltage enter"
+          },
+          {
+            "index": 2,
+            "text": "through MCP3208. Orin controls both"
+          },
+          {
+            "index": 3,
+            "text": "servos and reads signed INA226 battery"
+          },
+          {
+            "index": 4,
+            "text": "telemetry."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Four LDRs and panel voltage enter through MCP3208. Orin controls both servos and reads signed INA226 battery telemetry.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Arial",
+            "color": "#59636E"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Four LDRs and panel voltage enter through MCP3208. Orin controls both servos and reads signed INA226 battery telemetry.",
+              "fontSize": 18,
+              "typeface": "Arial",
+              "color": "#59636E"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/rup8bqtc",
+      "id": "11",
+      "bbox": [
+        430,
+        292,
+        320,
+        30
+      ],
+      "geometry": "rect",
+      "text": "FRAME + PROFILE",
+      "textPreview": "FRAME + PROFILE",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "fontSize": 17,
+        "typeface": "Arial",
+        "color": "#3D8DFF",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "FRAME + PROFILE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "FRAME + PROFILE",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "typeface": "Arial",
+            "color": "#3D8DFF",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "FRAME + PROFILE",
+              "fontSize": 17,
+              "typeface": "Arial",
+              "color": "#3D8DFF",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/svi9kvax",
+      "id": "12",
+      "bbox": [
+        430,
+        394,
+        340,
+        50
+      ],
+      "geometry": "rect",
+      "text": "Proje1 communication layer",
+      "textPreview": "Proje1 communication layer",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "fontSize": 25,
+        "typeface": "Arial",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Proje1 communication layer"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Proje1 communication layer",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Proje1 communication layer",
+              "fontSize": 25,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/twrqd0bi",
+      "id": "13",
+      "bbox": [
+        430,
+        454,
+        340,
+        142
+      ],
+      "geometry": "rect",
+      "text": "The mixed payload becomes a CRC frame with deterministic QPSK and OFDM resource accounting.",
+      "textPreview": "The mixed payload becomes a CRC frame with deterministic QPSK and OFDM resource accounting.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "The mixed payload becomes a CRC frame"
+          },
+          {
+            "index": 2,
+            "text": " with deterministic QPSK and OFDM"
+          },
+          {
+            "index": 3,
+            "text": "resource accounting."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "The mixed payload becomes a CRC frame with deterministic QPSK and OFDM resource accounting.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Arial",
+            "color": "#59636E"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "The mixed payload becomes a CRC frame with deterministic QPSK and OFDM resource accounting.",
+              "fontSize": 18,
+              "typeface": "Arial",
+              "color": "#59636E"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ex0rm5s3",
+      "id": "14",
+      "bbox": [
+        818,
+        292,
+        320,
+        30
+      ],
+      "geometry": "rect",
+      "text": "TRANSPORT + OBSERVE",
+      "textPreview": "TRANSPORT + OBSERVE",
+      "resolvedFontSize": 17,
+      "resolvedTextStyle": {
+        "fontSize": 17,
+        "typeface": "Arial",
+        "color": "#3D8DFF",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "TRANSPORT + OBSERVE"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "TRANSPORT + OBSERVE",
+          "resolvedTextStyle": {
+            "fontSize": 17,
+            "typeface": "Arial",
+            "color": "#3D8DFF",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "TRANSPORT + OBSERVE",
+              "fontSize": 17,
+              "typeface": "Arial",
+              "color": "#3D8DFF",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 15,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fy98fato",
+      "id": "15",
+      "bbox": [
+        818,
+        394,
+        340,
+        50
+      ],
+      "geometry": "rect",
+      "text": "Proje2 network layer",
+      "textPreview": "Proje2 network layer",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "fontSize": 25,
+        "typeface": "Arial",
+        "color": "#000000",
+        "bold": true,
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Proje2 network layer"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Proje2 network layer",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Arial",
+            "color": "#000000",
+            "bold": true
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Proje2 network layer",
+              "fontSize": 25,
+              "typeface": "Arial",
+              "color": "#000000",
+              "bold": true
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 16,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gzi9ofa9",
+      "id": "16",
+      "bbox": [
+        818,
+        454,
+        340,
+        142
+      ],
+      "geometry": "rect",
+      "text": "UDP forwarding, packet validation, sequence-gap monitoring, dashboard state, and CSV evidence close the loop.",
+      "textPreview": "UDP forwarding, packet validation, sequence-gap monitoring, dashboard state, and CSV evidence close the loop.",
+      "resolvedFontSize": 18,
+      "resolvedTextStyle": {
+        "fontSize": 18,
+        "typeface": "Arial",
+        "color": "#59636E",
+        "alignment": "left",
+        "autoFit": "shrinkText",
+        "autoFitScale": 1,
+        "insets": {
+          "top": 0,
+          "right": 0,
+          "bottom": 0,
+          "left": 0
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "UDP forwarding, packet validation,"
+          },
+          {
+            "index": 2,
+            "text": "sequence-gap monitoring, dashboard"
+          },
+          {
+            "index": 3,
+            "text": "state, and CSV evidence close the loop."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "UDP forwarding, packet validation, sequence-gap monitoring, dashboard state, and CSV evidence close the loop.",
+          "resolvedTextStyle": {
+            "fontSize": 18,
+            "typeface": "Arial",
+            "color": "#59636E"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "UDP forwarding, packet validation, sequence-gap monitoring, dashboard state, and CSV evidence close the loop.",
+              "fontSize": 18,
+              "typeface": "Arial",
+              "color": "#59636E"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}
