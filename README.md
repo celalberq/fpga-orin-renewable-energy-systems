@@ -5,6 +5,9 @@ that were also integrated into one working renewable-energy demonstrator. Each
 project has its own design scope, implementation, tests, and evidence; the
 integration shares hardware measurements and one telemetry contract.
 
+**Core stack:** Verilog RTL on the Nexys Video FPGA, Python on Jetson Orin and
+the PC, plus Tcl/XDC for FPGA build and pin constraints.
+
 ## Three Projects
 
 | Project | Independent scope | Main validated result |
